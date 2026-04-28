@@ -53,7 +53,7 @@ Make a tree directory like that:
     └── results.csv
 ```
 
-To install aima-python use the installation  in the official repository
+To install aima-python use the installation  in the official repository [aima-python](https://github.com/aimacode/aima-python)
 ```
 git clone https://github.com/aimacode/aima-python
 ```
@@ -63,7 +63,7 @@ To find the aima-python modules we have to tell to python to search also in anot
 export PYTHONPATH=$PYTHONPATH:$(pwd)/../aima-python
 ```
 
-right now we have connected this repository with aima-python and we can do:
+right now we have connected this repository with [aima-python](https://github.com/aimacode/aima-python) and we can do:
 
 ```
 python3 PE_IM_run.py
