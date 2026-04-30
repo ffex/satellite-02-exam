@@ -227,12 +227,7 @@ class Satellite(Problem):
             case ("SEND",):
 
                 if orientation == "N":
-
-                    for obj in memory:
-                        if obj not in sent:
-                            sent.append(obj)
-
-                    memory.clear()
+                    sent.append(memory.pop())
 
                 charge -= COST_SEND
 
