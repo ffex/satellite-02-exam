@@ -63,7 +63,7 @@ class Satellite(Problem):
     # ======================================================
     # COSTRUTTORE
     # ======================================================
-    def __init__(self, initial, goal, scenario=None):
+    def __init__(self, initial, goal):
         """
         initial:
         {
@@ -84,8 +84,6 @@ class Satellite(Problem):
 
         # mappa spaziale degli oggetti
         self.objects = initial["objects"]
-
-        self.scenario = scenario
 
         # statistiche ricerca
         self.nodes_generated = 0

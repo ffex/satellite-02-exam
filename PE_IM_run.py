@@ -63,7 +63,6 @@ def safe_heuristic(node, problem, heuristic):
 
 def run_experiment(problem_name,
                    problem_func,
-                   scenario,
                    heuristic=None,
                    algo="astar"):
     """
@@ -72,7 +71,6 @@ def run_experiment(problem_name,
     Parametri:
     - problem_name : nome problema
     - problem_func : funzione che genera initial, goal
-    - scenario     : scenario qualitativo
     - heuristic    : euristica A*
     - algo         : ids oppure astar
 
@@ -82,7 +80,6 @@ def run_experiment(problem_name,
 
     print("\n===================================")
     print("PROBLEM :", problem_name)
-    print("SCENARIO:", scenario)
     print("ALGO    :", algo)
     print("===================================")
 
@@ -99,7 +96,7 @@ def run_experiment(problem_name,
     # Creazione istanza Satellite
     # --------------------------------------------------
 
-    problem = Satellite(initial, goal, scenario)
+    problem = Satellite(initial, goal)
 
     # --------------------------------------------------
     # Timer start
@@ -173,7 +170,6 @@ def run_experiment(problem_name,
         "problem": problem_name,
         "algorithm": algo,
         "heuristic": heuristic.__name__ if heuristic else "None",
-        "scenario": scenario,
         "time": elapsed,
         "nodes_generated": problem.nodes_generated,
         "nodes_expanded": problem.nodes_expanded,
@@ -216,7 +212,6 @@ def save_to_csv(results):
                 "problem",
                 "algorithm",
                 "heuristic",
-                "scenario",
                 "time",
                 "nodes_generated",
                 "nodes_expanded",
@@ -252,17 +247,6 @@ def main():
     ]
 
     # --------------------------------------------------
-    # Scenari
-    # --------------------------------------------------
-
-    scenarios = [
-        "HD_PREFERRED",
-        "SD_PREFERRED",
-        "MIX_HD",
-        "MIX_SD"
-    ]
-
-    # --------------------------------------------------
     # Euristiche
     # --------------------------------------------------
 
@@ -280,30 +264,26 @@ def main():
 
     for problem_name, prob in problems:
 
-        for scenario in scenarios:
-
             # IDS
+         results.append(
+            run_experiment(
+                problem_name,
+                prob,
+                algo="ids"
+            )
+         )
+
+            # A*
+         for heuristic in heuristics_list:
+
             results.append(
                 run_experiment(
                     problem_name,
                     prob,
-                    scenario,
-                    algo="ids"
+                    heuristic=heuristic,
+                    algo="astar"
                 )
             )
-
-            # A*
-            for heuristic in heuristics_list:
-
-                results.append(
-                    run_experiment(
-                        problem_name,
-                        prob,
-                        scenario,
-                        heuristic=heuristic,
-                        algo="astar"
-                    )
-                )
 
     # --------------------------------------------------
     # OUTPUT FINALE
