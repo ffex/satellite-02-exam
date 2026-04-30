@@ -17,7 +17,6 @@ RAPPRESENTAZIONE DELLO STATO
 ----------------------------------------------------------
 
 STATE = (
-    position,       # posizione/orientamento logico iniziale
     orientation,    # dove sta guardando ora il satellite
     charge,         # energia residua
     memory,         # tuple di oggetti fotografati ma non inviati
@@ -91,7 +90,6 @@ class Satellite(Problem):
 
         # stato iniziale
         initial_state = (
-            initial["position"],      # position
             initial["position"],      # orientation iniziale
             initial["charge"],        # energia
             tuple(),                  # memory vuota
@@ -113,11 +111,10 @@ class Satellite(Problem):
     # ======================================================
     # BUILD STATE
     # ======================================================
-    def build_state(self, position, orientation, charge,
+    def build_state(self, orientation, charge,
                     memory, sent):
 
         return (
-            position,
             orientation,
             charge,
             tuple(memory),
@@ -134,7 +131,7 @@ class Satellite(Problem):
 
         self.nodes_expanded += 1
 
-        position, orientation, charge, memory, sent = state
+        orientation, charge, memory, sent = state
 
         memory = list(memory)
         sent = list(sent)
@@ -188,7 +185,7 @@ class Satellite(Problem):
 
         self.nodes_generated += 1
 
-        position, orientation, charge, memory, sent = state
+        orientation, charge, memory, sent = state
 
         memory = list(memory)
         sent = list(sent)
@@ -230,7 +227,6 @@ class Satellite(Problem):
                 charge -= COST_SEND
 
         return self.build_state(
-            position,
             orientation,
             charge,
             memory,
@@ -242,7 +238,7 @@ class Satellite(Problem):
     # ======================================================
     def goal_test(self, state):
 
-        _, _, _, _, sent = state
+        _, _, _, sent = state
 
         return set(self._goal).issubset(set(sent))
 
