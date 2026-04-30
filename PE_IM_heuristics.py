@@ -7,7 +7,6 @@ EURISTICHE PER A*
 Usiamo lo stato:
 
 (
-    position,
     orientation,
     charge,
     memory,
@@ -22,7 +21,7 @@ Usiamo lo stato:
 # ----------------------------------------------------------
 def h1(node, problem):
 
-    _, _, _, _, sent = node.state
+    _, _, _, sent = node.state
 
     missing = [
         obj for obj in problem._goal
@@ -38,7 +37,7 @@ def h1(node, problem):
 # ----------------------------------------------------------
 def h2(node, problem):
 
-    _, orientation, charge, memory, sent = node.state
+    orientation, charge, memory, sent = node.state
 
     missing = [
         obj for obj in problem._goal
