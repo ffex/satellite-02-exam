@@ -20,7 +20,7 @@ Usiamo lo stato:
 # Conta oggetti mancanti
 # ----------------------------------------------------------
 def h1(node, problem):
-
+#TEST nuova euristica
     _, _, _, sent = node.state
 
     missing = [
