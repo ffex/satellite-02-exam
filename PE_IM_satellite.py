@@ -19,6 +19,7 @@ RAPPRESENTAZIONE DELLO STATO
 STATE = (
     orientation,    # dove sta guardando ora il satellite
     charge,         # energia residua
+    free_memory,    # memoria ancora libera
     memory,         # tuple di oggetti fotografati ma non inviati
     sent            # tuple di oggetti già inviati
 )
@@ -26,11 +27,11 @@ STATE = (
 Esempio:
 
 (
-    "N",
     "E",
     6,
-    ("star1",),
-    ("planet1",)
+    10,
+    (("star1","HD"),),
+    (("planet1","SD"),)
 )
 
 ----------------------------------------------------------
@@ -49,7 +50,9 @@ from PE_IM_utils import (
     COST_ROTATE,
     COST_TAKEPIC,
     COST_SEND,
-    MAX_PHOTOS,
+    MAX_MEMORY,
+    HD_MEM_COST,
+    SD_MEM_COST,
     rotate_left,
     rotate_right
 )
@@ -92,6 +95,7 @@ class Satellite(Problem):
         initial_state = (
             initial["position"],      # orientation iniziale
             initial["charge"],        # energia
+            MAX_MEMORY,
             tuple(),                  # memory vuota
             tuple()                   # sent vuoto
         )
@@ -112,11 +116,12 @@ class Satellite(Problem):
     # BUILD STATE
     # ======================================================
     def build_state(self, orientation, charge,
-                    memory, sent):
+                    free_memory, memory, sent):
 
         return (
             orientation,
             charge,
+            free_memory,
             tuple(memory),
             tuple(sent)
         )
@@ -131,7 +136,7 @@ class Satellite(Problem):
 
         self.nodes_expanded += 1
 
-        orientation, charge, memory, sent = state
+        orientation, charge, free_memory, memory, sent = state
 
         memory = list(memory)
         sent = list(sent)
@@ -146,9 +151,9 @@ class Satellite(Problem):
             acts.append(("RR",))
 
         # --------------------------------------------------
-        # 2) TAKEPIC
+        # 2) TAKEPIC HD
         # --------------------------------------------------
-        if charge >= COST_TAKEPIC and len(memory) < MAX_PHOTOS:
+        if charge >= COST_TAKEPIC and free_memory < HD_MEM_COST:
 
             visible = self.visible_objects(orientation)
 
@@ -161,7 +166,25 @@ class Satellite(Problem):
                 if obj in memory:
                     continue
 
-                acts.append(("TAKEPIC", obj))
+                acts.append(("TAKEPICHD", obj))
+
+        # --------------------------------------------------
+        # 2) TAKEPIC SD
+        # --------------------------------------------------
+        if charge >= COST_TAKEPIC and free_memory < SD_MEM_COST:
+
+            visible = self.visible_objects(orientation)
+
+            for obj in visible:
+
+                # evita duplicati
+                if obj in sent:
+                    continue
+
+                if obj in memory:
+                    continue
+
+                acts.append(("TAKEPICSD", obj))
 
         # --------------------------------------------------
         # 3) SEND
@@ -185,7 +208,7 @@ class Satellite(Problem):
 
         self.nodes_generated += 1
 
-        orientation, charge, memory, sent = state
+        orientation, charge, free_memory, memory, sent = state
 
         memory = list(memory)
         sent = list(sent)
@@ -207,14 +230,22 @@ class Satellite(Problem):
                 charge -= COST_ROTATE
 
             # ----------------------------------------------
-            # TAKE PHOTO
+            # TAKE PHOTO HD
             # ----------------------------------------------
-            case ("TAKEPIC", obj):
+            case ("TAKEPICHD", obj):
+                if free_memory < HD_MEM_COST: # The if e' veramente necessaria? in teoria non si puo' fare l'azione in caso non basti la memoria...
+                    memory.append((obj,"HD"))
+                    free_memory -= HD_MEM_COST
+                    charge -= COST_TAKEPIC
 
-                if len(memory) < MAX_PHOTOS:
-                    memory.append(obj)
-
-                charge -= COST_TAKEPIC
+            # ----------------------------------------------
+            # TAKE PHOTO SD
+            # ----------------------------------------------
+            case ("TAKEPICSD", obj):
+                if free_memory < SD_MEM_COST: # The if e' veramente necessaria? in teoria non si puo' fare l'azione in caso non basti la memoria...
+                    memory.append((obj,"SD"))
+                    free_memory -= SD_MEM_COST
+                    charge -= COST_TAKEPIC
 
             # ----------------------------------------------
             # SEND
@@ -222,13 +253,18 @@ class Satellite(Problem):
             case ("SEND",):
 
                 if orientation == "N":
-                    sent.append(memory.pop())
-
-                charge -= COST_SEND
+                    pic_to_send = memory.pop()
+                    if pic_to_send[1]=="HD":
+                        free_memory += HD_MEM_COST
+                    else:
+                        free_memory += SD_MEM_COST
+                    sent.append(pic_to_send)
+                    charge -= COST_SEND
 
         return self.build_state(
             orientation,
             charge,
+            free_memory,
             memory,
             sent
         )
@@ -238,9 +274,17 @@ class Satellite(Problem):
     # ======================================================
     def goal_test(self, state):
 
-        _, _, _, sent = state
+        _, _, _, _, sent = state
 
-        return set(self._goal).issubset(set(sent))
+#        return set(self._goal).issubset(set(sent))
+        goal_set = set(self._goal)
+        # Check if the first element of the goal is a tuple or a single value
+        if isinstance(self._goal[0], tuple):
+            # Standard subset check for tuples
+            return goal_set.issubset(set(sent))
+        else:
+            # Compare single values against the first element of each sent tuple
+            return goal_set.issubset(val[0] for val in sent)
 
     # ======================================================
     # COSTO CAMMINO
