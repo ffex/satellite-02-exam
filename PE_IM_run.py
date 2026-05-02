@@ -21,7 +21,7 @@ così i risultati tornano visibili.
 # IMPORT
 # ==========================================================
 
-from search import iterative_deepening_search, astar_search
+from search import breadth_first_graph_search, breadth_first_tree_search, iterative_deepening_search, astar_search
 
 from PE_IM_satellite import Satellite
 from PE_IM_problems import *
@@ -111,6 +111,14 @@ def run_experiment(problem_name,
     if algo == "ids":
 
         result = iterative_deepening_search(problem)
+
+    # --------------------------------------------------
+    # BD
+    # --------------------------------------------------
+
+    elif algo == "bfts":
+
+        result = breadth_first_graph_search(problem)
 
     # --------------------------------------------------
     # A*
@@ -272,7 +280,13 @@ def main():
                 algo="ids"
             )
          )
-
+         results.append(
+            run_experiment(
+                problem_name,
+                prob,
+                algo="bfts"
+            )
+         )
             # A*
          for heuristic in heuristics_list:
 

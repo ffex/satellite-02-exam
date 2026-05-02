@@ -22,6 +22,15 @@ def problem_easy():
         }
     }, ["star1"]
 
+def new_problem_easy():
+    return {
+        "position": "N",
+        "charge": 10,
+        "objects": {
+            "NE": ["star1"]
+        }
+    }, ["star1"]
+
 
 def problem_medium():
     return {

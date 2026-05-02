@@ -153,17 +153,19 @@ class Satellite(Problem):
         # --------------------------------------------------
         # 2) TAKEPIC HD
         # --------------------------------------------------
-        if charge >= COST_TAKEPIC and free_memory < HD_MEM_COST:
+        if charge >= COST_TAKEPIC and free_memory >= HD_MEM_COST:
 
             visible = self.visible_objects(orientation)
+            sent_names = [item[0] for item in sent]
+            memory_names = [item[0] for item in memory]
 
             for obj in visible:
 
                 # evita duplicati
-                if obj in sent:
+                if obj in sent_names:
                     continue
 
-                if obj in memory:
+                if obj in memory_names:
                     continue
 
                 acts.append(("TAKEPICHD", obj))
@@ -171,17 +173,19 @@ class Satellite(Problem):
         # --------------------------------------------------
         # 2) TAKEPIC SD
         # --------------------------------------------------
-        if charge >= COST_TAKEPIC and free_memory < SD_MEM_COST:
+        if charge >= COST_TAKEPIC and free_memory >= SD_MEM_COST:
 
             visible = self.visible_objects(orientation)
+            sent_names = [item[0] for item in sent]
+            memory_names = [item[0] for item in memory]
 
             for obj in visible:
 
                 # evita duplicati
-                if obj in sent:
+                if obj in sent_names:
                     continue
 
-                if obj in memory:
+                if obj in memory_names:
                     continue
 
                 acts.append(("TAKEPICSD", obj))
@@ -233,7 +237,7 @@ class Satellite(Problem):
             # TAKE PHOTO HD
             # ----------------------------------------------
             case ("TAKEPICHD", obj):
-                if free_memory < HD_MEM_COST: # The if e' veramente necessaria? in teoria non si puo' fare l'azione in caso non basti la memoria...
+                if free_memory >= HD_MEM_COST:
                     memory.append((obj,"HD"))
                     free_memory -= HD_MEM_COST
                     charge -= COST_TAKEPIC
@@ -242,7 +246,7 @@ class Satellite(Problem):
             # TAKE PHOTO SD
             # ----------------------------------------------
             case ("TAKEPICSD", obj):
-                if free_memory < SD_MEM_COST: # The if e' veramente necessaria? in teoria non si puo' fare l'azione in caso non basti la memoria...
+                if free_memory >= SD_MEM_COST:
                     memory.append((obj,"SD"))
                     free_memory -= SD_MEM_COST
                     charge -= COST_TAKEPIC
@@ -296,7 +300,7 @@ class Satellite(Problem):
             case ("RL",) | ("RR",):
                 return c + COST_ROTATE
 
-            case ("TAKEPIC", _):
+            case ("TAKEPICHD", _) | ("TAKEPICSD", _):
                 return c + COST_TAKEPIC
 
             case ("SEND",):
