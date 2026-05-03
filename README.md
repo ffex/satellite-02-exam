@@ -30,7 +30,9 @@
 
 - Memory can be freed with the action of sending (send) the photos to Earth, which requires being positioned at North (N) and costs 2; the send action sends only one photo at a time.  
 
-- The memory can contain a maximum of two photos.  
+- The memory can contain a maximum of two photos. 
+
+- The RR and RL actions costs 1 each. 
 
 ### Example Problem
 Given an initial state of initial charge and stellar objects in various directions, a final state with photos of stellar objects sent to Earth is required. 

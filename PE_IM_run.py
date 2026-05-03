@@ -120,7 +120,7 @@ def run_experiment(problem_name,
 
         result = breadth_first_graph_search(problem)
 
-    # --------------------------------------------------
+    # ---------------breadth_first_graph_search----------------------------------
     # A*
     # --------------------------------------------------
 
@@ -259,7 +259,7 @@ def main():
     # Euristiche
     # --------------------------------------------------
 
-    heuristics_list = [h1,h2,h_max]
+    heuristics_list = [h1, h2, h_max]
 
     # --------------------------------------------------
     # Lista risultati finali
