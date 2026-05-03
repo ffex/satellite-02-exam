@@ -32,7 +32,7 @@ def h1(node, problem):
     _, _, _, _, sent = node.state
     sent_names = {val[0] for val in sent}
 
-    goal_names = {g[0] if isinstance(g, tuple) else g for g in problem._goal}
+    goal_names = {g[0] for g in problem._goal}
     remaining = len(goal_names - sent_names)
 
     return remaining * COST_SEND
@@ -47,7 +47,7 @@ def h2(node, problem):
 
     sent_names   = {item[0] for item in sent}
     memory_names = {item[0] for item in memory}
-    goal_names   = {g[0] if isinstance(g, tuple) else g for g in problem._goal}
+    goal_names   = {g[0] for g in problem._goal}
 
     missing = goal_names - sent_names
     if not missing:

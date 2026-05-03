@@ -5,10 +5,9 @@
 PROBLEMI DI TEST
 
 Formato:
-
 (
     initial,
-    goal
+    goal   <- always list of (name, quality) tuples
 )
 """
 
@@ -20,7 +19,7 @@ def problem_easy():
         "objects": {
             "E": ["star1"]
         }
-    }, ["star1"]
+    }, [("star1", "HD")]
 
 def problem_medium():
     return {
@@ -30,7 +29,7 @@ def problem_medium():
             "E": ["star1"],
             "W": ["planet1"]
         }
-    }, ["star1", "planet1"]
+    }, [("star1", "HD"), ("planet1", "HD")]
 
 def problem_hard():
     return {
@@ -41,7 +40,8 @@ def problem_hard():
             "S": ["planet1"],
             "NW": ["galaxy1"]
         }
-    }, [("star1","SD"), ("planet1","SD"), ("galaxy1","SD")]
+    }, [("star1", "SD"), ("planet1", "SD"), ("galaxy1", "SD")]
+
 def problem_hard_HD():
     return {
         "position": "SW",
@@ -51,7 +51,7 @@ def problem_hard_HD():
             "S": ["planet1"],
             "NW": ["galaxy1"]
         }
-    }, [("star1","HD"), ("planet1","HD"), ("galaxy1","HD")]
+    }, [("star1", "HD"), ("planet1", "HD"), ("galaxy1", "HD")]
 
 
 def variant_low_energy():
@@ -62,7 +62,7 @@ def variant_low_energy():
             "E": ["star1"],
             "W": ["planet1"]
         }
-    }, ["star1", "planet1"]
+    }, [("star1", "HD"), ("planet1", "HD")]
 
 
 def variant_many_objects():
@@ -73,7 +73,7 @@ def variant_many_objects():
             "E": ["star1", "planet1"],
             "W": ["galaxy1"]
         }
-    }, ["star1", "planet1", "galaxy1"]
+    }, [("star1", "HD"), ("planet1", "HD"), ("galaxy1", "HD")]
 
 
 def variant_memory_stress():
@@ -86,4 +86,4 @@ def variant_memory_stress():
             "W": ["galaxy1"],
             "NE": ["star2"]
         }
-    }, ["star1", "planet1", "galaxy1", "star2"]
+    }, [("star1", "HD"), ("planet1", "HD"), ("galaxy1", "HD"), ("star2", "HD")]
