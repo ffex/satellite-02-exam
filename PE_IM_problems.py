@@ -16,43 +16,42 @@ Formato:
 def problem_easy():
     return {
         "position": "N",
-        "charge": 100,
+        "charge": 10,
         "objects": {
             "E": ["star1"]
         }
     }, ["star1"]
 
-def new_problem_easy():
-    return {
-        "position": "N",
-        "charge": 10,
-        "objects": {
-            "NE": ["star1"]
-        }
-    }, ["star1"]
-
-
 def problem_medium():
     return {
         "position": "S",
-        "charge": 50,
+        "charge": 20,
         "objects": {
             "E": ["star1"],
             "W": ["planet1"]
         }
     }, ["star1", "planet1"]
 
-
 def problem_hard():
     return {
         "position": "SW",
-        "charge": 40,
+        "charge": 100,
         "objects": {
             "E": ["star1"],
             "S": ["planet1"],
             "NW": ["galaxy1"]
         }
-    }, ["star1", "planet1", "galaxy1"]
+    }, [("star1","SD"), ("planet1","SD"), ("galaxy1","SD")]
+def problem_hard_HD():
+    return {
+        "position": "SW",
+        "charge": 100,
+        "objects": {
+            "E": ["star1"],
+            "S": ["planet1"],
+            "NW": ["galaxy1"]
+        }
+    }, [("star1","HD"), ("planet1","HD"), ("galaxy1","HD")]
 
 
 def variant_low_energy():

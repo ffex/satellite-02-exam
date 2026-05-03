@@ -30,6 +30,16 @@ def rotate_right(pos):
     return DIRECTIONS[(i + 1) % len(DIRECTIONS)]
 
 
+def min_rotation_distance(pos1, pos2):
+    """
+    Minimum rotation steps between two directions (clockwise or counter-clockwise).
+    """
+    i = DIRECTIONS.index(pos1)
+    j = DIRECTIONS.index(pos2)
+    diff = abs(i - j)
+    return min(diff, len(DIRECTIONS) - diff)
+
+
 # ----------------------------------------------------------
 # COSTI
 # ----------------------------------------------------------

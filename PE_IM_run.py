@@ -249,16 +249,17 @@ def main():
         ("easy", problem_easy),
         ("medium", problem_medium),
         ("hard", problem_hard),
-        ("low_energy", variant_low_energy),
-        ("many_objects", variant_many_objects),
-        ("memory_stress", variant_memory_stress)
+        ("hard_HD", problem_hard_HD),
+#        ("low_energy", variant_low_energy),
+#        ("many_objects", variant_many_objects),
+#        ("memory_stress", variant_memory_stress)
     ]
 
     # --------------------------------------------------
     # Euristiche
     # --------------------------------------------------
 
-    heuristics_list = [h1, h2, h_max]
+    heuristics_list = [h1,h2,h_max]
 
     # --------------------------------------------------
     # Lista risultati finali

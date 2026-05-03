@@ -9,10 +9,18 @@ Usiamo lo stato:
 (
     orientation,
     charge,
+    free_memory,
     memory,
     sent
 )
 """
+
+from PE_IM_utils import (
+    COST_ROTATE,
+    COST_TAKEPIC,
+    COST_SEND,
+    min_rotation_distance
+)
 
 
 # ----------------------------------------------------------
@@ -21,12 +29,10 @@ Usiamo lo stato:
 # ----------------------------------------------------------
 def h1(node, problem):
 
-    _, _, _, sent = node.state
+    _, _, _, _, sent = node.state
+    sent_names = [item[0] for item in sent]
 
-    missing = [
-        obj for obj in problem._goal
-        if obj not in sent
-    ]
+    missing = [obj for obj in problem._goal if obj not in sent_names]
 
     return len(missing)
 
@@ -37,12 +43,10 @@ def h1(node, problem):
 # ----------------------------------------------------------
 def h2(node, problem):
 
-    orientation, charge, memory, sent = node.state
+    orientation, charge, free_memory, memory, sent = node.state
+    sent_names = [item[0] for item in sent]
 
-    missing = [
-        obj for obj in problem._goal
-        if obj not in sent
-    ]
+    missing = [obj for obj in problem._goal if obj not in sent_names]
 
     base = len(missing) * 2
 
@@ -56,6 +60,7 @@ def h2(node, problem):
     energy_penalty = 2 if charge <= 3 else 0
 
     return base + north_penalty + memory_penalty + energy_penalty
+
 
 
 # ----------------------------------------------------------
