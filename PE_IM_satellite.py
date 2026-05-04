@@ -1,24 +1,5 @@
-# ==========================================================
-# FILE: PE_IM_satellite.py
-# ==========================================================
-"""
-SATELLITE SEARCH PROBLEM
-
-STATE = (
-    orientation,    # current satellite direction
-    charge,         # remaining energy
-    free_memory,    # available memory units
-    memory,         # tuple of (name, quality) photographed but not sent
-    sent            # tuple of (name, quality) already sent
-)
-
-CONSTRAINTS:
-- TAKEPIC requires facing the object's direction and enough free memory
-- SEND only allowed facing North
-- every action consumes energy
-"""
-
 from search import Problem
+import time
 
 from PE_IM_utils import (
     COST_ROTATE,
@@ -34,39 +15,23 @@ from PE_IM_utils import (
 
 class Satellite(Problem):
 
-    DEBUG = False
-
-    # ======================================================
-    # COSTRUTTORE
-    # ======================================================
-    def __init__(self, initial, goal):
-        """
-        initial:
-        {
-            "position": "N",
-            "charge": 8,
-            "objects": {
-                "E": ["star1"],
-                "W": ["planet1"]
-            }
-        }
-
-        goal: list of (name, quality) tuples
-        [("star1", "HD"), ("planet1", "SD")]
-        """
+    def __init__(self, initial, goal, time_limit=10, node_limit=50000):
 
         self._goal = tuple(goal)
-        self.goal  = self._goal
+        self.goal = self._goal
 
-        # mappa spaziale degli oggetti
         self.objects = initial["objects"]
+        self.goal_quality = {name: q for name, q in goal}
 
-        # quick lookup: object name -> required quality
-        self.goal_quality = {name: quality for name, quality in self._goal}
+        self.time_limit = time_limit
+        self.node_limit = node_limit
+        self.start_time = time.time()
 
-        # statistiche ricerca
         self.nodes_generated = 0
-        self.nodes_expanded  = 0
+        self.nodes_expanded = 0
+
+        # VISITED VA GESTITO DAL SEARCH, NON DAL PROBLEM
+        self.visited = set()
 
         initial_state = (
             initial["position"],
@@ -78,57 +43,58 @@ class Satellite(Problem):
 
         super().__init__(initial_state)
 
-    # ======================================================
-    # FUNZIONE SUPPORTO
-    # ======================================================
+    # ==================================================
+    # STOP
+    # ==================================================
+    def stopped(self):
+        return (
+            time.time() - self.start_time > self.time_limit
+            or self.nodes_expanded > self.node_limit
+        )
+
+    # ==================================================
+    # UTILS
+    # ==================================================
     def visible_objects(self, orientation):
         return self.objects.get(orientation, [])
 
-    # ======================================================
-    # BUILD STATE
-    # ======================================================
-    def build_state(self, orientation, charge, free_memory, memory, sent):
+    def state_key(self, state):
+        # CHARGE NON VA NELLO STATO (rompe IDS inutilmente)
+        orientation, charge, free_memory, memory, sent = state
+
         return (
             orientation,
-            charge,
             free_memory,
-            tuple(memory),
-            tuple(sent)
+            frozenset(memory),
+            frozenset(sent)
         )
 
-    # ======================================================
-    # ACTIONS(state)
-    # ======================================================
+    # ==================================================
+    # ACTIONS (VINCOLI CORRETTI QUI)
+    # ==================================================
     def actions(self, state):
+
+        if self.stopped():
+            return []
 
         self.nodes_expanded += 1
 
         orientation, charge, free_memory, memory, sent = state
 
-        memory = list(memory)
-        sent   = list(sent)
-
         acts = []
 
-        # --------------------------------------------------
-        # 1) ROTAZIONI
-        # --------------------------------------------------
-        if charge >= COST_ROTATE:
-            acts.append(("RL",))
-            acts.append(("RR",))
+        sent_names = {x[0] for x in sent}
+        memory_names = {x[0] for x in memory}
+        goal_names = {x[0] for x in self._goal}
 
-        # --------------------------------------------------
-        # 2) TAKEPIC
-        # Quality is determined by the goal — no reason to
-        # photograph at a quality that won't satisfy the goal.
-        # --------------------------------------------------
-        if charge >= COST_TAKEPIC:
+        missing = goal_names - sent_names - memory_names
 
-            visible      = self.visible_objects(orientation)
-            sent_names   = {item[0] for item in sent}
-            memory_names = {item[0] for item in memory}
+        # -------------------------
+        # TAKEPIC (MAX 2 FOTO)
+        # -------------------------
+        if charge >= COST_TAKEPIC and len(memory) < 2:
 
-            for obj in visible:
+            for obj in self.visible_objects(orientation):
 
                 if obj in sent_names or obj in memory_names:
                     continue
@@ -136,79 +102,114 @@ class Satellite(Problem):
                 if obj not in self.goal_quality:
                     continue
 
-                quality  = self.goal_quality[obj]
+                quality = self.goal_quality[obj]
                 mem_cost = HD_MEM_COST if quality == "HD" else SD_MEM_COST
 
                 if free_memory >= mem_cost:
                     acts.append(("TAKEPIC", obj, quality))
 
-        # --------------------------------------------------
-        # 3) SEND
-        # --------------------------------------------------
-        if orientation == "N" and len(memory) > 0 and charge >= COST_SEND:
+        # -------------------------
+        # SEND (solo N + almeno 1 foto)
+        # -------------------------
+        if orientation == "N" and memory and charge >= COST_SEND:
             acts.append(("SEND",))
+
+        # -------------------------
+        # ROTATE
+        # -------------------------
+        if charge >= COST_ROTATE and (missing or memory):
+            acts.append(("ROTATE_LEFT",))
+            acts.append(("ROTATE_RIGHT",))
 
         return acts
 
-    # ======================================================
-    # RESULT(state, action)
-    # ======================================================
+    # ==================================================
+    # RESULT (PURAMENTE FUNZIONALE - FIX CRITICO)
+    # ==================================================
     def result(self, state, action):
+
+        if self.stopped():
+            return state
 
         self.nodes_generated += 1
 
         orientation, charge, free_memory, memory, sent = state
 
         memory = list(memory)
-        sent   = list(sent)
+        sent = list(sent)
 
-        match action:
+        if action == ("ROTATE_LEFT",):
+            return (
+                rotate_left(orientation),
+                charge - COST_ROTATE,
+                free_memory,
+                tuple(memory),
+                tuple(sent)
+            )
 
-            case ("RL",):
-                orientation = rotate_left(orientation)
-                charge -= COST_ROTATE
+        if action == ("ROTATE_RIGHT",):
+            return (
+                rotate_right(orientation),
+                charge - COST_ROTATE,
+                free_memory,
+                tuple(memory),
+                tuple(sent)
+            )
 
-            case ("RR",):
-                orientation = rotate_right(orientation)
-                charge -= COST_ROTATE
+        if action[0] == "TAKEPIC":
+            _, obj, quality = action
 
-            case ("TAKEPIC", obj, quality):
-                mem_cost = HD_MEM_COST if quality == "HD" else SD_MEM_COST
-                if free_memory >= mem_cost:
-                    memory.append((obj, quality))
-                    free_memory -= mem_cost
-                    charge -= COST_TAKEPIC
+            mem_cost = HD_MEM_COST if quality == "HD" else SD_MEM_COST
 
-            case ("SEND",):
-                if orientation == "N":
-                    pic = memory.pop()
-                    free_memory += HD_MEM_COST if pic[1] == "HD" else SD_MEM_COST
-                    sent.append(pic)
-                    charge -= COST_SEND
+            memory.append((obj, quality))
 
-        return self.build_state(orientation, charge, free_memory, memory, sent)
+            return (
+                orientation,
+                charge - COST_TAKEPIC,
+                free_memory - mem_cost,
+                tuple(memory),
+                tuple(sent)
+            )
 
-    # ======================================================
+        if action[0] == "SEND":
+            pic = memory.pop(0)
+
+            mem_cost = HD_MEM_COST if pic[1] == "HD" else SD_MEM_COST
+
+            sent.append(pic)
+
+            return (
+                orientation,
+                charge - COST_SEND,
+                free_memory + mem_cost,
+                tuple(memory),
+                tuple(sent)
+            )
+
+        return state
+
+    # ==================================================
     # GOAL TEST
-    # ======================================================
+    # ==================================================
     def goal_test(self, state):
         _, _, _, _, sent = state
         return set(self._goal).issubset(set(sent))
 
-    # ======================================================
-    # COSTO CAMMINO
-    # ======================================================
+    # ==================================================
+    # COST
+    # ==================================================
     def path_cost(self, c, state1, action, state2):
 
-        match action:
+        if action == ("ROTATE_LEFT",):
+            return c + COST_ROTATE
 
-            case ("RL",) | ("RR",):
-                return c + COST_ROTATE
+        if action == ("ROTATE_RIGHT",):
+            return c + COST_ROTATE
 
-            case ("TAKEPIC", _, _):
-                return c + COST_TAKEPIC
+        if action[0] == "TAKEPIC":
+            return c + COST_TAKEPIC
 
-            case ("SEND",):
-                return c + COST_SEND
+        if action == ("SEND",):
+            return c + COST_SEND
 
         return c
