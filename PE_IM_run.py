@@ -1,27 +1,14 @@
 # ==========================================================
 # PE_IM_run.py
-# VERSIONE COMPLETA CON STAMPA RISULTATI + CSV
 # ==========================================================
 
-"""
-Questo file esegue tutti gli esperimenti del Satellite Problem.
-
-OBIETTIVO:
-- Testare IDS e A*
-- Confrontare euristiche
-- Stampare risultati in console
-- Salvare risultati in CSV
-
-IMPORTANTE:
-Alla fine richiamiamo print_results(results),
-così i risultati tornano visibili.
-"""
-
-# ==========================================================
-# IMPORT
-# ==========================================================
-
-from search import breadth_first_graph_search, breadth_first_tree_search, iterative_deepening_search, astar_search
+from search import (
+    breadth_first_graph_search,
+    iterative_deepening_search,
+    astar_search,
+    uniform_cost_search,
+    depth_limited_search
+)
 
 from PE_IM_satellite import Satellite
 from PE_IM_problems import *
@@ -29,291 +16,196 @@ from PE_IM_heuristics import *
 
 import time
 import csv
+import signal
 
 
-# ==========================================================
-# SAFE HEURISTIC WRAPPER
-# ==========================================================
+# Questi parametri servono per id, per non fare andare in loop all'infinito
+IDS_MAX_DEPTH = 100
+TIME_LIMIT = 300
 
-def safe_heuristic(node, problem, heuristic):
-    """
-    Esegue l’euristica in modo sicuro.
+class TimeoutException(Exception):
+    pass
 
-    Se l’euristica genera errore:
-    - stampa messaggio debug
-    - restituisce 0
 
-    Questo evita il crash di A*.
-    """
+def timeout_handler(signum, frame):
+    raise TimeoutException()
 
-    if heuristic is None:
-        return 0
+
+def run_with_timeout(func, timeout, *args):
+    signal.signal(signal.SIGALRM, timeout_handler)
+    signal.alarm(timeout)
 
     try:
-        return heuristic(node, problem)
+        return func(*args)
+    except TimeoutException:
+        print("[TIMEOUT] algoritmo interrotto")
+        return None
+    finally:
+        signal.alarm(0)
 
-    except Exception as e:
-        print("[HEURISTIC ERROR]", e)
+
+# Per motivi di compilazione, facciamo un wrapper dell'euristiche
+def safe_heuristic(node, problem, h):
+    if h is None:
+        return 0
+    try:
+        return h(node, problem)
+    except:
         return 0
 
 
-# ==========================================================
-# ESECUZIONE SINGOLO TEST
-# ==========================================================
+# Eseguiamo i problemi, uno alla volta, di tutti gli scenari, con i vari algoritmi
+def run_experiment(problem_name, problem_fn, algo="astar", heuristic=None):
 
-def run_experiment(problem_name,
-                   problem_func,
-                   heuristic=None,
-                   algo="astar"):
-    """
-    Esegue un singolo esperimento.
+    print("\n==================================================")
+    print(f"PROBLEMA   : {problem_name}")
+    print(f"ALGORITMO  : {algo}")
+    print(f"EURISTICA  : {heuristic.__name__ if heuristic else 'None'}")
+    print("==================================================")
 
-    Parametri:
-    - problem_name : nome problema
-    - problem_func : funzione che genera initial, goal
-    - heuristic    : euristica A*
-    - algo         : ids oppure astar
-
-    Restituisce:
-    dict con statistiche finali
-    """
-
-    print("\n===================================")
-    print("PROBLEM :", problem_name)
-    print("ALGO    :", algo)
-    print("===================================")
-
-    # --------------------------------------------------
-    # Generazione problema
-    # --------------------------------------------------
-
-    initial, goal = problem_func()
-
-    print("DEBUG INITIAL:", initial)
-    print("DEBUG GOAL   :", goal)
-
-    # --------------------------------------------------
-    # Creazione istanza Satellite
-    # --------------------------------------------------
-
+    initial, goal = problem_fn()
     problem = Satellite(initial, goal)
 
-    # --------------------------------------------------
-    # Timer start
-    # --------------------------------------------------
+    start_time = time.time()
+    result = None
 
-    start = time.time()
+    try:
 
-    # --------------------------------------------------
-    # IDS
-    # --------------------------------------------------
+        match algo:
 
-    if algo == "ids":
+            # ---------------- IDS ----------------
+            case "ids":
+                print("[IDS] ricerca iterativa")
+                result = run_with_timeout(
+                    iterative_deepening_search,
+                    TIME_LIMIT,
+                    problem
+                )
 
-        result = iterative_deepening_search(problem)
+            # ---------------- BFS ----------------
+            case "bfts":
+                print("[BFS] ricerca in ampiezza")
+                result = breadth_first_graph_search(problem)
 
-    # --------------------------------------------------
-    # BD
-    # --------------------------------------------------
+            # ---------------- UCS ----------------
+            case "ucs":
+                print("[UCS] costo uniforme")
+                result = uniform_cost_search(problem)
 
-    elif algo == "bfts":
+            # ---------------- DLS ----------------
+            case "dls":
+                print("[DLS] profondità limitata")
+                result = depth_limited_search(problem, IDS_MAX_DEPTH)
 
-        result = breadth_first_graph_search(problem)
+            # ---------------- A* ----------------
+            case "astar":
+                print("[A*] ricerca informata")
+                result = astar_search(
+                    problem,
+                    lambda n: safe_heuristic(n, problem, heuristic)
+                )
 
-    # ---------------breadth_first_graph_search----------------------------------
-    # A*
-    # --------------------------------------------------
+            case _:
+                raise ValueError("Algoritmo non valido")
 
-    elif algo == "astar":
+    except Exception as e:
+        print("[ERROR]", e)
+        result = None
 
-        result = astar_search(
-            problem,
-            lambda n: safe_heuristic(n, problem, heuristic)
-        )
+    elapsed = round(time.time() - start_time, 5)
 
-    else:
-        raise ValueError("Algoritmo non valido")
+    # Se non c'è soluzione
+    if not result:
+        print("\nRISULTATO: FALLIMENTO / NESSUNA SOLUZIONE")
 
-    # --------------------------------------------------
-    # Timer stop
-    # --------------------------------------------------
+        return {
+            "problem": problem_name,
+            "algorithm": algo,
+            "heuristic": heuristic.__name__ if heuristic else "None",
+            "time": elapsed,
+            "nodes_generated": problem.nodes_generated,
+            "nodes_expanded": problem.nodes_expanded,
+            "depth": None,
+            "cost": None,
+            "branching_factor": None,
+            "efficiency": None,
+            "depth_ratio": None
+        }
 
-    end = time.time()
+    # Se la trovo, la salvo
+    solution = result.solution()
 
-    elapsed = round(end - start, 5)
+    print("\nSOLUZIONE TROVATA")
 
-    # --------------------------------------------------
-    # Statistiche base
-    # --------------------------------------------------
+    print("\nSEQUENZA AZIONI:")
+    for i, action in enumerate(solution, 1):
+        print(f"{i:02d}. {action}")
 
-    print("NODES GENERATED:", problem.nodes_generated)
-    print("NODES EXPANDED :", problem.nodes_expanded)
+    # Stampo le statistiche
+    print("\nSTATISTICHE:")
+    print("DEPTH:", len(solution))
+    print("COST :", result.path_cost)
 
-    # --------------------------------------------------
-    # Se trovata soluzione
-    # --------------------------------------------------
-
-    if result:
-
-        solution = result.solution()
-
-        print("DEPTH:", len(solution))
-        print("COST :", result.path_cost)
-
-        print("PLAN :")
-        for step in solution:
-            print("   ", step)
-
-    else:
-
-        solution = None
-
-        print("RESULT = None")
-
-    # --------------------------------------------------
-    # Riga risultati
-    # --------------------------------------------------
+    nodes_generated = problem.nodes_generated
+    nodes_expanded = problem.nodes_expanded
 
     return {
         "problem": problem_name,
         "algorithm": algo,
         "heuristic": heuristic.__name__ if heuristic else "None",
         "time": elapsed,
-        "nodes_generated": problem.nodes_generated,
-        "nodes_expanded": problem.nodes_expanded,
-        "depth": len(solution) if solution else None,
-        "cost": result.path_cost if result else None
+        "nodes_generated": nodes_generated,
+        "nodes_expanded": nodes_expanded,
+        "depth": len(solution),
+        "cost": result.path_cost,
+        "branching_factor": nodes_generated / nodes_expanded if nodes_expanded else 0,
+        "efficiency": nodes_expanded / elapsed if elapsed else 0,
+        "depth_ratio": len(solution) / result.path_cost if result.path_cost else None
     }
 
 
-# ==========================================================
-# STAMPA TABELLA RISULTATI
-# ==========================================================
-
+# Stampe dei risultati
 def print_results(results):
-    """
-    Stampa tutti i risultati finali.
-    """
+    print("\n================= RISULTATI FINALI =================\n")
+    for r in results:
+        print(r)
 
-    print("\n\n=================================================")
-    print("=============== RISULTATI FINALI ================")
-    print("=================================================\n")
-
-    for row in results:
-        print(row)
-
-
-# ==========================================================
-# SALVATAGGIO CSV
-# ==========================================================
-
-def save_to_csv(results):
-    """
-    Salva i risultati nel file results.csv
-    """
-
-    with open("results.csv", "w", newline="") as file:
-
-        writer = csv.DictWriter(
-            file,
-            fieldnames=[
-                "problem",
-                "algorithm",
-                "heuristic",
-                "time",
-                "nodes_generated",
-                "nodes_expanded",
-                "depth",
-                "cost"
-            ]
-        )
-
+# Stampe nel .csv
+def save_csv(results):
+    with open("results.csv", "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=results[0].keys())
         writer.writeheader()
         writer.writerows(results)
 
 
-# ==========================================================
-# MAIN
-# ==========================================================
-
+# Punto di ingressa
 def main():
-    """
-    Esegue batteria completa test.
-    """
-
-    # --------------------------------------------------
-    # Problemi
-    # --------------------------------------------------
-
+    # I problemi
     problems = [
         ("easy", problem_easy),
         ("medium", problem_medium),
         ("hard", problem_hard),
         ("hard_HD", problem_hard_HD),
-#        ("low_energy", variant_low_energy),
-#        ("many_objects", variant_many_objects),
-#        ("memory_stress", variant_memory_stress)
     ]
-
-    # --------------------------------------------------
-    # Euristiche
-    # --------------------------------------------------
-
-    heuristics_list = [h1, h2, h_max]
-
-    # --------------------------------------------------
-    # Lista risultati finali
-    # --------------------------------------------------
+    # Le euristiche
+    heuristics = [h1, h2, h3, h4, h_max]
 
     results = []
 
-    # --------------------------------------------------
-    # Loop principale
-    # --------------------------------------------------
+    for name, fn in problems:
+        results.append(run_experiment(name, fn, "ids"))
+        results.append(run_experiment(name, fn, "bfts"))
+        results.append(run_experiment(name, fn, "ucs"))
+        results.append(run_experiment(name, fn, "dls"))
 
-    for problem_name, prob in problems:
-
-            # IDS
-         results.append(
-            run_experiment(
-                problem_name,
-                prob,
-                algo="ids"
-            )
-         )
-         results.append(
-            run_experiment(
-                problem_name,
-                prob,
-                algo="bfts"
-            )
-         )
-            # A*
-         for heuristic in heuristics_list:
-
-            results.append(
-                run_experiment(
-                    problem_name,
-                    prob,
-                    heuristic=heuristic,
-                    algo="astar"
-                )
-            )
-
-    # --------------------------------------------------
-    # OUTPUT FINALE
-    # --------------------------------------------------
+        for h in heuristics:
+            results.append(run_experiment(name, fn, "astar", h))
 
     print_results(results)
+    save_csv(results)
 
-    save_to_csv(results)
+    print("\nFile CSV salvato correttamente")
 
-    print("\nFile salvato: results.csv")
-
-
-# ==========================================================
-# ENTRY POINT
-# ==========================================================
 
 if __name__ == "__main__":
     main()
