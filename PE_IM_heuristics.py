@@ -1,40 +1,20 @@
-# ==========================================================
-# FILE: PE_IM_heuristics.py
-# ==========================================================
 """
+EURISTICHE PER IL PROBLEMA DEL SATELLITE
 
-Un'euristica h(n) è una funzione che stima il costo minimo
-necessario per raggiungere lo stato goal a partire dallo stato n.
+Un'euristica h(n) stima il costo minimo per raggiungere il goal.
 
-Formalmente:
+Costo reale composto da:
+- ROTATE
+- TAKEPIC
+- SEND
 
-    h(n) ≈ costo minimo reale da n a goal
+PROPRIETÀ
 
-Nel nostro caso il costo reale è composto da:
+AMMISSIBILE:
+    h(n) ≤ costo reale → garantisce ottimalità A*
 
-1. ROTAZIONI del satellite (ROTATE)
-2. SCATTO foto (TAKEPIC)
-3. INVIO a terra (SEND)
-
-Un euristica ha almeno due proprietà:
-
-AMMISSIBILITÀ:
-    h(n) NON deve mai sovrastimare il costo reale.
-
-CONSISTENZA (più forte):
-    h(n) ≤ costo(n → n') + h(n')
-
-Se consistente ⇒ A* è ottimale e più efficiente.
-
-----------------------------------------------------------
-STRATEGIA DELLE EURISTICHE
-----------------------------------------------------------
-
-- h1 → stima minimale (conteggio puro)
-- h2 → aggiunge vincoli del problema
-- h3 → usa struttura spaziale (direzioni)
-- h_max → combina tutte (massimo valore)
-
+CONSISTENTE:
+    h(n) ≤ c(n,n') + h(n') → A* più efficiente
 """
 
 from PE_IM_utils import (
@@ -42,77 +22,56 @@ from PE_IM_utils import (
     COST_SEND,
     COST_ROTATE,
     SD_MEM_COST,
-    HD_MEM_COST,
-    MAX_MEMORY,
     min_rotation_distance,
-    angular_distance
 )
 
-# ==========================================================
-# H1 - STIMA BASE (COUNTING HEURISTIC)
-# ==========================================================
 
+# H1 - COUNTING HEURISTIC
 def h1(node, problem):
     """
     IDEA:
     Ogni oggetto mancante deve almeno:
-        - essere fotografato (TAKEPIC)
+        - essere fotografato (TAKEPIC) se non già in memoria
         - essere inviato (SEND)
 
-    Ignoriamo completamente:
+    NON considera:
         - rotazioni
-        - posizione del satellite
-        - vincoli di memoria
+        - posizione
+        - vincolo 2 foto in memoria
 
-    ⇒ stiamo stimando un LOWER BOUND molto semplice
+    Ammissibile e Consistente, ma debole
     """
-
     _, _, _, memory, sent = node.state
 
-    # oggetti già inviati
-    sent_names = {x[0] for x in sent}
-
-    # oggetti già fotografati ma non inviati
+    sent_names  = {x[0] for x in sent}
     memory_names = {x[0] for x in memory}
+    goal_names  = {g[0] for g in problem._goal}
 
-    # obiettivi totali
-    goal_names = {g[0] for g in problem._goal}
-
-    # oggetti ancora da completare
     missing = goal_names - sent_names
 
     cost = 0
-
-    # --------------------------------------------------
-    # Per ogni oggetto mancante:
-    # --------------------------------------------------
     for obj in missing:
-
         if obj in memory_names:
-            # già fotografato → serve solo SEND
             cost += COST_SEND
         else:
-            # non fotografato → TAKEPIC + SEND
             cost += COST_TAKEPIC + COST_SEND
 
     return cost
 
 
-# ==========================================================
-# H2 - STIMA CON VINCOLI REALI
-# ==========================================================
-
+# H2 - COUNTING + ROTAZIONE MINIMA
 def h2(node, problem):
     """
-    Aggiungiamo vincoli REALI del problema:
+    Aggiunge a h1 una stima minima delle rotazioni necessarie.
+    - costo base foto + invio come h1
+    - aggiungiamo UNA rotazione minima verso la direzione utile più vicina
 
-    1. SEND è possibile SOLO a Nord, quindi serve rotazione
-    2. memoria può essere piena
+    NON forziamo il movimento verso N direttamente
+    (evita sovrastime per oggetti già vicini).
 
-    euristica informata ma non formalmente provata come consistente in ogni caso
+    Ammissibile
     """
-
-    orientation, charge, free_memory, memory, sent = node.state
+    orientation, _, _, memory, sent = node.state
 
     sent_names   = {x[0] for x in sent}
     memory_names = {x[0] for x in memory}
@@ -125,50 +84,41 @@ def h2(node, problem):
 
     cost = 0
 
-    # --------------------------------------------------
-    # 1. costo base oggetti (come h1)
-    # --------------------------------------------------
+    # costo base (come h1)
     for obj in missing:
-
         if obj in memory_names:
             cost += COST_SEND
         else:
             cost += COST_TAKEPIC + COST_SEND
 
-    # --------------------------------------------------
-    # 2. costo minimo per raggiungere Nord
-    # --------------------------------------------------
-    # SEND richiede orientamento N
-    cost += min_rotation_distance(orientation, "N") * COST_ROTATE
+    # una rotazione minima verso la direzione utile più vicina
+    min_rot = float("inf")
+    for direction, objects in problem.objects.items():
+        if any(obj in missing for obj in objects):
+            dist = min_rotation_distance(orientation, direction)
+            min_rot = min(min_rot, dist)
 
-    # --------------------------------------------------
-    # 3. vincolo memoria (caso limite)
-    # --------------------------------------------------
-    # se memoria piena → serve almeno una azione extra
-    if len(memory) == 2 and (missing - memory_names):
-        cost += COST_ROTATE
+    if min_rot != float("inf"):
+        cost += min_rot * COST_ROTATE
 
     return cost
 
 
-# ==========================================================
-# H3 - STIMA SPAZIALE (GEOMETRICA)
-# ==========================================================
-
+# H3 - GEOMETRICA (rotazione + foto, ignora SEND)
 def h3(node, problem):
     """
-    Qui usiamo la geometria del problema:
+    Usa la struttura spaziale:
+    - stima la rotazione minima verso un oggetto mancante
+    - aggiunge il costo TAKEPIC per tutti i mancanti
 
-    - Oggetti sono distribuiti nelle 8 direzioni
-    - Il satellite deve ruotare per raggiungerli
+    NON considera:
+    - ordine ottimale
+    - SEND
+    - memoria
 
-    STIMA: costo foto + rotazione minima verso una direzione utile
-    MA:
-    - non considera sequenza ottimale tra più oggetti
-    - assume sempre miglior scelta locale
+    ✔ Ammissibile (sottostima molto, ma non sovrastima mai)
     """
-
-    orientation, charge, free_memory, memory, sent = node.state
+    orientation, _, _, _, sent = node.state
 
     sent_names = {x[0] for x in sent}
     goal_names = {g[0] for g in problem._goal}
@@ -178,105 +128,114 @@ def h3(node, problem):
     if not missing:
         return 0
 
-    object_positions = problem.objects
-
     min_rotation = float("inf")
-
-    # --------------------------------------------------
-    # cerchiamo la direzione migliore verso un goal
-    # --------------------------------------------------
-    for direction, objects in object_positions.items():
-
+    for direction, objects in problem.objects.items():
         if any(obj in missing for obj in objects):
-
-            dist = angular_distance(orientation, direction)
-
+            dist = min_rotation_distance(orientation, direction)
             min_rotation = min(min_rotation, dist)
 
-    # fallback
     if min_rotation == float("inf"):
         min_rotation = 0
 
-    # costo minimo:
-    # foto + rotazione
     return len(missing) * COST_TAKEPIC + min_rotation * COST_ROTATE
 
-# ==========================================================
-# H4 - STIMA MEMORIA
-# ==========================================================
+
+# H4 - MEMORY PRESSURE HEURISTIC (CORRETTA E INFORMATIVA)
 def h4(node, problem):
     """
-    Stimiamo se la memoria corrente è sufficiente
-    a contenere tutte le foto necessarie senza forcing SEND.
+    Stima il costo aggiuntivo imposto dal vincolo di 2 foto in memoria.
+    Considera DUE vincoli che limitano quante foto si possono accumulare:
+      1) Slot: al massimo 2 foto in memoria contemporaneamente
+      2) Spazio: la free_memory non può scendere sotto 0
 
-    Se non basta, almeno un SEND sarà necessario.
+    Il numero massimo di foto che entrano "in un batch" è il minimo
+    tra i 2 slot disponibili e quante foto entrano nella free_memory
+    corrente in base alla qualità richiesta.
+
+    Se ci sono più oggetti da fotografare di quanti ne entrano nel batch,
+    siamo costretti a fare cicli intermedi di SEND verso N.
+
+    Stima:
+    - costo base: TAKEPIC + SEND per ogni oggetto da fotografare,
+      solo SEND per quelli già in memoria
+    - batch_size: min(slot liberi, foto che entrano nella free_memory)
+    - overflow: oggetti che non entrano nel batch corrente
+    - per ogni ciclo send extra: SEND + rotazione minima verso N
+
+    Ammissibile: non sovrastima mai il costo reale
+    Più informativa di h1 e h2: usa sia il vincolo slot che quello
+      di spazio, e sfrutta problem.max_memory specifico del problema
     """
+    orientation, _, free_memory, memory, sent = node.state
 
-    orientation, charge, free_memory, memory, sent = node.state
-
-    sent_names = {x[0] for x in sent}
-    goal_names = {g[0] for g in problem._goal}
-
-    memory_load = sum(
-        HD_MEM_COST if x[1] == "HD" else SD_MEM_COST
-        for x in memory
-    )
+    sent_names   = {x[0] for x in sent}
+    memory_names = {x[0] for x in memory}
+    goal_names   = {g[0] for g in problem._goal}
 
     missing = goal_names - sent_names
+
     if not missing:
         return 0
 
-    # --------------------------------------------------
-    # 1. costo base minimo (foto + invio)
-    # --------------------------------------------------
-    cost = 0
-    for obj in missing:
-        # assumiamo caso minimo (SD = sottostima)
-        cost += COST_TAKEPIC + COST_SEND
+    # Oggetti che devono ancora essere fotografati (non in memoria, non inviati)
+    to_photograph = [obj for obj in missing if obj not in memory_names]
+    # Oggetti già in memoria, pronti per SEND
+    to_send_now   = [obj for obj in missing if obj in memory_names]
 
-    # --------------------------------------------------
-    # 2. stima spazio necessario per completare tutto
-    # --------------------------------------------------
-    estimated_required_memory = 0
+    # Costo base: TAKEPIC + SEND per ogni mancante
+    cost = len(to_photograph) * (COST_TAKEPIC + COST_SEND)
+    cost += len(to_send_now) * COST_SEND
 
-    for obj in missing:
-        quality = problem.goal_quality[obj]
-        estimated_required_memory += (
-            HD_MEM_COST if quality == "HD" else SD_MEM_COST
-        )
+    # Slot liberi (vincolo numero foto)
+    free_slots = 2 - len(memory)
 
-    # --------------------------------------------------
-    # 3. vincolo realistico: se non ci sta tutto
-    #    almeno un SEND intermedio sarà necessario
-    # --------------------------------------------------
-    if memory_load + estimated_required_memory > MAX_MEMORY:
-        cost += COST_SEND  # flush obbligatorio minimo
+    # Stima di quante foto entrano nella free_memory corrente.
+    # Usiamo il costo minimo (SD = 3) per non sovrastimare.
+    photos_by_space = free_memory // SD_MEM_COST if SD_MEM_COST > 0 else free_slots
+
+    # Batch size = il minore tra i due vincoli
+    batch_size = min(free_slots, photos_by_space)
+    batch_size = max(0, batch_size)  # non negativo
+
+    # Oggetti che non entrano nel batch corrente
+    overflow = max(0, len(to_photograph) - batch_size)
+
+    if overflow > 0:
+        # Ogni ciclo send intermedio libera spazio per un altro batch.
+        # Usiamo batch_size minimo di 1 per evitare divisioni per zero.
+        effective_batch = max(1, batch_size)
+        extra_sends = (overflow + effective_batch - 1) // effective_batch
+
+        # Rotazione minima verso N dall'orientamento corrente
+        rot_to_N = min_rotation_distance(orientation, "N")
+
+        # Per ogni ciclo extra: rotazione verso N + SEND
+        # Non includiamo il ritorno per restare ammissibili
+        cost += extra_sends * (COST_SEND + rot_to_N * COST_ROTATE)
 
     return cost
 
 
 # ==========================================================
-# HMAX - COMBINAZIONE EURISTICHE
+# H_MAX - COMBINAZIONE
 # ==========================================================
-
 def h_max(node, problem):
     """
-    Combina tutte le euristiche prendendo il massimo:
+    Combina tutte le euristiche prendendo il massimo.
 
-        h_max = max(h1, h2, h3)
+    Ammissibile solo se tutte le componenti lo sono (sì, qui lo sono)
+    Consistente solo se tutte lo sono (sì)
+    Domina tutte le singole euristiche → meno nodi espansi in A*
 
-    IDEA:
-    usare sempre la stima più informata.
-
-    PROPRIETÀ:
-    - ammissibile se tutte lo sono
-    - NON necessariamente consistente
+    Con la nuova h4, ogni euristica può ora "vincere" in scenari diversi:
+    - h1: pochi oggetti, nessuna rotazione necessaria
+    - h2: oggetti lontani dall'orientamento corrente
+    - h3: molte rotazioni, pochi invii
+    - h4: molti oggetti, vincolo memoria stringente
     """
-
     return max(
         h1(node, problem),
         h2(node, problem),
         h3(node, problem),
-        h4(node, problem)
-
+        h4(node, problem),
     )
