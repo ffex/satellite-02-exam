@@ -51,55 +51,13 @@ class Satellite(Problem):
         return self.objects.get(orientation, [])
 
 
-    # Convertiamo lo stato in una chiave, per vedere se l'abbiamo già esplorata
     def state_key(self, state):
-        """
-        Stato ridotto per caching.
-
-        Due stati sono uguali se hanno:
-        - stessa orientazione
-        - stessi oggetti processati
-        - stessa "situazione logica"
-
-        Ignoriamo ordine interno (set/frozenset).
-        """
-
-        orientation, charge, free_memory, memory, sent = state
-
+        orientation, _, _, memory, sent = state
         return (
             orientation,
             frozenset(memory),
             frozenset(sent)
         )
-
-
-    # Il concetto di Pruning viene definito qui
-    def is_dominated(self, state):
-        """
-        Uno stato è inutile se:
-        - abbiamo già visto stesso stato logico
-        - ma con più energia o più progresso sul goal
-        """
-
-        key = self.state_key(state)
-
-        _, charge, _, memory, sent = state
-
-        sent_score = len(sent)  # progresso sul goal
-
-        # Se non c'è match
-        if key not in self.closed:
-            return False
-
-        # Recupera dallo stato già esplorato key la vecchia carica del satellite
-        # e gli oggetti già inviati.
-        old_charge, old_sent = self.closed[key]
-
-        # stato peggiore viene scartato
-        if charge <= old_charge and sent_score <= old_sent:
-            return True
-
-        return False
 
 
     # Definizione di stato
@@ -119,6 +77,33 @@ class Satellite(Problem):
 
         # Aggiorniamo il conteggio dei nodi
         self.nodes_expanded += 1
+
+        # ==================================================
+        # DOMINANCE PRUNING
+        # ==================================================
+        # Uno stato è dominato se esiste uno stato già esplorato
+        # con la stessa configurazione logica (orientazione, memoria, inviati)
+        # ma con carica >= e progresso >= in entrambe le dimensioni.
+        # Se dominato, questo ramo non può portare a soluzioni migliori.
+        #
+        # IDS riusa la stessa istanza del problema su più iterazioni DLS.
+        # Resettiamo self.closed ogni volta che espandiamo la radice,
+        # così le iterazioni successive non vengono potate dalla prima.
+        if state == self.initial:
+            self.closed = {}
+
+        _, charge, _, _, sent = state
+        sent_score = len(sent)
+        key = self.state_key(state)
+
+        if key in self.closed:
+            old_charge, old_sent = self.closed[key]
+            if charge <= old_charge and sent_score <= old_sent:
+                return []
+            # Non dominato: aggiorna con i valori migliori per ogni dimensione
+            self.closed[key] = (max(charge, old_charge), max(sent_score, old_sent))
+        else:
+            self.closed[key] = (charge, sent_score)
 
         # Definiamo lo stato
         orientation, charge, free_memory, memory, sent = state
