@@ -44,7 +44,6 @@ from PE_IM_utils import (
     SD_MEM_COST,
     HD_MEM_COST,
     MAX_MEMORY,
-    min_rotation_distance,
     angular_distance
 )
 
@@ -139,7 +138,7 @@ def h2(node, problem):
     # 2. costo minimo per raggiungere Nord
     # --------------------------------------------------
     # SEND richiede orientamento N
-    cost += min_rotation_distance(orientation, "N") * COST_ROTATE
+    cost += angular_distance(orientation, "N") * COST_ROTATE
 
     # --------------------------------------------------
     # 3. vincolo memoria (caso limite)

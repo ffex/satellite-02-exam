@@ -34,29 +34,13 @@ def rotate_right(pos):
     i = DIRECTIONS.index(pos)
     return DIRECTIONS[(i + 1) % len(DIRECTIONS)]
 
-
-# Distanza minima tra le rotazioni
-def min_rotation_distance(pos1, pos2):
-    """
-    Restituisce il numero minimo di rotazioni
-    per passare da pos1 a pos2.
-    """
-    i = DIRECTIONS.index(pos1)
-    j = DIRECTIONS.index(pos2)
-
-    diff = abs(i - j)
-
-    return min(diff, len(DIRECTIONS) - diff)
-
-
-# Funzione per tornare i costi di memoria  
-
+# Funzione per tornare i costi di memoria
 def memory_cost(quality):
     # Ritorna il costo delle foto
     return HD_MEM_COST if quality == "HD" else SD_MEM_COST
 
 
-# Costo riferito alle rotazioni
+# Costo minimo riferito alle rotazioni
 def angular_distance(a, b):
     i = DIRECTIONS.index(a)
     j = DIRECTIONS.index(b)
