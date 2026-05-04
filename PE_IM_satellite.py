@@ -177,16 +177,8 @@ class Satellite(Problem):
         
         # Controllo se ho energia e se ho qualcosa da fotografare
         if charge >= COST_ROTATE and (missing or memory):
-
-            # evita backtracking immediato (riduce loop RL/RR)
-            last_action_block = getattr(self, "last_action", None)
-            
-            # Controllo se non ripeto l'ultima azione
-            if last_action_block != "RR":
-                acts.append(("RL",))
-
-            if last_action_block != "RL":
-                acts.append(("RR",))
+            acts.append(("RL",))
+            acts.append(("RR",))
 
         return acts
 
@@ -202,9 +194,6 @@ class Satellite(Problem):
 
         memory = list(memory)
         sent = list(sent)
-
-        # salva ultima azione per evitare loop
-        self.last_action = action[0]
 
         # applicazione azione
         match action:
@@ -243,20 +232,6 @@ class Satellite(Problem):
             memory,
             sent
         )
-
-
-        # Controllo sul pruning
-        if self.is_dominated(new_state):
-            return state
-
-
-        # Aggiorno la cache
-        key = self.state_key(new_state)
-
-        sent_score = len(sent)
-
-        if key not in self.closed:
-            self.closed[key] = (charge, sent_score)
 
         return new_state
 
