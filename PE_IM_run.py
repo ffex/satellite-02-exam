@@ -1,20 +1,19 @@
 # ==========================================================
 # PE_IM_run.py
-# VERSIONE COMPLETA CON STAMPA RISULTATI + CSV
+# Complete version with results printing + CSV
 # ==========================================================
 
 """
-Questo file esegue tutti gli esperimenti del Satellite Problem.
+This file runs all Satellite Problem experiments.
 
-OBIETTIVO:
-- Testare IDS e A*
-- Confrontare euristiche
-- Stampare risultati in console
-- Salvare risultati in CSV
+OBJECTIVE:
+- Test IDS and A*
+- Compare heuristics
+- Print results to console
+- Save results to CSV
 
-IMPORTANTE:
-Alla fine richiamiamo print_results(results),
-così i risultati tornano visibili.
+NOTE:
+All problems have explicit photo quality (no scenarios).
 """
 
 # ==========================================================
@@ -37,13 +36,13 @@ import csv
 
 def safe_heuristic(node, problem, heuristic):
     """
-    Esegue l’euristica in modo sicuro.
+    Execute heuristic safely.
 
-    Se l’euristica genera errore:
-    - stampa messaggio debug
-    - restituisce 0
+    If heuristic generates error:
+    - print debug message
+    - return 0
 
-    Questo evita il crash di A*.
+    This prevents A* from crashing.
     """
 
     if heuristic is None:
@@ -58,7 +57,7 @@ def safe_heuristic(node, problem, heuristic):
 
 
 # ==========================================================
-# ESECUZIONE SINGOLO TEST
+# RUN SINGLE EXPERIMENT
 # ==========================================================
 
 def run_experiment(problem_name,
@@ -66,16 +65,16 @@ def run_experiment(problem_name,
                    heuristic=None,
                    algo="astar"):
     """
-    Esegue un singolo esperimento.
+    Run a single experiment.
 
-    Parametri:
-    - problem_name : nome problema
-    - problem_func : funzione che genera initial, goal
-    - heuristic    : euristica A*
-    - algo         : ids oppure astar
+    Parameters:
+    - problem_name : problem name
+    - problem_func : function that generates initial, goal
+    - heuristic    : A* heuristic
+    - algo         : ids or astar
 
-    Restituisce:
-    dict con statistiche finali
+    Returns:
+    dict with final statistics
     """
 
     print("\n===================================")
@@ -84,7 +83,7 @@ def run_experiment(problem_name,
     print("===================================")
 
     # --------------------------------------------------
-    # Generazione problema
+    # Generate problem
     # --------------------------------------------------
 
     initial, goal = problem_func()
@@ -93,7 +92,7 @@ def run_experiment(problem_name,
     print("DEBUG GOAL   :", goal)
 
     # --------------------------------------------------
-    # Creazione istanza Satellite
+    # Create Satellite instance
     # --------------------------------------------------
 
     problem = Satellite(initial, goal)
@@ -124,7 +123,7 @@ def run_experiment(problem_name,
         )
 
     else:
-        raise ValueError("Algoritmo non valido")
+        raise ValueError("Invalid algorithm")
 
     # --------------------------------------------------
     # Timer stop
@@ -135,14 +134,14 @@ def run_experiment(problem_name,
     elapsed = round(end - start, 5)
 
     # --------------------------------------------------
-    # Statistiche base
+    # Base statistics
     # --------------------------------------------------
 
     print("NODES GENERATED:", problem.nodes_generated)
     print("NODES EXPANDED :", problem.nodes_expanded)
 
     # --------------------------------------------------
-    # Se trovata soluzione
+    # If solution found
     # --------------------------------------------------
 
     if result:
@@ -163,7 +162,7 @@ def run_experiment(problem_name,
         print("RESULT = None")
 
     # --------------------------------------------------
-    # Riga risultati
+    # Results row
     # --------------------------------------------------
 
     return {
@@ -179,16 +178,16 @@ def run_experiment(problem_name,
 
 
 # ==========================================================
-# STAMPA TABELLA RISULTATI
+# PRINT RESULTS TABLE
 # ==========================================================
 
 def print_results(results):
     """
-    Stampa tutti i risultati finali.
+    Print all final results.
     """
 
     print("\n\n=================================================")
-    print("=============== RISULTATI FINALI ================")
+    print("=============== FINAL RESULTS ================")
     print("=================================================\n")
 
     for row in results:
@@ -196,12 +195,12 @@ def print_results(results):
 
 
 # ==========================================================
-# SALVATAGGIO CSV
+# SAVE TO CSV
 # ==========================================================
 
 def save_to_csv(results):
     """
-    Salva i risultati nel file results.csv
+    Save results to results.csv file
     """
 
     with open("results.csv", "w", newline="") as file:
@@ -230,11 +229,11 @@ def save_to_csv(results):
 
 def main():
     """
-    Esegue batteria completa test.
+    Run complete test suite.
     """
 
     # --------------------------------------------------
-    # Problemi
+    # Problems
     # --------------------------------------------------
 
     problems = [
@@ -243,38 +242,38 @@ def main():
         ("hard", problem_hard),
         ("low_energy", variant_low_energy),
         ("many_objects", variant_many_objects),
-        ("memory_stress", variant_memory_stress)
+        # ("memory_stress", variant_memory_stress)
     ]
 
     # --------------------------------------------------
-    # Euristiche
+    # Heuristics
     # --------------------------------------------------
 
-    heuristics_list = [h1, h2, h_max]
+    heuristics_list = [h_takepic_only, h_takepic_send, h_max]
 
     # --------------------------------------------------
-    # Lista risultati finali
+    # Final results list
     # --------------------------------------------------
 
     results = []
 
     # --------------------------------------------------
-    # Loop principale
+    # Main loop
     # --------------------------------------------------
 
     for problem_name, prob in problems:
 
-            # IDS
-         results.append(
+        # IDS
+        results.append(
             run_experiment(
                 problem_name,
                 prob,
                 algo="ids"
             )
-         )
+        )
 
-            # A*
-         for heuristic in heuristics_list:
+        # A*
+        for heuristic in heuristics_list:
 
             results.append(
                 run_experiment(
@@ -286,14 +285,14 @@ def main():
             )
 
     # --------------------------------------------------
-    # OUTPUT FINALE
+    # FINAL OUTPUT
     # --------------------------------------------------
 
     print_results(results)
 
     save_to_csv(results)
 
-    print("\nFile salvato: results.csv")
+    print("\nFile saved: results.csv")
 
 
 # ==========================================================

@@ -2,45 +2,19 @@
 # FILE: PE_IM_satellite.py
 # ==========================================================
 """
-SATELLITE SEARCH PROBLEM
-==========================================================
+Satellite search problem.
 
-In questo dominio modelliamo un satellite che deve:
-
-1) ruotare nello spazio
-2) osservare oggetti astronomici
-3) fotografarli
-4) inviare i dati verso la base
-
-----------------------------------------------------------
-RAPPRESENTAZIONE DELLO STATO
-----------------------------------------------------------
-
-STATE = (
-    orientation,    # dove sta guardando ora il satellite
-    charge,         # energia residua
-    memory,         # tuple di oggetti fotografati ma non inviati
-    sent            # tuple di oggetti già inviati
-)
-
-Esempio:
-
+State layout:
 (
-    "N",
-    "E",
-    6,
-    ("star1",),
-    ("planet1",)
+    position,
+    orientation,
+    charge,
+    memory,
+    sent
 )
 
-----------------------------------------------------------
-VINCOLI
-----------------------------------------------------------
-
-- per fotografare un oggetto bisogna guardare la sua direzione
-- SEND si può fare SOLO guardando NORD
-- memoria massima = 2 oggetti
-- ogni azione consuma energia
+memory stores tuples of the form:
+    (object_name, quality)
 """
 
 from search import Problem
@@ -50,8 +24,11 @@ from PE_IM_utils import (
     COST_TAKEPIC,
     COST_SEND,
     MAX_PHOTOS,
+    normalize_photo_quality,
+    memory_usage,
+    can_store_photo,
     rotate_left,
-    rotate_right
+    rotate_right,
 )
 
 
@@ -60,117 +37,90 @@ class Satellite(Problem):
     DEBUG = False
 
     # ======================================================
-    # COSTRUTTORE
+    # CONSTRUCTOR
     # ======================================================
-    def __init__(self, initial, goal):
-        """
-        initial:
-        {
-            "position": "N",
-            "charge": 8,
-            "objects": {
-                "E": ["star1"],
-                "W": ["planet1"]
-            }
-        }
-
-        goal:
-        ["star1", "planet1"]
-        """
-
+    def __init__(self, initial, goal, scenario=None):
         self._goal = tuple(goal)
         self.goal = self._goal
-
-        # mappa spaziale degli oggetti
         self.objects = initial["objects"]
-
-        # statistiche ricerca
+        self.scenario = scenario
         self.nodes_generated = 0
         self.nodes_expanded = 0
 
-        # stato iniziale
         initial_state = (
-            initial["position"],      # orientation iniziale
-            initial["charge"],        # energia
-            tuple(),                  # memory vuota
-            tuple()                   # sent vuoto
+            initial["position"],
+            initial["position"],
+            initial["charge"],
+            tuple(),
+            tuple(),
         )
 
         super().__init__(initial_state)
 
     # ======================================================
-    # FUNZIONE SUPPORTO
+    # SUPPORT HELPERS
     # ======================================================
+    def photo_quality_for(self, obj):
+        """Return the deterministic photo quality for an object."""
+        # Search for explicit quality in the objects map
+        for items in self.objects.values():
+            for entry in items:
+                if isinstance(entry, dict):
+                    if entry.get("name") == obj:
+                        return normalize_photo_quality(entry.get("quality", "SD"))
+                elif isinstance(entry, (tuple, list)) and len(entry) == 2:
+                    if entry[0] == obj:
+                        return normalize_photo_quality(entry[1])
+                elif entry == obj:
+                    break
+
+        # Default fallback
+        return "SD"
+
+    def _object_name(self, entry):
+        if isinstance(entry, dict):
+            return entry.get("name")
+        if isinstance(entry, (tuple, list)) and len(entry) == 2:
+            return entry[0]
+        return entry
+
     def visible_objects(self, orientation):
-        """
-        Restituisce tutti gli oggetti visibili
-        nella direzione corrente.
-        """
         return self.objects.get(orientation, [])
 
-    # ======================================================
-    # BUILD STATE
-    # ======================================================
-    def build_state(self, orientation, charge,
-                    memory, sent):
+    def build_state(self, position, orientation, charge, memory, sent):
+        return (position, orientation, charge, tuple(memory), tuple(sent))
 
-        return (
-            orientation,
-            charge,
-            tuple(memory),
-            tuple(sent)
-        )
+    def memory_used(self, memory):
+        return memory_usage(memory)
 
     # ======================================================
     # ACTIONS(state)
     # ======================================================
     def actions(self, state):
-        """
-        Restituisce le azioni legali dallo stato corrente.
-        """
-
         self.nodes_expanded += 1
 
-        orientation, charge, memory, sent = state
-
+        position, orientation, charge, memory, sent = state
         memory = list(memory)
         sent = list(sent)
-
         acts = []
 
-        # --------------------------------------------------
-        # 1) ROTAZIONI
-        # --------------------------------------------------
         if charge >= COST_ROTATE:
             acts.append(("RL",))
             acts.append(("RR",))
 
-        # --------------------------------------------------
-        # 2) TAKEPIC
-        # --------------------------------------------------
         if charge >= COST_TAKEPIC and len(memory) < MAX_PHOTOS:
-
             visible = self.visible_objects(orientation)
-
-            for obj in visible:
-
-                # evita duplicati
+            for entry in visible:
+                obj = self._object_name(entry)
                 if obj in sent:
                     continue
-
-                if obj in memory:
+                if any(photo_obj == obj for photo_obj, _ in memory):
                     continue
+                quality = self.photo_quality_for(obj)
+                if can_store_photo(memory, quality):
+                    acts.append(("TAKEPIC", obj))
 
-                acts.append(("TAKEPIC", obj))
-
-        # --------------------------------------------------
-        # 3) SEND
-        # --------------------------------------------------
-        if (
-            orientation == "N"
-            and len(memory) > 0
-            and charge >= COST_SEND
-        ):
+        if orientation == "N" and len(memory) > 0 and charge >= COST_SEND:
             acts.append(("SEND",))
 
         return acts
@@ -179,83 +129,52 @@ class Satellite(Problem):
     # RESULT(state, action)
     # ======================================================
     def result(self, state, action):
-        """
-        Applica una azione e produce il nuovo stato.
-        """
-
         self.nodes_generated += 1
 
-        orientation, charge, memory, sent = state
-
+        position, orientation, charge, memory, sent = state
         memory = list(memory)
         sent = list(sent)
 
         match action:
-
-            # ----------------------------------------------
-            # ROTATE LEFT
-            # ----------------------------------------------
             case ("RL",):
                 orientation = rotate_left(orientation)
                 charge -= COST_ROTATE
 
-            # ----------------------------------------------
-            # ROTATE RIGHT
-            # ----------------------------------------------
             case ("RR",):
                 orientation = rotate_right(orientation)
                 charge -= COST_ROTATE
 
-            # ----------------------------------------------
-            # TAKE PHOTO
-            # ----------------------------------------------
             case ("TAKEPIC", obj):
-
-                if len(memory) < MAX_PHOTOS:
-                    memory.append(obj)
-
+                quality = self.photo_quality_for(obj)
+                if can_store_photo(memory, quality):
+                    memory.append((obj, quality))
                 charge -= COST_TAKEPIC
 
-            # ----------------------------------------------
-            # SEND
-            # ----------------------------------------------
             case ("SEND",):
-
-                if orientation == "N":
-                    sent.append(memory.pop())
-
+                if orientation == "N" and memory:
+                    obj, _quality = memory.pop(0)
+                    if obj not in sent:
+                        sent.append(obj)
                 charge -= COST_SEND
 
-        return self.build_state(
-            orientation,
-            charge,
-            memory,
-            sent
-        )
+        return self.build_state(position, orientation, charge, memory, sent)
 
     # ======================================================
     # GOAL TEST
     # ======================================================
     def goal_test(self, state):
-
-        _, _, _, sent = state
-
+        _, _, _, _, sent = state
         return set(self._goal).issubset(set(sent))
 
     # ======================================================
-    # COSTO CAMMINO
+    # PATH COST
     # ======================================================
     def path_cost(self, c, state1, action, state2):
-
         match action:
-
             case ("RL",) | ("RR",):
                 return c + COST_ROTATE
-
             case ("TAKEPIC", _):
                 return c + COST_TAKEPIC
-
             case ("SEND",):
                 return c + COST_SEND
 
-        return c
