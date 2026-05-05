@@ -42,23 +42,6 @@ def min_rotation_distance(pos1, pos2):
     diff = abs(i - j)
     return min(diff, len(DIRECTIONS) - diff)
 
-
-def memory_cost(quality):
-    """Ritorna il costo in memoria della foto in base alla qualità."""
-    return HD_MEM_COST if quality == "HD" else SD_MEM_COST
-
-
-def has_extra_outputs(self, state):
-    """
-    Verifica se lo stato finale contiene output inutili.
-    Serve solo per logging / debug / metriche.
-    """
-    _, _, _, _, sent = state
-    sent_set = set(sent)
-    goal_set = set(self._goal)
-    return not sent_set == goal_set
-
-
 # Costi azioni
 COST_ROTATE = 1
 COST_TAKEPIC = 2
@@ -70,3 +53,4 @@ COST_SEND = 2
 MAX_MEMORY = 20
 HD_MEM_COST = 10
 SD_MEM_COST = 3
+MEM_SLOT_MAX = 2

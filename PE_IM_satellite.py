@@ -7,6 +7,7 @@ from PE_IM_utils import (
     COST_SEND,
     MAX_MEMORY,
     HD_MEM_COST,
+    MEM_SLOT_MAX,
     SD_MEM_COST,
     rotate_left,
     rotate_right
@@ -80,7 +81,7 @@ class Satellite(Problem):
         """
         return (
             time.time() - self.start_time > self.time_limit
-            or self.nodes_expanded > self.node_limit
+            or self.nodes_expanded >= self.node_limit
         )
 
     def visible_objects(self, orientation):
@@ -137,8 +138,8 @@ class Satellite(Problem):
 
         # Controllo:
         # - charge >= COST_TAKEPIC : abbiamo abbastanza energia per scattare
-        # - len(memory) < 2        : c'è almeno uno slot libero (max 2 foto)
-        if charge >= COST_TAKEPIC and len(memory) < 2:
+        # - len(memory) < MEM_SLOT_MAX        : c'è almeno uno slot libero (max 2 foto)
+        if charge >= COST_TAKEPIC and len(memory) < MEM_SLOT_MAX:
 
             # Iteriamo sugli oggetti visibili nella direzione corrente.
             # Solo gli oggetti in questa direzione possono essere fotografati ora.
@@ -229,7 +230,7 @@ class Satellite(Problem):
                 tuple(sent)
             )
 
-        # Aggiorniamo il costo della rotazione!
+        # facciamo la foto e la salviamo nella memoria
         if action[0] == "TAKEPIC":
             _, obj, quality = action
             mem_cost = HD_MEM_COST if quality == "HD" else SD_MEM_COST
@@ -241,7 +242,7 @@ class Satellite(Problem):
                 tuple(memory),
                 tuple(sent)
             )
-        # Aggiorniamo il costo della rotazione, facciamo la pop e la mandiamo, liberando memoria
+        # Facciamo la pop e la mandiamo, liberando memoria
         if action[0] == "SEND":
             pic      = memory.pop(0)
             mem_cost = HD_MEM_COST if pic[1] == "HD" else SD_MEM_COST
@@ -260,15 +261,11 @@ class Satellite(Problem):
         """
         Verifica se tutti gli obiettivi sono stati inviati.
         In particolare che sent contenga quello che ha goal
-        Si usa Subset, un controllo largo che prò viene controllato
-        da:
-        def has_extra_outputs(self, state) che si trova nelle PE_IM_utils
-
         """
         _, _, _, _, sent = state
         return set(self._goal).issubset(set(sent))
 
-    def path_cost(self, c, _state1, action, _state2):
+    def path_cost(self, c, state1, action, state2):
         """
         Costo cumulativo del percorso, in cui aggiorniamo i costi!
         """

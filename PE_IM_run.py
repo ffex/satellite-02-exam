@@ -1,10 +1,10 @@
 """
 ORCHESTRATORE DEGLI ESPERIMENTI — PROBLEMA DEL SATELLITE
- 
+
 Questo file si occupa di eseguire tutti gli algoritmi di ricerca
 su tutti i problemi definiti in PE_IM_problems.py, raccogliere
 i risultati e salvarli in un file CSV per l'analisi comparativa.
- 
+
 STRUTTURA GENERALE:
     main()
       └── per ogni problema (easy, medium, hard, hard_HD, extreme)
@@ -13,31 +13,31 @@ STRUTTURA GENERALE:
             ├── UCS   — costo uniforme
             ├── DLS   — profondità limitata (limite = IDS_MAX_DEPTH)
             └── A*    — con ognuna delle euristiche: h1, h2, h3, h4, h_max
- 
+
 FUNZIONI PRINCIPALI:
     run_experiment(problem_name, problem_fn, algo, heuristic)
         Esegue un singolo esperimento e restituisce un dizionario
         con tutte le metriche: tempo, nodi, profondità, costo, status.
- 
+
     run_limited_search(search_fn, problem, time_limit, node_limit, *args)
         Wrapper che chiama la funzione di ricerca AIMA e verifica
         i limiti di tempo e nodi DOPO la terminazione.
         Nota: il controllo interno avviene tramite Satellite.stopped().
- 
+
     safe_heuristic(node, problem, h)
         Chiama l'euristica in modo sicuro: se h è None o lancia
         un'eccezione, restituisce 0 (comportamento UCS).
- 
+
     format_actions(solution, max_len)
         Formatta la sequenza di azioni per la stampa e il CSV,
         troncando con "..." se la soluzione supera max_len passi.
- 
+
 GESTIONE DEI RISULTATI:
     Ogni esperimento restituisce uno tra tre status:
         SUCCESS    — soluzione trovata, metriche complete
         NO_SOLUTION — ricerca terminata senza trovare il goal
         FAILURE    — timeout, node limit superato, o crash
- 
+
 """
 
 from search import (
@@ -54,7 +54,7 @@ from PE_IM_problems import (
     problem_medium,
     problem_hard,
     problem_hard_HD,
-    problem_extreme,          
+    problem_extreme,
 )
 from PE_IM_heuristics import h1, h2, h3, h4, h_max
 
@@ -323,7 +323,7 @@ def main():
         ("medium",   problem_medium),
         ("hard",     problem_hard),
         ("hard_HD",  problem_hard_HD),
-        ("extreme",  problem_extreme),   
+        ("extreme",  problem_extreme),
     ]
 
     heuristics = [h1, h2, h3, h4, h_max]

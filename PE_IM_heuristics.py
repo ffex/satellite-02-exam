@@ -137,7 +137,7 @@ def h3(node, problem):
     if min_rotation == float("inf"):
         min_rotation = 0
 
-    return len(missing) * COST_TAKEPIC + min_rotation * COST_ROTATE
+    return len(missing) * 2 + min_rotation * COST_ROTATE
 
 
 # H4 - MEMORY PRESSURE HEURISTIC (CORRETTA E INFORMATIVA)
