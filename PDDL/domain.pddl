@@ -1,18 +1,13 @@
 ; ==========================================================
 ; DOMAIN: SATELLITE
+; ==========================================================
 ;
 ; Il satellite può:
 ;   - ruotare
 ;   - fotografare oggetti
 ;   - inviare immagini
 ;
-; Vincoli modellati:
-;   - orientamento
-;   - memoria
-;   - slot immagini
-;   - qualità HD / SD
-;
-; Compatibile con Fast Downward
+; Il tipo HD / SD è modellato come proprietà dell’oggetto.
 ;
 ; ==========================================================
 
@@ -26,6 +21,7 @@
 
 ; ==========================================================
 ; TIPI
+; ==========================================================
 
 (:types
     direction
@@ -34,20 +30,20 @@
 
 ; ==========================================================
 ; PREDICATI
-
+; ==========================================================
 
 (:predicates
 
     ; orientamento corrente
     (pointing ?d - direction)
 
-    ; oggetto visibile da una direzione
+    ; oggetto visibile in una direzione
     (visible ?o - object ?d - direction)
 
-    ; foto salvata in memoria
+    ; foto presente in memoria
     (stored ?o - object)
 
-    ; foto inviata alla Terra
+    ; foto inviata
     (sent ?o - object)
 
     ; qualità richiesta
@@ -62,8 +58,8 @@
 )
 
 ; ==========================================================
-; ROTAZIONE DESTRA
-
+; ROTATE RIGHT
+; ==========================================================
 
 (:action rotate-right
 
@@ -80,7 +76,8 @@
 )
 
 ; ==========================================================
-; ROTAZIONE SINISTRA
+; ROTATE LEFT
+; ==========================================================
 
 (:action rotate-left
 
@@ -97,9 +94,10 @@
 )
 
 ; ==========================================================
-; FOTO HD
+; TAKE PICTURE
+; ==========================================================
 
-(:action take-picture-hd
+(:action take-picture
 
     :parameters (?o - object ?d - direction)
 
@@ -107,8 +105,6 @@
     (and
         (pointing ?d)
         (visible ?o ?d)
-
-        (hd ?o)
 
         (not (stored ?o))
         (not (sent ?o))
@@ -121,45 +117,19 @@
     (and
         (stored ?o)
 
+        ; memoria occupata
         (not (memory-free))
+
+        ; slot occupato
         (not (slot-free))
     )
 )
 
 ; ==========================================================
-; FOTO SD
-
-(:action take-picture-sd
-
-    :parameters (?o - object ?d - direction)
-
-    :precondition
-    (and
-        (pointing ?d)
-        (visible ?o ?d)
-
-        (sd ?o)
-
-        (not (stored ?o))
-        (not (sent ?o))
-
-        (memory-free)
-        (slot-free)
-    )
-
-    :effect
-    (and
-        (stored ?o)
-
-        (not (memory-free))
-        (not (slot-free))
-    )
-)
-
+; SEND
 ; ==========================================================
-; INVIO HD
 
-(:action send-hd
+(:action send
 
     :parameters (?o - object ?north - direction)
 
@@ -168,40 +138,18 @@
         (pointing ?north)
 
         (stored ?o)
-        (hd ?o)
     )
 
     :effect
     (and
         (not (stored ?o))
+
         (sent ?o)
 
+        ; memoria liberata
         (memory-free)
-        (slot-free)
-    )
-)
 
-; ==========================================================
-; INVIO SD
-
-(:action send-sd
-
-    :parameters (?o - object ?north - direction)
-
-    :precondition
-    (and
-        (pointing ?north)
-
-        (stored ?o)
-        (sd ?o)
-    )
-
-    :effect
-    (and
-        (not (stored ?o))
-        (sent ?o)
-
-        (memory-free)
+        ; slot liberato
         (slot-free)
     )
 )
