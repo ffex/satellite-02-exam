@@ -7,8 +7,6 @@ EURISTICHE SEMPLIFICATE PER IL PLANNING PDDL
 Queste euristiche sono pensate per un approccio planning,
 non per una ricerca dettagliata nello spazio degli stati.
 
-IDEA PRINCIPALE
-----------------------------------------------------------
 Stimare quanto il goal sia distante usando:
     - energia residua
     - memoria disponibile

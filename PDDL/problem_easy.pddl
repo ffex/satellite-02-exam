@@ -1,48 +1,50 @@
 ; ==========================================================
-; EASY PROBLEM
-; ==========================================================
-; Posizione iniziale: N
-; Goal: star1 HD inviata
-; Oggetti: star1 visibile da E
-;
-; Il satellite deve:
-;   1. ruotare da N verso E (2 passi: N→NE→E oppure N→NW→W→SW→S→SE→E)
-;   2. scattare la foto HD
-;   3. ruotare verso N
-;   4. inviare
+; PROBLEM EASY
 ; ==========================================================
 
-(define (problem satellite_easy)
-  (:domain satellite)
+(define (problem satellite-easy)
 
-  (:objects
-      star1 - object
-      N NE E - direction
-  )
+(:domain satellite)
 
-  (:init
-      ; orientamento iniziale
-      (pointing N)
+; ==========================================================
+; OGGETTI
 
-      ; adiacenze orarie per le direzioni usate in questo problema
-      ; (adjacent ?a ?b) = ruotando a destra da ?a si arriva a ?b
-      (adjacent N NE)
-      (adjacent NE E)
-      (adjacent E NE)   ; serve per rotate-left da E verso NE
+(:objects
 
-      ; risorse iniziali
-      (energy-available)
-      (memory-available)
-      (slot-available)
+    N E S W NE NW SE SW - direction
 
-      ; qualità richiesta
-      (hd star1)
+    star1 noise1 - object
+)
 
-      ; visibilità
-      (visible star1 E)
-  )
+; ==========================================================
+; STATO INIZIALE
 
-  (:goal
-      (sent star1)
-  )
+(:init
+
+    ; orientamento iniziale
+    (pointing N)
+
+    ; memoria disponibile
+    (memory-free)
+
+    ; slot disponibile
+    (slot-free)
+
+    ; visibilità
+    (visible star1 E)
+    (visible noise1 E)
+
+    ; qualità richiesta
+    (hd star1)
+)
+
+; ==========================================================
+; GOAL
+
+(:goal
+    (and
+        (sent star1)
+    )
+)
+
 )

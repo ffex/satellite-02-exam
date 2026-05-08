@@ -1,54 +1,53 @@
 ; ==========================================================
-; MEDIUM PROBLEM
-; ==========================================================
-; Posizione iniziale: S
-; Goal: star1 HD (visibile da E) e planet1 HD (visibile da W)
-;
-; La memoria da 13 unità non contiene due HD insieme (10+10=20),
-; quindi il satellite deve fare un ciclo send intermedio.
+; PROBLEM MEDIUM
 ; ==========================================================
 
-(define (problem satellite_medium)
-  (:domain satellite)
+(define (problem satellite-medium)
 
-  (:objects
-      star1 planet1 - object
-      N NE E W NW S SW SE - direction
-  )
+(:domain satellite)
 
-  (:init
-      ; orientamento iniziale
-      (pointing S)
+; ==========================================================
+; OGGETTI
 
-      ; adiacenze orarie (rosa completa per permettere
-      ; al planner di trovare qualsiasi percorso)
-      (adjacent N NE)
-      (adjacent NE E)
-      (adjacent E SE)
-      (adjacent SE S)
-      (adjacent S SW)
-      (adjacent SW W)
-      (adjacent W NW)
-      (adjacent NW N)
+(:objects
 
-      ; risorse iniziali
-      (energy-available)
-      (memory-available)
-      (slot-available)
+    N E S W NE NW SE SW - direction
 
-      ; qualità richiesta
-      (hd star1)
-      (hd planet1)
+    star1 planet1 junk1 noise2 - object
+)
 
-      ; visibilità
-      (visible star1 E)
-      (visible planet1 W)
-  )
+; ==========================================================
+; STATO INIZIALE
 
-  (:goal
-      (and
-          (sent star1)
-          (sent planet1)
-      )
-  )
+(:init
+
+    ; orientamento iniziale
+    (pointing S)
+
+    ; risorse disponibili
+    (memory-free)
+    (slot-free)
+
+    ; visibilità oggetti
+    (visible star1 E)
+    (visible junk1 E)
+
+    (visible planet1 W)
+    (visible noise2 W)
+
+    ; qualità immagini
+    (hd star1)
+    (hd planet1)
+)
+
+; ==========================================================
+; GOAL
+
+(:goal
+    (and
+        (sent star1)
+        (sent planet1)
+    )
+)
+
 )

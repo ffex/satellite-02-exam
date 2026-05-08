@@ -1,56 +1,56 @@
 ; ==========================================================
-; HARD PROBLEM (SD)
+; PROBLEM HARD
+
+(define (problem satellite-hard)
+
+(:domain satellite)
+
 ; ==========================================================
-; Posizione iniziale: SW
-; Goal: star1 SD (E), planet1 SD (S), galaxy1 SD (NW)
-;
-; Tre oggetti SD: tutti entrano in memoria (3+3=6 < 16),
-; ma il vincolo dei 2 slot rimane il collo di bottiglia.
+; OGGETTI
+
+(:objects
+
+    N E S W NE NW SE SW - direction
+
+    star1 planet1 galaxy1 dust1 junk2 - object
+)
+
 ; ==========================================================
+; STATO INIZIALE
 
-(define (problem satellite_hard)
-  (:domain satellite)
+(:init
 
-  (:objects
-      star1 planet1 galaxy1 - object
-      N NE E SE S SW W NW - direction
-  )
+    ; orientamento iniziale
+    (pointing SW)
 
-  (:init
-      ; orientamento iniziale
-      (pointing SW)
+    ; risorse
+    (memory-free)
+    (slot-free)
 
-      ; adiacenze orarie (rosa completa)
-      (adjacent N NE)
-      (adjacent NE E)
-      (adjacent E SE)
-      (adjacent SE S)
-      (adjacent S SW)
-      (adjacent SW W)
-      (adjacent W NW)
-      (adjacent NW N)
+    ; visibilità
+    (visible star1 E)
+    (visible dust1 E)
 
-      ; risorse iniziali
-      (energy-available)
-      (memory-available)
-      (slot-available)
+    (visible planet1 S)
 
-      ; qualità richiesta
-      (sd star1)
-      (sd planet1)
-      (sd galaxy1)
+    (visible galaxy1 NW)
+    (visible junk2 NW)
 
-      ; visibilità
-      (visible star1 E)
-      (visible planet1 S)
-      (visible galaxy1 NW)
-  )
+    ; qualità immagini
+    (sd star1)
+    (sd planet1)
+    (sd galaxy1)
+)
 
-  (:goal
-      (and
-          (sent star1)
-          (sent planet1)
-          (sent galaxy1)
-      )
-  )
+; ==========================================================
+; GOAL
+
+(:goal
+    (and
+        (sent star1)
+        (sent planet1)
+        (sent galaxy1)
+    )
+)
+
 )

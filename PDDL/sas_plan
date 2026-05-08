@@ -1,0 +1,4 @@
+(rotate-left n e)
+(take-picture-hd star1 e)
+(send-hd star1 e)
+; cost = 3 (unit cost)

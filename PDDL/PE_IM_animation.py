@@ -5,9 +5,6 @@ ANIMAZIONE DEL SATELLITE
 
 Visualizzazione semplice step-by-step del piano.
 
-L'obiettivo NON è creare un videogioco,
-ma rendere visibile:
-
 - orientamento
 - foto scattate
 - invii

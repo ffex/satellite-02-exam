@@ -20,19 +20,15 @@ from PE_IM_parser import parse_plan
 from PE_IM_animation import animate_plan
 
 
-# ==========================================================
-# CONFIG
-# ==========================================================
+# Varie config
 
 DOMAIN = "domain.pddl"
 PROBLEM = "problem_easy.pddl"
 PLAN_FILE = "sas_plan"
 
 
-# ==========================================================
-# PLANNER STRATEGIES
-# ==========================================================
 
+# Le strategie
 PLANNERS = {
     "blind": "astar(blind())",
     "hmax": "astar(hmax())",
@@ -40,10 +36,8 @@ PLANNERS = {
 }
 
 
-# ==========================================================
-# RUN PLANNER
-# ==========================================================
 
+# Il planner
 def run_planner(strategy="lmcut"):
     """
     Esegue Fast Downward.
@@ -68,7 +62,7 @@ def run_planner(strategy="lmcut"):
     result = subprocess.run(command)
 
     if result.returncode != 0:
-        print("\n❌ Planner fallito")
+        print("\nPlanner fallito")
         return False
 
     return True
