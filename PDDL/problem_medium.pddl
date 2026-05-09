@@ -11,8 +11,6 @@
 
 (:objects
 
-    N E S W NE NW SE SW - direction
-
     star1 planet1 junk1 noise2 - object
 )
 
