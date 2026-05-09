@@ -36,6 +36,10 @@
 ; PREDICATI
 
 
+(:constants
+    N NE E SE S SW W NW - direction
+)
+
 (:predicates
 
     ; orientamento corrente

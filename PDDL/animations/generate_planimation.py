@@ -45,7 +45,7 @@ def main(argv: list[str] | None = None) -> int:
 
     output_path = args.output
     if output_path is None:
-        output_path = Path("planimation_exports") / f"{config.problem_file}.json"
+        output_path = Path("planimation_exports") / f"{config.key}.json"
 
     export_planimation(frames, config, output_path)
 

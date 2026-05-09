@@ -50,7 +50,7 @@ COST_SEND = 2
 # Memoria
 # MAX_MEMORY è un fallback di sicurezza usato se il problema
 # non specifica un valore proprio in initial["max_memory"].
-MAX_MEMORY = 20
+MAX_MEMORY = 13
 HD_MEM_COST = 10
 SD_MEM_COST = 3
 MEM_SLOT_MAX = 2

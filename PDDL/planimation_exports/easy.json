@@ -1,0 +1,2885 @@
+{
+  "problem": "problem_easy.pddl",
+  "title": "EASY mission",
+  "description": "One HD target with a simple capture/send sequence.",
+  "initial_direction": "N",
+  "goal_objects": [
+    "star1"
+  ],
+  "frames": [
+    {
+      "step_index": 0,
+      "action": null,
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "initial state"
+    },
+    {
+      "step_index": 1,
+      "action": {
+        "name": "INFO",
+        "args": [
+          "planner",
+          "time",
+          "limit:",
+          "None"
+        ],
+        "raw": "INFO     planner time limit: None"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 2,
+      "action": {
+        "name": "INFO",
+        "args": [
+          "planner",
+          "memory",
+          "limit:",
+          "None"
+        ],
+        "raw": "INFO     planner memory limit: None"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 3,
+      "action": {
+        "name": "INFO",
+        "args": [
+          "Running",
+          "translator."
+        ],
+        "raw": "INFO     Running translator."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 4,
+      "action": {
+        "name": "INFO",
+        "args": [
+          "translator",
+          "stdin:",
+          "None"
+        ],
+        "raw": "INFO     translator stdin: None"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 5,
+      "action": {
+        "name": "INFO",
+        "args": [
+          "translator",
+          "time",
+          "limit:",
+          "None"
+        ],
+        "raw": "INFO     translator time limit: None"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 6,
+      "action": {
+        "name": "INFO",
+        "args": [
+          "translator",
+          "memory",
+          "limit:",
+          "None"
+        ],
+        "raw": "INFO     translator memory limit: None"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 7,
+      "action": {
+        "name": "INFO",
+        "args": [
+          "translator",
+          "command",
+          "line",
+          "string:",
+          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+          "-m",
+          "translate",
+          "domain.pddl",
+          "problem_easy.pddl",
+          "--sas-file",
+          "output.sas"
+        ],
+        "raw": "INFO     translator command line string: /Library/Frameworks/Python.framework/Versions/3.12/bin/python3 -m translate domain.pddl problem_easy.pddl --sas-file output.sas"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 8,
+      "action": {
+        "name": "Parsing...",
+        "args": [],
+        "raw": "Parsing..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 9,
+      "action": {
+        "name": "[0.010s",
+        "args": [
+          "CPU,",
+          "0.001s",
+          "wall-clock]"
+        ],
+        "raw": "Parsing: [0.010s CPU, 0.001s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 10,
+      "action": {
+        "name": "Normalizing",
+        "args": [
+          "task...",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Normalizing task... [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 11,
+      "action": {
+        "name": "Instantiating...",
+        "args": [],
+        "raw": "Instantiating..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 12,
+      "action": {
+        "name": "Generating",
+        "args": [
+          "Datalog",
+          "program...",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Generating Datalog program... [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 13,
+      "action": {
+        "name": "Normalizing",
+        "args": [
+          "Datalog",
+          "program..."
+        ],
+        "raw": "Normalizing Datalog program..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 14,
+      "action": {
+        "name": "Normalizing",
+        "args": [
+          "Datalog",
+          "program:",
+          "[0.000s",
+          "CPU,",
+          "0.001s",
+          "wall-clock]"
+        ],
+        "raw": "Normalizing Datalog program: [0.000s CPU, 0.001s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 15,
+      "action": {
+        "name": "Preparing",
+        "args": [
+          "model...",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Preparing model... [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 16,
+      "action": {
+        "name": "Generated",
+        "args": [
+          "35",
+          "rules."
+        ],
+        "raw": "Generated 35 rules."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 17,
+      "action": {
+        "name": "Computing",
+        "args": [
+          "model...",
+          "[0.000s",
+          "CPU,",
+          "0.001s",
+          "wall-clock]"
+        ],
+        "raw": "Computing model... [0.000s CPU, 0.001s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 18,
+      "action": {
+        "name": "183",
+        "args": [
+          "relevant",
+          "atoms"
+        ],
+        "raw": "183 relevant atoms"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 19,
+      "action": {
+        "name": "72",
+        "args": [
+          "auxiliary",
+          "atoms"
+        ],
+        "raw": "72 auxiliary atoms"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 20,
+      "action": {
+        "name": "255",
+        "args": [
+          "final",
+          "queue",
+          "length"
+        ],
+        "raw": "255 final queue length"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 21,
+      "action": {
+        "name": "401",
+        "args": [
+          "total",
+          "queue",
+          "pushes"
+        ],
+        "raw": "401 total queue pushes"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 22,
+      "action": {
+        "name": "Completing",
+        "args": [
+          "instantiation...",
+          "[0.000s",
+          "CPU,",
+          "0.001s",
+          "wall-clock]"
+        ],
+        "raw": "Completing instantiation... [0.000s CPU, 0.001s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 23,
+      "action": {
+        "name": "[0.000s",
+        "args": [
+          "CPU,",
+          "0.003s",
+          "wall-clock]"
+        ],
+        "raw": "Instantiating: [0.000s CPU, 0.003s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 24,
+      "action": {
+        "name": "Computing",
+        "args": [
+          "fact",
+          "groups..."
+        ],
+        "raw": "Computing fact groups..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 25,
+      "action": {
+        "name": "Finding",
+        "args": [
+          "invariants..."
+        ],
+        "raw": "Finding invariants..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 26,
+      "action": {
+        "name": "8",
+        "args": [
+          "initial",
+          "candidates"
+        ],
+        "raw": "8 initial candidates"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 27,
+      "action": {
+        "name": "Finding",
+        "args": [
+          "invariants:",
+          "[0.000s",
+          "CPU,",
+          "0.001s",
+          "wall-clock]"
+        ],
+        "raw": "Finding invariants: [0.000s CPU, 0.001s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 28,
+      "action": {
+        "name": "Checking",
+        "args": [
+          "invariant",
+          "weight...",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Checking invariant weight... [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 29,
+      "action": {
+        "name": "Instantiating",
+        "args": [
+          "groups...",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Instantiating groups... [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 30,
+      "action": {
+        "name": "Collecting",
+        "args": [
+          "mutex",
+          "groups...",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 31,
+      "action": {
+        "name": "Choosing",
+        "args": [
+          "groups..."
+        ],
+        "raw": "Choosing groups..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 32,
+      "action": {
+        "name": "2",
+        "args": [
+          "uncovered",
+          "facts"
+        ],
+        "raw": "2 uncovered facts"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 33,
+      "action": {
+        "name": "Choosing",
+        "args": [
+          "groups:",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Choosing groups: [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 34,
+      "action": {
+        "name": "Building",
+        "args": [
+          "translation",
+          "key...",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Building translation key... [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 35,
+      "action": {
+        "name": "Computing",
+        "args": [
+          "fact",
+          "groups:",
+          "[0.000s",
+          "CPU,",
+          "0.001s",
+          "wall-clock]"
+        ],
+        "raw": "Computing fact groups: [0.000s CPU, 0.001s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 36,
+      "action": {
+        "name": "Building",
+        "args": [
+          "STRIPS",
+          "to",
+          "SAS",
+          "dictionary...",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 37,
+      "action": {
+        "name": "Building",
+        "args": [
+          "dictionary",
+          "for",
+          "full",
+          "mutex",
+          "groups...",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 38,
+      "action": {
+        "name": "Building",
+        "args": [
+          "mutex",
+          "information..."
+        ],
+        "raw": "Building mutex information..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 39,
+      "action": {
+        "name": "Building",
+        "args": [
+          "mutex",
+          "information:",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Building mutex information: [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 40,
+      "action": {
+        "name": "Translating",
+        "args": [
+          "task..."
+        ],
+        "raw": "Translating task..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 41,
+      "action": {
+        "name": "Processing",
+        "args": [
+          "axioms..."
+        ],
+        "raw": "Processing axioms..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 42,
+      "action": {
+        "name": "Simplifying",
+        "args": [
+          "axioms...",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Simplifying axioms... [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 43,
+      "action": {
+        "name": "Translator",
+        "args": [
+          "axioms",
+          "removed",
+          "by",
+          "simplifying:",
+          "0"
+        ],
+        "raw": "Translator axioms removed by simplifying: 0"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 44,
+      "action": {
+        "name": "Processing",
+        "args": [
+          "axioms:",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Processing axioms: [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 45,
+      "action": {
+        "name": "Translating",
+        "args": [
+          "task:",
+          "[0.000s",
+          "CPU,",
+          "0.001s",
+          "wall-clock]"
+        ],
+        "raw": "Translating task: [0.000s CPU, 0.001s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 46,
+      "action": {
+        "name": "1",
+        "args": [
+          "effect",
+          "conditions",
+          "simplified"
+        ],
+        "raw": "1 effect conditions simplified"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 47,
+      "action": {
+        "name": "0",
+        "args": [
+          "implied",
+          "preconditions",
+          "added"
+        ],
+        "raw": "0 implied preconditions added"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 48,
+      "action": {
+        "name": "Detecting",
+        "args": [
+          "unreachable",
+          "propositions..."
+        ],
+        "raw": "Detecting unreachable propositions..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 49,
+      "action": {
+        "name": "0",
+        "args": [
+          "operators",
+          "removed"
+        ],
+        "raw": "0 operators removed"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 50,
+      "action": {
+        "name": "0",
+        "args": [
+          "axioms",
+          "removed"
+        ],
+        "raw": "0 axioms removed"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 51,
+      "action": {
+        "name": "2",
+        "args": [
+          "propositions",
+          "removed"
+        ],
+        "raw": "2 propositions removed"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 52,
+      "action": {
+        "name": "Detecting",
+        "args": [
+          "unreachable",
+          "propositions:",
+          "[0.000s",
+          "CPU,",
+          "0.001s",
+          "wall-clock]"
+        ],
+        "raw": "Detecting unreachable propositions: [0.000s CPU, 0.001s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 53,
+      "action": {
+        "name": "Reordering",
+        "args": [
+          "and",
+          "filtering",
+          "variables..."
+        ],
+        "raw": "Reordering and filtering variables..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 54,
+      "action": {
+        "name": "4",
+        "args": [
+          "of",
+          "4",
+          "variables",
+          "necessary."
+        ],
+        "raw": "4 of 4 variables necessary."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 55,
+      "action": {
+        "name": "1",
+        "args": [
+          "of",
+          "3",
+          "mutex",
+          "groups",
+          "necessary."
+        ],
+        "raw": "1 of 3 mutex groups necessary."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 56,
+      "action": {
+        "name": "121",
+        "args": [
+          "of",
+          "121",
+          "operators",
+          "necessary."
+        ],
+        "raw": "121 of 121 operators necessary."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 57,
+      "action": {
+        "name": "0",
+        "args": [
+          "of",
+          "0",
+          "axiom",
+          "rules",
+          "necessary."
+        ],
+        "raw": "0 of 0 axiom rules necessary."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 58,
+      "action": {
+        "name": "Reordering",
+        "args": [
+          "and",
+          "filtering",
+          "variables:",
+          "[0.000s",
+          "CPU,",
+          "0.000s",
+          "wall-clock]"
+        ],
+        "raw": "Reordering and filtering variables: [0.000s CPU, 0.000s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 59,
+      "action": {
+        "name": "Translator",
+        "args": [
+          "variables:",
+          "4"
+        ],
+        "raw": "Translator variables: 4"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 60,
+      "action": {
+        "name": "Translator",
+        "args": [
+          "derived",
+          "variables:",
+          "0"
+        ],
+        "raw": "Translator derived variables: 0"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 61,
+      "action": {
+        "name": "Translator",
+        "args": [
+          "facts:",
+          "14"
+        ],
+        "raw": "Translator facts: 14"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 62,
+      "action": {
+        "name": "Translator",
+        "args": [
+          "goal",
+          "facts:",
+          "1"
+        ],
+        "raw": "Translator goal facts: 1"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 63,
+      "action": {
+        "name": "Translator",
+        "args": [
+          "mutex",
+          "groups:",
+          "1"
+        ],
+        "raw": "Translator mutex groups: 1"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 64,
+      "action": {
+        "name": "Translator",
+        "args": [
+          "total",
+          "mutex",
+          "groups",
+          "size:",
+          "2"
+        ],
+        "raw": "Translator total mutex groups size: 2"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 65,
+      "action": {
+        "name": "Translator",
+        "args": [
+          "operators:",
+          "121"
+        ],
+        "raw": "Translator operators: 121"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 66,
+      "action": {
+        "name": "Translator",
+        "args": [
+          "axioms:",
+          "0"
+        ],
+        "raw": "Translator axioms: 0"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 67,
+      "action": {
+        "name": "Translator",
+        "args": [
+          "task",
+          "size:",
+          "412"
+        ],
+        "raw": "Translator task size: 412"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 68,
+      "action": {
+        "name": "could",
+        "args": [
+          "not",
+          "determine",
+          "peak",
+          "memory"
+        ],
+        "raw": "warning: could not determine peak memory"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 69,
+      "action": {
+        "name": "Writing",
+        "args": [
+          "output...",
+          "[0.000s",
+          "CPU,",
+          "0.001s",
+          "wall-clock]"
+        ],
+        "raw": "Writing output... [0.000s CPU, 0.001s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 70,
+      "action": {
+        "name": "Done!",
+        "args": [
+          "[0.010s",
+          "CPU,",
+          "0.009s",
+          "wall-clock]"
+        ],
+        "raw": "Done! [0.010s CPU, 0.009s wall-clock]"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 71,
+      "action": {
+        "name": "translate",
+        "args": [
+          "exit",
+          "code:",
+          "0"
+        ],
+        "raw": "translate exit code: 0"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 72,
+      "action": {
+        "name": "release",
+        "args": [],
+        "raw": "INFO     Running search (release)."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 73,
+      "action": {
+        "name": "INFO",
+        "args": [
+          "search",
+          "stdin:",
+          "output.sas"
+        ],
+        "raw": "INFO     search stdin: output.sas"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 74,
+      "action": {
+        "name": "INFO",
+        "args": [
+          "search",
+          "time",
+          "limit:",
+          "None"
+        ],
+        "raw": "INFO     search time limit: None"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 75,
+      "action": {
+        "name": "INFO",
+        "args": [
+          "search",
+          "memory",
+          "limit:",
+          "None"
+        ],
+        "raw": "INFO     search memory limit: None"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 76,
+      "action": {
+        "name": "INFO",
+        "args": [
+          "search",
+          "command",
+          "line",
+          "string:",
+          "'/Users/volodyasmac/Desktop/Intelligent",
+          "models/satellite-02-exam/PDDL/downward/builds/release/bin/downward'",
+          "--search",
+          "'astar(lmcut())'",
+          "--internal-plan-file",
+          "sas_plan",
+          "<",
+          "output.sas"
+        ],
+        "raw": "INFO     search command line string: '/Users/volodyasmac/Desktop/Intelligent models/satellite-02-exam/PDDL/downward/builds/release/bin/downward' --search 'astar(lmcut())' --internal-plan-file sas_plan < output.sas"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 77,
+      "action": {
+        "name": "[t=0.000226s,",
+        "args": [
+          "435303264",
+          "KB]",
+          "Search",
+          "code",
+          "revision:",
+          "d43b3aa"
+        ],
+        "raw": "[t=0.000226s, 435303264 KB] Search code revision: d43b3aa"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 78,
+      "action": {
+        "name": "[t=0.000242s,",
+        "args": [
+          "435303264",
+          "KB]",
+          "reading",
+          "input..."
+        ],
+        "raw": "[t=0.000242s, 435303264 KB] reading input..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 79,
+      "action": {
+        "name": "[t=0.000730s,",
+        "args": [
+          "435303264",
+          "KB]",
+          "done",
+          "reading",
+          "input!"
+        ],
+        "raw": "[t=0.000730s, 435303264 KB] done reading input!"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 80,
+      "action": {
+        "name": "[t=0.001568s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Initializing",
+          "landmark",
+          "cut",
+          "heuristic..."
+        ],
+        "raw": "[t=0.001568s, 435307360 KB] Initializing landmark cut heuristic..."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 81,
+      "action": {
+        "name": "[t=0.001592s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Building",
+          "successor",
+          "generator...",
+          "done!"
+        ],
+        "raw": "[t=0.001592s, 435307360 KB] Building successor generator... done!"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 82,
+      "action": {
+        "name": "[t=0.001619s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "peak",
+          "memory",
+          "difference",
+          "for",
+          "successor",
+          "generator",
+          "creation:",
+          "0",
+          "KB"
+        ],
+        "raw": "[t=0.001619s, 435307360 KB] peak memory difference for successor generator creation: 0 KB"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 83,
+      "action": {
+        "name": "[t=0.001624s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "time",
+          "for",
+          "successor",
+          "generation",
+          "creation:",
+          "0.000017s"
+        ],
+        "raw": "[t=0.001624s, 435307360 KB] time for successor generation creation: 0.000017s"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 84,
+      "action": {
+        "name": "[t=0.001629s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Variables:",
+          "4"
+        ],
+        "raw": "[t=0.001629s, 435307360 KB] Variables: 4"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 85,
+      "action": {
+        "name": "[t=0.001633s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "FactPairs:",
+          "14"
+        ],
+        "raw": "[t=0.001633s, 435307360 KB] FactPairs: 14"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 86,
+      "action": {
+        "name": "[t=0.001637s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Bytes",
+          "per",
+          "state:",
+          "4"
+        ],
+        "raw": "[t=0.001637s, 435307360 KB] Bytes per state: 4"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 87,
+      "action": {
+        "name": "real",
+        "args": [],
+        "raw": "[t=0.001645s, 435307360 KB] Conducting best first search with reopening closed nodes, (real) bound = 2147483647"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 88,
+      "action": {
+        "name": "[t=0.001664s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "New",
+          "best",
+          "heuristic",
+          "value",
+          "for",
+          "lmcut:",
+          "3"
+        ],
+        "raw": "[t=0.001664s, 435307360 KB] New best heuristic value for lmcut: 3"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 89,
+      "action": {
+        "name": "[t=0.001669s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "g=0,",
+          "1",
+          "evaluated,",
+          "0",
+          "expanded"
+        ],
+        "raw": "[t=0.001669s, 435307360 KB] g=0, 1 evaluated, 0 expanded"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 90,
+      "action": {
+        "name": "[t=0.001674s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "f",
+          "=",
+          "3,",
+          "1",
+          "evaluated,",
+          "0",
+          "expanded"
+        ],
+        "raw": "[t=0.001674s, 435307360 KB] f = 3, 1 evaluated, 0 expanded"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 91,
+      "action": {
+        "name": "[t=0.001685s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Initial",
+          "heuristic",
+          "value",
+          "for",
+          "lmcut:",
+          "3"
+        ],
+        "raw": "[t=0.001685s, 435307360 KB] Initial heuristic value for lmcut: 3"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 92,
+      "action": {
+        "name": "[t=0.001690s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "pruning",
+          "method:",
+          "none"
+        ],
+        "raw": "[t=0.001690s, 435307360 KB] pruning method: none"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 93,
+      "action": {
+        "name": "[t=0.001716s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "New",
+          "best",
+          "heuristic",
+          "value",
+          "for",
+          "lmcut:",
+          "2"
+        ],
+        "raw": "[t=0.001716s, 435307360 KB] New best heuristic value for lmcut: 2"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 94,
+      "action": {
+        "name": "[t=0.001721s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "g=1,",
+          "2",
+          "evaluated,",
+          "1",
+          "expanded"
+        ],
+        "raw": "[t=0.001721s, 435307360 KB] g=1, 2 evaluated, 1 expanded"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 95,
+      "action": {
+        "name": "[t=0.001755s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "New",
+          "best",
+          "heuristic",
+          "value",
+          "for",
+          "lmcut:",
+          "1"
+        ],
+        "raw": "[t=0.001755s, 435307360 KB] New best heuristic value for lmcut: 1"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 96,
+      "action": {
+        "name": "[t=0.001759s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "g=2,",
+          "9",
+          "evaluated,",
+          "2",
+          "expanded"
+        ],
+        "raw": "[t=0.001759s, 435307360 KB] g=2, 9 evaluated, 2 expanded"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 97,
+      "action": {
+        "name": "[t=0.001782s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "New",
+          "best",
+          "heuristic",
+          "value",
+          "for",
+          "lmcut:",
+          "0"
+        ],
+        "raw": "[t=0.001782s, 435307360 KB] New best heuristic value for lmcut: 0"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 98,
+      "action": {
+        "name": "[t=0.001786s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "g=3,",
+          "17",
+          "evaluated,",
+          "3",
+          "expanded"
+        ],
+        "raw": "[t=0.001786s, 435307360 KB] g=3, 17 evaluated, 3 expanded"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 99,
+      "action": {
+        "name": "[t=0.001791s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Solution",
+          "found!"
+        ],
+        "raw": "[t=0.001791s, 435307360 KB] Solution found!"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 100,
+      "action": {
+        "name": "[t=0.001796s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Actual",
+          "search",
+          "time:",
+          "0.000093s"
+        ],
+        "raw": "[t=0.001796s, 435307360 KB] Actual search time: 0.000093s"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 101,
+      "action": {
+        "name": "1",
+        "args": [],
+        "raw": "rotate-left n e (1)"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 102,
+      "action": {
+        "name": "1",
+        "args": [],
+        "raw": "take-picture-hd star1 e (1)"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 103,
+      "action": {
+        "name": "1",
+        "args": [],
+        "raw": "send-hd star1 e (1)"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 104,
+      "action": {
+        "name": "s",
+        "args": [],
+        "raw": "[t=0.001800s, 435307360 KB] Plan length: 3 step(s)."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 105,
+      "action": {
+        "name": "[t=0.001800s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Plan",
+          "cost:",
+          "3"
+        ],
+        "raw": "[t=0.001800s, 435307360 KB] Plan cost: 3"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 106,
+      "action": {
+        "name": "s",
+        "args": [],
+        "raw": "[t=0.001800s, 435307360 KB] Expanded 4 state(s)."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 107,
+      "action": {
+        "name": "s",
+        "args": [],
+        "raw": "[t=0.001800s, 435307360 KB] Reopened 0 state(s)."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 108,
+      "action": {
+        "name": "s",
+        "args": [],
+        "raw": "[t=0.001800s, 435307360 KB] Evaluated 17 state(s)."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 109,
+      "action": {
+        "name": "[t=0.001800s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Evaluations:",
+          "17"
+        ],
+        "raw": "[t=0.001800s, 435307360 KB] Evaluations: 17"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 110,
+      "action": {
+        "name": "s",
+        "args": [],
+        "raw": "[t=0.001800s, 435307360 KB] Generated 44 state(s)."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 111,
+      "action": {
+        "name": "s",
+        "args": [],
+        "raw": "[t=0.001800s, 435307360 KB] Dead ends: 0 state(s)."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 112,
+      "action": {
+        "name": "s",
+        "args": [],
+        "raw": "[t=0.001800s, 435307360 KB] Expanded until last jump: 0 state(s)."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 113,
+      "action": {
+        "name": "s",
+        "args": [],
+        "raw": "[t=0.001800s, 435307360 KB] Reopened until last jump: 0 state(s)."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 114,
+      "action": {
+        "name": "s",
+        "args": [],
+        "raw": "[t=0.001800s, 435307360 KB] Evaluated until last jump: 1 state(s)."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 115,
+      "action": {
+        "name": "s",
+        "args": [],
+        "raw": "[t=0.001800s, 435307360 KB] Generated until last jump: 0 state(s)."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 116,
+      "action": {
+        "name": "[t=0.001800s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Number",
+          "of",
+          "registered",
+          "states:",
+          "17"
+        ],
+        "raw": "[t=0.001800s, 435307360 KB] Number of registered states: 17"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 117,
+      "action": {
+        "name": "[t=0.001800s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Int",
+          "hash",
+          "set",
+          "load",
+          "factor:",
+          "17/32",
+          "=",
+          "0.531250"
+        ],
+        "raw": "[t=0.001800s, 435307360 KB] Int hash set load factor: 17/32 = 0.531250"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 118,
+      "action": {
+        "name": "[t=0.001800s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Int",
+          "hash",
+          "set",
+          "resizes:",
+          "5"
+        ],
+        "raw": "[t=0.001800s, 435307360 KB] Int hash set resizes: 5"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 119,
+      "action": {
+        "name": "[t=0.001800s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Search",
+          "time:",
+          "0.000155s"
+        ],
+        "raw": "[t=0.001800s, 435307360 KB] Search time: 0.000155s"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 120,
+      "action": {
+        "name": "[t=0.001800s,",
+        "args": [
+          "435307360",
+          "KB]",
+          "Total",
+          "time:",
+          "0.001800s"
+        ],
+        "raw": "[t=0.001800s, 435307360 KB] Total time: 0.001800s"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 121,
+      "action": {
+        "name": "Solution",
+        "args": [
+          "found."
+        ],
+        "raw": "Solution found."
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 122,
+      "action": {
+        "name": "Peak",
+        "args": [
+          "memory:",
+          "435307360",
+          "KB"
+        ],
+        "raw": "Peak memory: 435307360 KB"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 123,
+      "action": {
+        "name": "Remove",
+        "args": [
+          "intermediate",
+          "file",
+          "output.sas"
+        ],
+        "raw": "Remove intermediate file output.sas"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 124,
+      "action": {
+        "name": "search",
+        "args": [
+          "exit",
+          "code:",
+          "0"
+        ],
+        "raw": "search exit code: 0"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    },
+    {
+      "step_index": 125,
+      "action": {
+        "name": "INFO",
+        "args": [
+          "Planner",
+          "time:",
+          "0.10s"
+        ],
+        "raw": "INFO     Planner time: 0.10s"
+      },
+      "state": {
+        "direction": "N",
+        "memory_total": 13,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "action not modeled in planimation core"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "problem": "problem_easy.pddl",
+  "title": "EASY mission",
+  "description": "One HD target with a simple capture/send sequence.",
+  "initial_direction": "N",
+  "goal_objects": [
+    "star1"
+  ],
+  "frames": [
+    {
+      "step_index": 0,
+      "action": null,
+      "state": {
+        "direction": "N",
+        "memory_total": 20,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "initial state"
+    },
+    {
+      "step_index": 1,
+      "action": {
+        "name": "rotate-left",
+        "args": [
+          "N",
+          "E"
+        ],
+        "raw": "(rotate-left n e)"
+      },
+      "state": {
+        "direction": "E",
+        "memory_total": 20,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": []
+      },
+      "note": "rotated to E"
+    },
+    {
+      "step_index": 2,
+      "action": {
+        "name": "take-picture-hd",
+        "args": [
+          "star1",
+          "E"
+        ],
+        "raw": "(take-picture-hd star1 e)"
+      },
+      "state": {
+        "direction": "E",
+        "memory_total": 20,
+        "memory_used": 10,
+        "slot_total": 2,
+        "slots_used": 1,
+        "stored": [
+          {
+            "object_name": "star1",
+            "quality": "HD",
+            "direction": "E",
+            "memory_cost": 10
+          }
+        ],
+        "sent": []
+      },
+      "note": "stored star1 as HD photo"
+    },
+    {
+      "step_index": 3,
+      "action": {
+        "name": "send-hd",
+        "args": [
+          "star1",
+          "E"
+        ],
+        "raw": "(send-hd star1 e)"
+      },
+      "state": {
+        "direction": "E",
+        "memory_total": 20,
+        "memory_used": 0,
+        "slot_total": 2,
+        "slots_used": 0,
+        "stored": [],
+        "sent": [
+          {
+            "object_name": "star1",
+            "quality": "HD",
+            "direction": "E",
+            "memory_cost": 10
+          }
+        ]
+      },
+      "note": "sent star1"
+    }
+  ]
+}
