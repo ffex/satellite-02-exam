@@ -28,11 +28,54 @@ PLAN_FILE = "sas_plan"
 # ==========================================================
 
 PLANNERS = {
-    "blind": "astar(blind())",
+
+    # ======================================================
+    # BASELINE (ignoranti ma utili per debug)
+    # ======================================================
+    "blind_astar": "astar(blind())",
+    "bfs": "breadth_first_search()",
+    "dfs": "depth_first_search()",
+
+    # ======================================================
+    # HEURISTICHE CLASSICHE
+    # ======================================================
     "astar_hmax": "astar(hmax())",
+    "astar_ff": "astar(ff())",
+    "astar_cea": "astar(cea())",
+
+    # ======================================================
+    # STATE-OF-THE-ART HEURISTICS
+    # ======================================================
     "astar_lmcut": "astar(lmcut())",
+    "eager_lmcut": "eager_greedy([lmcut()])",
+
+    "astar_add": "astar(add())",
+    "eager_add": "eager_greedy([add()])",
+
+    # ======================================================
+    # GREEDY SEARCH (veloci ma non ottimali)
+    # ======================================================
     "greedy_hmax": "eager_greedy([hmax()])",
+    "greedy_ff": "eager_greedy([ff()])",
     "greedy_lmcut": "eager_greedy([lmcut()])",
+
+    # ======================================================
+    # MULTI-HEURISTIC (molto utile!)
+    # ======================================================
+    "eager_combo": "eager_greedy([ff(), hmax(), lmcut()])",
+    "astar_combo": "astar([ff(), hmax(), lmcut()])",
+
+    # ======================================================
+    # WEIGHTED A*
+    # ======================================================
+    "wastar_ff": "lazy_wastar([ff()], w=2)",
+    "wastar_lmcut": "lazy_wastar([lmcut()], w=2)",
+
+    # ======================================================
+    # BEST-FIRST VARIANT
+    # ======================================================
+    "lazy_greedy_ff": "lazy_greedy([ff()])",
+    "lazy_greedy_lmcut": "lazy_greedy([lmcut()])",
 }
 
 
