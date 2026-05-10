@@ -1,0 +1,29 @@
+======================================================================
+COMMAND
+======================================================================
+java -jar /home/fratm/Scrivania/Github-fede/satellite-02-exam/PDDL/Advanced/enhsp-enhsp-20/enhsp.jar -o /home/fratm/Scrivania/Github-fede/satellite-02-exam/PDDL/Advanced/domain_advanced.pddl -f /home/fratm/Scrivania/Github-fede/satellite-02-exam/PDDL/Advanced/problem_hard_hd_advanced.pddl -sp /home/fratm/Scrivania/Github-fede/satellite-02-exam/PDDL/Advanced/generated_plans/plan_hard_hd_wastar_hff.txt -s WAStar -h hff
+
+======================================================================
+EXIT CODE
+======================================================================
+0
+
+======================================================================
+STDOUT
+======================================================================
+Domain parsed
+Problem parsed
+Grounding..
+Grounding Time: 14
+Aibr Preprocessing
+UFX:false
+|F|:0
+|X|:0
+Unsolvable Problem
+
+
+======================================================================
+STDERR
+======================================================================
+
+
