@@ -20,7 +20,7 @@ class ProblemConfig:
 PROBLEMS = {
     "easy": ProblemConfig(
         key="easy",
-        problem_file="problem_easy.pddl",
+        problem_file="problem_easy.pddl.pddl",
         title="EASY mission",
         initial_direction="N",
         description="One HD target with a simple capture/send sequence.",

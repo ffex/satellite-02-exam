@@ -1,213 +1,174 @@
 ; ==========================================================
-; DOMAIN: SATELLITE
-;
-; Il satellite può:
-;   - ruotare
-;   - fotografare oggetti
-;   - inviare immagini
-;
-; Vincoli modellati:
-;   - orientamento
-;   - memoria
-;   - slot immagini
-;   - qualità HD / SD
-;
-; Compatibile con Fast Downward
-;
+; DOMAIN: SATELLITE (ENHSP FIXED)
 ; ==========================================================
 
 (define (domain satellite)
 
 (:requirements
-    :strips
     :typing
     :negative-preconditions
+    :fluents
 )
 
 ; ==========================================================
-; TIPI
-
+;
 (:types
     direction
-    object
+    target ;
 )
-
-; ==========================================================
-; PREDICATI
-
 
 (:constants
     N NE E SE S SW W NW - direction
 )
 
+; ==========================================================
+;
 (:predicates
-
-    ; orientamento corrente
     (pointing ?d - direction)
+    (visible ?t - target ?d - direction)
+    (stored ?t - target)
+    (sent ?t - target)
 
-    ; oggetto visibile da una direzione
-    (visible ?o - object ?d - direction)
+    (hd ?t - target)
+    (sd ?t - target)
 
-    ; foto salvata in memoria
-    (stored ?o - object)
+    (next-right ?from - direction ?to - direction)
+    (next-left ?from - direction ?to - direction)
 
-    ; foto inviata alla Terra
-    (sent ?o - object)
-
-    ; qualità richiesta
-    (hd ?o - object)
-    (sd ?o - object)
-
-    ; memoria disponibile
-    (memory-free)
-
-    ; slot disponibile
-    (slot-free)
+    ;
+    (is-north ?d - direction)
 )
 
 ; ==========================================================
-; ROTAZIONE DESTRA
+;
+(:functions
+    (charge)
+    (memory-used)
+    (max-memory)
+    (photo-count)
+)
 
-
+; ==========================================================
+;
 (:action rotate-right
-
     :parameters (?from - direction ?to - direction)
-
     :precondition
-    (pointing ?from)
-
+    (and
+        (pointing ?from)
+        (next-right ?from ?to)
+        (>= (charge) 1)
+    )
     :effect
     (and
         (not (pointing ?from))
         (pointing ?to)
+        (decrease (charge) 1)
     )
 )
-
-; ==========================================================
-; ROTAZIONE SINISTRA
 
 (:action rotate-left
-
     :parameters (?from - direction ?to - direction)
-
     :precondition
-    (pointing ?from)
-
+    (and
+        (pointing ?from)
+        (next-left ?from ?to)
+        (>= (charge) 1)
+    )
     :effect
     (and
         (not (pointing ?from))
         (pointing ?to)
+        (decrease (charge) 1)
     )
 )
 
 ; ==========================================================
-; FOTO HD
-
 (:action take-picture-hd
-
-    :parameters (?o - object ?d - direction)
-
+    :parameters (?t - target ?d - direction)
     :precondition
     (and
         (pointing ?d)
-        (visible ?o ?d)
+        (visible ?t ?d)
+        (hd ?t)
+        (not (stored ?t))
+        (not (sent ?t))
 
-        (hd ?o)
-
-        (not (stored ?o))
-        (not (sent ?o))
-
-        (memory-free)
-        (slot-free)
+        (>= (charge) 2)
+        (<= (photo-count) 1) ;
+        (<= (+ (memory-used) 10) (max-memory))
     )
-
     :effect
     (and
-        (stored ?o)
-
-        (not (memory-free))
-        (not (slot-free))
+        (stored ?t)
+        (decrease (charge) 2)
+        (increase (photo-count) 1)
+        (increase (memory-used) 10)
     )
 )
-
-; ==========================================================
-; FOTO SD
 
 (:action take-picture-sd
-
-    :parameters (?o - object ?d - direction)
-
+    :parameters (?t - target ?d - direction)
     :precondition
     (and
         (pointing ?d)
-        (visible ?o ?d)
+        (visible ?t ?d)
+        (sd ?t)
+        (not (stored ?t))
+        (not (sent ?t))
 
-        (sd ?o)
-
-        (not (stored ?o))
-        (not (sent ?o))
-
-        (memory-free)
-        (slot-free)
+        (>= (charge) 2)
+        (<= (photo-count) 1) ;
+        (<= (+ (memory-used) 3) (max-memory))
     )
-
     :effect
     (and
-        (stored ?o)
-
-        (not (memory-free))
-        (not (slot-free))
+        (stored ?t)
+        (decrease (charge) 2)
+        (increase (photo-count) 1)
+        (increase (memory-used) 3)
     )
 )
 
 ; ==========================================================
-; INVIO HD
-
 (:action send-hd
-
-    :parameters (?o - object ?north - direction)
-
+    :parameters (?t - target ?d - direction)
     :precondition
     (and
-        (pointing ?north)
-
-        (stored ?o)
-        (hd ?o)
+        (pointing ?d)
+        (is-north ?d)
+        (stored ?t)
+        (hd ?t)
+        (>= (charge) 2)
     )
-
     :effect
     (and
-        (not (stored ?o))
-        (sent ?o)
+        (not (stored ?t))
+        (sent ?t)
 
-        (memory-free)
-        (slot-free)
+        (decrease (charge) 2)
+        (decrease (photo-count) 1)
+        (decrease (memory-used) 10)
     )
 )
-
-; ==========================================================
-; INVIO SD
 
 (:action send-sd
-
-    :parameters (?o - object ?north - direction)
-
+    :parameters (?t - target ?d - direction)
     :precondition
     (and
-        (pointing ?north)
-
-        (stored ?o)
-        (sd ?o)
+        (pointing ?d)
+        (is-north ?d)
+        (stored ?t)
+        (sd ?t)
+        (>= (charge) 2)
     )
-
     :effect
     (and
-        (not (stored ?o))
-        (sent ?o)
+        (not (stored ?t))
+        (sent ?t)
 
-        (memory-free)
-        (slot-free)
+        (decrease (charge) 2)
+        (decrease (photo-count) 1)
+        (decrease (memory-used) 3)
     )
 )
-
 )

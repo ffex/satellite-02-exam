@@ -1,0 +1,6 @@
+(rotate-right N NE)
+(rotate-right NE E)
+(take-picture-hd star1 E)
+(rotate-left E NE)
+(rotate-left NE N)
+(send-hd star1 N)

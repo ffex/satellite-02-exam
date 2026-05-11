@@ -1,95 +1,162 @@
-"""
-==========================================================
-PLANNER RUNNER
-==========================================================
+"""Planner runner for satellite planning problems.
 
-Esegue planner Fast Downward con 3 strategie:
-- blind
-- hmax
-- lmcut
-
-Gestisce:
-- fallimenti planner
-- parsing sicuro
-- animazione
-==========================================================
+Runs ENHSP on all problems in problems/ directory iteratively.
 """
 
+from __future__ import annotations
+
+import argparse
 import subprocess
-from PE_IM_parser import parse_plan
+from pathlib import Path
+
 from PE_IM_animation import animate_plan
+from PE_IM_parser import parse_plan
 
-
-# Varie config
 
 DOMAIN = "domain.pddl"
-PROBLEM = "problem_easy.pddl"
-PLAN_FILE = "sas_plan"
+DEFAULT_PROBLEM = "problem_easy.pddl"
+PLAN_DIR = Path("plans")
+PROBLEMS_DIR = Path("problems")
 
-
-
-# Le strategie
 PLANNERS = {
-    "blind": "astar(blind())",
-    "hmax": "astar(hmax())",
-    "lmcut": "astar(lmcut())"
+    "wastar": "WAStar",
+    "greedy": "gbfs",
 }
 
 
+def _problem_key(problem_path: str) -> str:
+    name = Path(problem_path).stem
+    return name.replace("problem_", "")
 
-# Il planner
-def run_planner(strategy="lmcut"):
-    """
-    Esegue Fast Downward.
-    """
+
+def _plan_file(problem_path: str, strategy: str) -> Path:
+    PLAN_DIR.mkdir(parents=True, exist_ok=True)
+    return PLAN_DIR / f"plan_{_problem_key(problem_path)}_{strategy}.txt"
+
+
+def run_planner(strategy: str = "wastar", problem: str = DEFAULT_PROBLEM) -> tuple[bool, Path]:
+    """Run ENHSP for one problem/strategy pair."""
 
     print("\n########################################")
-    print(f"PLANNER: {strategy}")
+    print(f"PLANNER: ENHSP ({strategy})")
+    print(f"PROBLEM: {problem}")
     print("########################################")
 
-    search = PLANNERS[strategy]
+    search_algo = PLANNERS[strategy]
+    plan_file = _plan_file(problem, strategy)
 
     command = [
-        "./downward/fast-downward.py",
-        DOMAIN,
-        PROBLEM,
-        "--search",
-        search
+        "java",
+        "-jar", "enhsp-20.jar",
+        "-o", DOMAIN,
+        "-f", problem,
+        "-s", search_algo,
+        "-sp", str(plan_file)
     ]
 
-    print("\nESECUZIONE:", search)
+    print("\nESECUZIONE:", " ".join(command))
 
-    result = subprocess.run(command)
+    result = subprocess.run(command, capture_output=True, text=True)
 
-    if result.returncode != 0:
-        print("\nPlanner fallito")
-        return False
+    if "Problem unsolvable" in result.stdout or result.returncode != 0:
+        print("\n❌ Planner fallito")
+        print("\n".join(result.stdout.splitlines()[-15:]))
+        return False, plan_file
 
-    return True
+    if not plan_file.exists():
+        print(f"\n❌ File {plan_file} not created")
+        print(result.stdout)
+        return False, plan_file
+
+    print(f"✅ Plan saved to: {plan_file}")
+
+    return True, plan_file
 
 
-# ==========================================================
-# MAIN
-# ==========================================================
+def _discover_problems() -> list[Path]:
+    """Find all problem_*.pddl files in problems/ directory."""
+    if not PROBLEMS_DIR.exists():
+        print(f"❌ Directory {PROBLEMS_DIR} not found!")
+        return []
 
-def main():
+    problems = sorted(PROBLEMS_DIR.glob("problem_*.pddl"))
+    if not problems:
+        print(f"❌ No problem_*.pddl files found in {PROBLEMS_DIR}/")
+        return []
 
-    for strategy in PLANNERS:
+    print(f"✅ Found {len(problems)} problems:")
+    for p in problems:
+        print(f"   - {p.name}")
 
-        ok = run_planner(strategy)
+    return problems
 
-        plan = parse_plan(PLAN_FILE)
 
-        if not plan:
-            print("[MAIN] Nessun piano generato\n")
-            continue
+def build_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Run ENHSP on all problems.")
+    parser.add_argument(
+        "problem",
+        nargs="?",
+        default=None,
+        help="Single problem (e.g. problem_easy.pddl); if not specified, runs all in problems/",
+    )
+    parser.add_argument(
+        "--strategy",
+        choices=tuple(PLANNERS.keys()) + ("all",),
+        default="all",
+        help="Strategy to run (default: all)",
+    )
+    return parser
 
-        print("\nPIANO GENERATO:\n")
 
-        for p in plan:
-            print(p)
+def main(argv: list[str] | None = None):
+    args = build_arg_parser().parse_args(argv)
 
-        animate_plan(plan)
+    # Decide which problems to run
+    if args.problem:
+        # Single problem specified
+        if not args.problem.startswith("problems/"):
+            args.problem = f"problems/{args.problem}"
+        problems_to_run = [args.problem]
+    else:
+        # Auto-discover all problems in problems/
+        discovered = _discover_problems()
+        problems_to_run = [str(p) for p in discovered]
+
+    if not problems_to_run:
+        print("❌ No problems to run!")
+        return
+
+    print(f"\n{'='*60}")
+    print(f"Running {len(problems_to_run)} problem(s)")
+    print(f"{'='*60}\n")
+
+    # Run each problem with all strategies
+    for problem in problems_to_run:
+        print(f"\n{'='*60}")
+        print(f"PROBLEM: {Path(problem).name}")
+        print(f"{'='*60}")
+
+        strategies = PLANNERS.keys() if args.strategy == "all" else (args.strategy,)
+
+        for strategy in strategies:
+            ok, plan_file = run_planner(strategy, problem)
+            if not ok:
+                continue
+
+            plan = parse_plan(plan_file)
+            if not plan:
+                print(f"[MAIN] No plan in {plan_file}\n")
+                continue
+
+            print("\nPLAN:\n")
+            for p in plan:
+                print(p)
+
+            animate_plan(plan)
+
+    print(f"\n{'='*60}")
+    print("✅ All done!")
+    print(f"{'='*60}\n")
 
 
 if __name__ == "__main__":

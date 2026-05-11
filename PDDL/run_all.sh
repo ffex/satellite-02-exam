@@ -14,10 +14,15 @@ for problem in $PROBLEMS; do
     echo "PLANNING: $problem"
     echo "=========================================="
 
-    problem_file="problem_${problem}.pddl"
+    problem_file="problems/problem_${problem}.pddl"
 
-    # Run planner
-    ./downward/fast-downward.py "$DOMAIN" "$problem_file" --search "$SEARCH_STRATEGY" > "plans/plan_${problem}.txt" 2>&1
+    # Run planner (writes to sas_plan by default)
+    java -jar enhsp-20.jar -o "$DOMAIN" -f "$problem_file"
+
+    # Copy the plan to our plans directory
+    if [ -f "sas_plan" ]; then
+        cp "sas_plan" "plans/plan_${problem}.txt"
+    fi
 
     if [ $? -eq 0 ]; then
         echo "✅ Plan saved to: plans/plan_${problem}.txt"
