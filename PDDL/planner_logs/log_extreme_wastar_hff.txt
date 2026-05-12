@@ -1,30 +1,83 @@
-======================================================================
+================================================================================
 COMMAND
-======================================================================
-java -jar /home/fratm/Scrivania/Github-fede/satellite-02-exam/PDDL/Advanced/enhsp-enhsp-20/enhsp.jar -o /home/fratm/Scrivania/Github-fede/satellite-02-exam/PDDL/Advanced/domain_advanced.pddl -f /home/fratm/Scrivania/Github-fede/satellite-02-exam/PDDL/Advanced/problem_extreme_advanced.pddl -sp /home/fratm/Scrivania/Github-fede/satellite-02-exam/PDDL/Advanced/generated_plans/plan_extreme_wastar_hff.txt -s WAStar -h hff
+================================================================================
+java -jar /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/enhsp-enhsp-20/enhsp.jar -o /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/domain_advanced.pddl -f /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/problem_extreme_advanced.pddl -sp /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/generated_plans/plan_extreme_wastar_hff.txt -s WAStar -h hff
 
-======================================================================
+================================================================================
 EXIT CODE
-======================================================================
+================================================================================
 0
 
-======================================================================
+================================================================================
 STDOUT
-======================================================================
+================================================================================
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 13
+Grounding Time: 20
 Aibr Preprocessing
-Problem Detected as Unsolvable by AIBR during preprocessing
 UFX:false
 |F|:32
-|X|:1
-Unsolvable Problem
+|X|:3
+|A|:28
+|P|:0
+|E|:0
+Folding back to 1-0 heuristic. Input heuristic is not supported
+h(I):1.0
+f(n) = 1.0 (Expanded Nodes: 1, Evaluated States: 1, Time: 0.004) Frontier Size: 0
+f(n) = 2.0 (Expanded Nodes: 2, Evaluated States: 3, Time: 0.009) Frontier Size: 1
+f(n) = 3.0 (Expanded Nodes: 6, Evaluated States: 12, Time: 0.01) Frontier Size: 6
+f(n) = 4.0 (Expanded Nodes: 17, Evaluated States: 34, Time: 0.012) Frontier Size: 17
+f(n) = 5.0 (Expanded Nodes: 45, Evaluated States: 88, Time: 0.015) Frontier Size: 43
+f(n) = 6.0 (Expanded Nodes: 98, Evaluated States: 173, Time: 0.018) Frontier Size: 75
+f(n) = 7.0 (Expanded Nodes: 207, Evaluated States: 361, Time: 0.021) Frontier Size: 154
+f(n) = 8.0 (Expanded Nodes: 391, Evaluated States: 630, Time: 0.023) Frontier Size: 239
+f(n) = 9.0 (Expanded Nodes: 687, Evaluated States: 1064, Time: 0.027) Frontier Size: 377
+f(n) = 10.0 (Expanded Nodes: 1128, Evaluated States: 1683, Time: 0.03) Frontier Size: 555
+f(n) = 11.0 (Expanded Nodes: 1805, Evaluated States: 2645, Time: 0.033) Frontier Size: 840
+f(n) = 12.0 (Expanded Nodes: 2699, Evaluated States: 3740, Time: 0.038) Frontier Size: 1041
+f(n) = 13.0 (Expanded Nodes: 3813, Evaluated States: 5061, Time: 0.043) Frontier Size: 1248
+f(n) = 14.0 (Expanded Nodes: 5161, Evaluated States: 6649, Time: 0.049) Frontier Size: 1488
+f(n) = 15.0 (Expanded Nodes: 6714, Evaluated States: 8386, Time: 0.054) Frontier Size: 1672
+Problem Solved
+
+Found Plan:
+0.0: (rotate-left n nw)
+1.0: (rotate-left nw w)
+2.0: (take-picture-sd nebula1 w)
+3.0: (rotate-right w nw)
+4.0: (rotate-right nw n)
+5.0: (send nebula1)
+6.0: (rotate-left n nw)
+7.0: (rotate-left nw w)
+8.0: (rotate-left w sw)
+9.0: (take-picture-sd planet1 sw)
+10.0: (rotate-left sw s)
+11.0: (rotate-left s se)
+12.0: (take-picture-hd star1 se)
+13.0: (rotate-left se e)
+14.0: (rotate-left e ne)
+15.0: (rotate-left ne n)
+16.0: (send star1)
+17.0: (rotate-right n ne)
+18.0: (take-picture-hd galaxy1 ne)
+19.0: (rotate-left ne n)
+20.0: (send galaxy1)
+21.0: (send planet1)
+
+Plan-Length:22
+Metric (Search):14.0
+Planning Time (msec): 58
+Heuristic Time (msec): 1
+Search Time (msec): 55
+Expanded Nodes:7042
+States Evaluated:8937
+Number of Dead-Ends detected:0
+Number of Duplicates detected:7522
 
 
-======================================================================
+================================================================================
 STDERR
-======================================================================
+================================================================================
 
 

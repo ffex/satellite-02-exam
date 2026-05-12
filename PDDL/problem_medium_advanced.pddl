@@ -9,16 +9,39 @@
 (:init
 
     (pointing s)
+    (last-dir s)
 
     (visible star1 e)
     (visible planet1 w)
 
-    (= (memory-used) 0)
-    (= (memory-capacity) 200)
+    (= (energy) 50)
 
-    (= (energy) 400)
+    (= (memory-used) 0)
+    (= (memory-capacity) 13)
+
     (= (photo-count) 0)
 
+    (= (rotation-cost) 0)
+
+    ; RIGHT
+    (next-right n ne)
+    (next-right ne e)
+    (next-right e se)
+    (next-right se s)
+    (next-right s sw)
+    (next-right sw w)
+    (next-right w nw)
+    (next-right nw n)
+
+    ; LEFT
+    (next-left ne n)
+    (next-left e ne)
+    (next-left se e)
+    (next-left s se)
+    (next-left sw s)
+    (next-left w sw)
+    (next-left nw w)
+    (next-left n nw)
 )
 
 (:goal
@@ -31,6 +54,9 @@
     )
 )
 
-(:metric minimize (energy))
+(:metric minimize
+    (+ (energy)
+       (rotation-cost))
+)
 
 )

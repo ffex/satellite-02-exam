@@ -1,30 +1,158 @@
-======================================================================
+================================================================================
 COMMAND
-======================================================================
-java -jar /home/fratm/Scrivania/Github-fede/satellite-02-exam/PDDL/Advanced/enhsp-enhsp-20/enhsp.jar -o /home/fratm/Scrivania/Github-fede/satellite-02-exam/PDDL/Advanced/domain_advanced.pddl -f /home/fratm/Scrivania/Github-fede/satellite-02-exam/PDDL/Advanced/problem_extreme_advanced.pddl -sp /home/fratm/Scrivania/Github-fede/satellite-02-exam/PDDL/Advanced/generated_plans/plan_extreme_gbfs_hff.txt -s gbfs -h hff
+================================================================================
+java -jar /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/enhsp-enhsp-20/enhsp.jar -o /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/domain_advanced.pddl -f /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/problem_extreme_advanced.pddl -sp /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/generated_plans/plan_extreme_gbfs_hff.txt -s gbfs -h hff
 
-======================================================================
+================================================================================
 EXIT CODE
-======================================================================
+================================================================================
 0
 
-======================================================================
+================================================================================
 STDOUT
-======================================================================
+================================================================================
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 16
+Grounding Time: 19
 Aibr Preprocessing
-Problem Detected as Unsolvable by AIBR during preprocessing
 UFX:false
 |F|:32
-|X|:1
-Unsolvable Problem
+|X|:3
+|A|:28
+|P|:0
+|E|:0
+Folding back to 1-0 heuristic. Input heuristic is not supported
+h(I):1.0
+Problem Solved
+
+Found Plan:
+0.0: (rotate-left n nw)
+1.0: (rotate-left nw w)
+2.0: (rotate-left w sw)
+3.0: (take-picture-sd planet1 sw)
+4.0: (rotate-right sw w)
+5.0: (rotate-left w sw)
+6.0: (rotate-right sw w)
+7.0: (rotate-left w sw)
+8.0: (rotate-right sw w)
+9.0: (rotate-left w sw)
+10.0: (rotate-right sw w)
+11.0: (rotate-left w sw)
+12.0: (rotate-right sw w)
+13.0: (rotate-left w sw)
+14.0: (rotate-right sw w)
+15.0: (rotate-left w sw)
+16.0: (rotate-right sw w)
+17.0: (rotate-left w sw)
+18.0: (rotate-right sw w)
+19.0: (rotate-left w sw)
+20.0: (rotate-right sw w)
+21.0: (rotate-left w sw)
+22.0: (rotate-right sw w)
+23.0: (rotate-left w sw)
+24.0: (rotate-right sw w)
+25.0: (rotate-left w sw)
+26.0: (rotate-right sw w)
+27.0: (rotate-left w sw)
+28.0: (rotate-right sw w)
+29.0: (rotate-left w sw)
+30.0: (rotate-right sw w)
+31.0: (rotate-left w sw)
+32.0: (rotate-right sw w)
+33.0: (rotate-left w sw)
+34.0: (rotate-right sw w)
+35.0: (rotate-left w sw)
+36.0: (rotate-right sw w)
+37.0: (rotate-left w sw)
+38.0: (rotate-right sw w)
+39.0: (rotate-left w sw)
+40.0: (rotate-right sw w)
+41.0: (rotate-left w sw)
+42.0: (rotate-right sw w)
+43.0: (rotate-left w sw)
+44.0: (rotate-right sw w)
+45.0: (rotate-left w sw)
+46.0: (rotate-right sw w)
+47.0: (rotate-left w sw)
+48.0: (rotate-right sw w)
+49.0: (rotate-left w sw)
+50.0: (rotate-right sw w)
+51.0: (rotate-left w sw)
+52.0: (rotate-right sw w)
+53.0: (rotate-left w sw)
+54.0: (rotate-right sw w)
+55.0: (rotate-left w sw)
+56.0: (rotate-right sw w)
+57.0: (rotate-left w sw)
+58.0: (rotate-right sw w)
+59.0: (rotate-left w sw)
+60.0: (rotate-right sw w)
+61.0: (rotate-left w sw)
+62.0: (rotate-right sw w)
+63.0: (rotate-left w sw)
+64.0: (rotate-right sw w)
+65.0: (rotate-left w sw)
+66.0: (rotate-right sw w)
+67.0: (rotate-left w sw)
+68.0: (rotate-right sw w)
+69.0: (rotate-left w sw)
+70.0: (rotate-right sw w)
+71.0: (rotate-left w sw)
+72.0: (rotate-right sw w)
+73.0: (rotate-left w sw)
+74.0: (rotate-right sw w)
+75.0: (rotate-left w sw)
+76.0: (rotate-right sw w)
+77.0: (rotate-left w sw)
+78.0: (rotate-right sw w)
+79.0: (rotate-left w sw)
+80.0: (rotate-right sw w)
+81.0: (rotate-left w sw)
+82.0: (rotate-right sw w)
+83.0: (rotate-left w sw)
+84.0: (rotate-right sw w)
+85.0: (rotate-left w sw)
+86.0: (rotate-right sw w)
+87.0: (rotate-left w sw)
+88.0: (rotate-right sw w)
+89.0: (rotate-left w sw)
+90.0: (rotate-right sw w)
+91.0: (rotate-left w sw)
+92.0: (rotate-right sw w)
+93.0: (rotate-left w sw)
+94.0: (rotate-right sw w)
+95.0: (take-picture-sd nebula1 w)
+96.0: (rotate-right w nw)
+97.0: (rotate-right nw n)
+98.0: (send planet1)
+99.0: (send nebula1)
+100.0: (rotate-right n ne)
+101.0: (take-picture-hd galaxy1 ne)
+102.0: (rotate-left ne n)
+103.0: (send galaxy1)
+104.0: (rotate-right n ne)
+105.0: (rotate-right ne e)
+106.0: (rotate-right e se)
+107.0: (take-picture-hd star1 se)
+108.0: (rotate-left se e)
+109.0: (rotate-left e ne)
+110.0: (rotate-left ne n)
+111.0: (send star1)
+
+Plan-Length:112
+Metric (Search):104.0
+Planning Time (msec): 55
+Heuristic Time (msec): 2
+Search Time (msec): 53
+Expanded Nodes:8045
+States Evaluated:8337
+Number of Dead-Ends detected:0
+Number of Duplicates detected:8101
 
 
-======================================================================
+================================================================================
 STDERR
-======================================================================
+================================================================================
 
 

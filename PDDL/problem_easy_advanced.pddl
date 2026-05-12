@@ -9,16 +9,21 @@
 (:init
 
     (pointing n)
+    (last-dir n)
 
     (visible star1 e)
     (visible noise1 e)
 
+    (= (energy) 20)
+
     (= (memory-used) 0)
     (= (memory-capacity) 20)
 
-    (= (energy) 20)
     (= (photo-count) 0)
 
+    (= (rotation-cost) 0)
+
+    ; RIGHT
     (next-right n ne)
     (next-right ne e)
     (next-right e se)
@@ -28,15 +33,15 @@
     (next-right w nw)
     (next-right nw n)
 
-    (next-left n nw)
-    (next-left nw w)
-    (next-left w sw)
-    (next-left sw s)
-    (next-left s se)
-    (next-left se e)
-    (next-left e ne)
+    ; LEFT
     (next-left ne n)
-
+    (next-left e ne)
+    (next-left se e)
+    (next-left s se)
+    (next-left sw s)
+    (next-left w sw)
+    (next-left nw w)
+    (next-left n nw)
 )
 
 (:goal
@@ -46,6 +51,9 @@
     )
 )
 
-(:metric minimize (energy))
+(:metric minimize
+    (+ (energy)
+       (rotation-cost))
+)
 
 )

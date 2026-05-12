@@ -1,5 +1,5 @@
 # ==========================================================
-# PARSER PIANI ENHSP
+# FILE: PE_IM_parse_plan_advanced.py
 # ==========================================================
 
 import re
@@ -11,9 +11,13 @@ def parse_plan(plan_file: str):
 
     with open(plan_file, "r") as f:
 
-        for line in f:
+        for raw_line in f:
 
-            line = line.strip().lower()
+            line = raw_line.strip().lower()
+
+            # ----------------------------------------------
+            # skip empty/comments
+            # ----------------------------------------------
 
             if not line:
                 continue
@@ -21,23 +25,48 @@ def parse_plan(plan_file: str):
             if line.startswith(";"):
                 continue
 
-            # rimuove timestamp:
+            # ----------------------------------------------
+            # remove timestamps
             # 0.000: (rotate-right n ne) [1.000]
-            line = re.sub(r"^[0-9\.]+\:\s*", "", line)
+            # ----------------------------------------------
 
-            # rimuove duration
-            line = re.sub(r"\[[0-9\.]+\]", "", line)
+            line = re.sub(
+                r"^[0-9\.]+\:\s*",
+                "",
+                line
+            )
 
-            line = line.replace("(", "").replace(")", "")
+            # ----------------------------------------------
+            # remove duration
+            # ----------------------------------------------
+
+            line = re.sub(
+                r"\[[0-9\.]+\]",
+                "",
+                line
+            )
+
+            # ----------------------------------------------
+            # remove parentheses
+            # ----------------------------------------------
+
+            line = (
+                line
+                .replace("(", "")
+                .replace(")", "")
+                .strip()
+            )
+
+            if not line:
+                continue
 
             parts = line.split()
-
-            if not parts:
-                continue
 
             action = parts[0]
             params = parts[1:]
 
-            plan.append((action, params))
+            plan.append(
+                (action, params)
+            )
 
     return plan
