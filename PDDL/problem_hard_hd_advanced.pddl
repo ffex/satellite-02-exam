@@ -1,6 +1,5 @@
 (define (problem satellite-hard-hd)
-
-(:domain satellite-advanced)
+(:domain satellite)
 
 (:objects
     star1 planet1 galaxy1 - object
@@ -10,23 +9,20 @@
 
     (pointing sw)
 
-    ;; visibility
     (visible star1 e)
     (visible planet1 s)
     (visible galaxy1 nw)
 
-    ;; numeric fluents
+    (quality-hd star1)
+    (quality-hd planet1)
+    (quality-hd galaxy1)
+
     (= (energy) 100)
-
     (= (memory-used) 0)
-
     (= (memory-capacity) 13)
-
     (= (photo-count) 0)
-
     (= (rotation-cost) 0)
 
-    ;; direction graph
     (next-right n ne)
     (next-right ne e)
     (next-right e se)
@@ -48,21 +44,11 @@
 
 (:goal
     (and
-
         (sent star1)
-        (photo-hd star1)
-
         (sent planet1)
-        (photo-hd planet1)
-
         (sent galaxy1)
-        (photo-hd galaxy1)
     )
 )
 
-(:metric minimize
-    (+ (energy)
-       (rotation-cost))
-)
-
+(:metric minimize (+ (energy) (rotation-cost)))
 )

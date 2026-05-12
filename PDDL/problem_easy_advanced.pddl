@@ -1,6 +1,5 @@
 (define (problem satellite-easy)
-
-(:domain satellite-advanced)
+(:domain satellite)
 
 (:objects
     star1 noise1 - object
@@ -14,16 +13,15 @@
     (visible star1 e)
     (visible noise1 e)
 
-    (= (energy) 20)
+    (quality-hd star1)
+    (quality-sd noise1)
 
+    (= (energy) 20)
     (= (memory-used) 0)
     (= (memory-capacity) 20)
-
     (= (photo-count) 0)
-
     (= (rotation-cost) 0)
 
-    ; RIGHT
     (next-right n ne)
     (next-right ne e)
     (next-right e se)
@@ -33,7 +31,6 @@
     (next-right w nw)
     (next-right nw n)
 
-    ; LEFT
     (next-left ne n)
     (next-left e ne)
     (next-left se e)
@@ -47,13 +44,8 @@
 (:goal
     (and
         (sent star1)
-        (photo-hd star1)
     )
 )
 
-(:metric minimize
-    (+ (energy)
-       (rotation-cost))
-)
-
+(:metric minimize (+ (energy) (rotation-cost)))
 )
