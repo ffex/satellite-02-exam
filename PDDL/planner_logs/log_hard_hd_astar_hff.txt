@@ -1,12 +1,13 @@
+STDOUT:
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 17
+Grounding Time: 15
 Aibr Preprocessing
 UFX:false
-|F|:28
+|F|:22
 |X|:3
-|A|:25
+|A|:22
 |P|:0
 |E|:0
 Folding back to 1-0 heuristic. Input heuristic is not supported
@@ -91,29 +92,32 @@ Found Plan:
 74.0: (rotate-right se s)
 75.0: (rotate-left s se)
 76.0: (rotate-right se s)
-77.0: (take-picture-hd planet1 s)
+77.0: (take-picture planet1 s)
 78.0: (rotate-left s se)
 79.0: (rotate-left se e)
 80.0: (rotate-left e ne)
 81.0: (rotate-left ne n)
 82.0: (send planet1)
 83.0: (rotate-left n nw)
-84.0: (take-picture-hd galaxy1 nw)
+84.0: (take-picture galaxy1 nw)
 85.0: (rotate-right nw n)
 86.0: (send galaxy1)
 87.0: (rotate-right n ne)
 88.0: (rotate-right ne e)
-89.0: (take-picture-hd star1 e)
+89.0: (take-picture star1 e)
 90.0: (rotate-left e ne)
 91.0: (rotate-left ne n)
 92.0: (send star1)
 
 Plan-Length:93
 Metric (Search):87.0
-Planning Time (msec): 40
+Planning Time (msec): 23
 Heuristic Time (msec): 2
-Search Time (msec): 38
-Expanded Nodes:4281
-States Evaluated:4561
+Search Time (msec): 22
+Expanded Nodes:998
+States Evaluated:1237
 Number of Dead-Ends detected:0
-Number of Duplicates detected:4274
+Number of Duplicates detected:807
+
+
+STDERR:

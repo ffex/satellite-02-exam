@@ -1,89 +1,62 @@
+STDOUT:
 Domain parsed
 Problem parsed
 Grounding..
 Grounding Time: 18
 Aibr Preprocessing
 UFX:false
-|F|:28
+|F|:22
 |X|:3
-|A|:25
+|A|:22
 |P|:0
 |E|:0
 Numeric Error for Complex Condition Activated
-H1 Setup Time (msec): 10
-h(I):21.0
- g(n)= 1.0 h(n)=20.0
- g(n)= 2.0 h(n)=15.0
- g(n)= 3.0 h(n)=14.0
- g(n)= 3.0 h(n)=12.0
- g(n)= 4.0 h(n)=11.0
- g(n)= 5.0 h(n)=10.0
- g(n)= 65.0 h(n)=8.0
- g(n)= 42.0 h(n)=6.0
- g(n)= 43.0 h(n)=4.0
- g(n)= 44.0 h(n)=2.0
- g(n)= 45.0 h(n)=0.0
+H1 Setup Time (msec): 9
+h(I):15.0
+ g(n)= 1.0 h(n)=13.0
+ g(n)= 2.0 h(n)=9.0
+ g(n)= 3.0 h(n)=7.0
+ g(n)= 3.0 h(n)=6.0
+ g(n)= 6.0 h(n)=5.0
+ g(n)= 7.0 h(n)=4.0
+ g(n)= 12.0 h(n)=3.0
+ g(n)= 13.0 h(n)=2.0
+ g(n)= 14.0 h(n)=1.0
+ g(n)= 15.0 h(n)=0.0
 Problem Solved
 
 Found Plan:
 0.0: (rotate-right sw w)
 1.0: (rotate-right w nw)
-2.0: (take-picture-sd galaxy1 nw)
+2.0: (take-picture galaxy1 nw)
 3.0: (rotate-right nw n)
-4.0: (rotate-right n ne)
-5.0: (rotate-right ne e)
-6.0: (rotate-left e ne)
-7.0: (rotate-right ne e)
+4.0: (send galaxy1)
+5.0: (rotate-right n ne)
+6.0: (rotate-right ne e)
+7.0: (take-picture star1 e)
 8.0: (rotate-left e ne)
-9.0: (rotate-right ne e)
-10.0: (rotate-left e ne)
-11.0: (rotate-right ne e)
-12.0: (rotate-left e ne)
-13.0: (rotate-right ne e)
-14.0: (rotate-left e ne)
-15.0: (rotate-right ne e)
-16.0: (rotate-left e ne)
-17.0: (rotate-right ne e)
+9.0: (rotate-left ne n)
+10.0: (send star1)
+11.0: (rotate-right n ne)
+12.0: (rotate-right ne e)
+13.0: (rotate-right e se)
+14.0: (rotate-right se s)
+15.0: (take-picture planet1 s)
+16.0: (rotate-left s se)
+17.0: (rotate-left se e)
 18.0: (rotate-left e ne)
-19.0: (rotate-right ne e)
-20.0: (rotate-left e ne)
-21.0: (rotate-right ne e)
-22.0: (rotate-left e ne)
-23.0: (rotate-right ne e)
-24.0: (rotate-left e ne)
-25.0: (rotate-right ne e)
-26.0: (rotate-left e ne)
-27.0: (rotate-right ne e)
-28.0: (rotate-left e ne)
-29.0: (rotate-right ne e)
-30.0: (rotate-left e ne)
-31.0: (rotate-right ne e)
-32.0: (rotate-left e ne)
-33.0: (rotate-right ne e)
-34.0: (rotate-left e ne)
-35.0: (rotate-right ne e)
-36.0: (rotate-left e ne)
-37.0: (rotate-left ne n)
-38.0: (send galaxy1)
-39.0: (rotate-right n ne)
-40.0: (rotate-right ne e)
-41.0: (take-picture-sd star1 e)
-42.0: (rotate-right e se)
-43.0: (rotate-right se s)
-44.0: (take-picture-sd planet1 s)
-45.0: (rotate-left s se)
-46.0: (rotate-left se e)
-47.0: (rotate-left e ne)
-48.0: (rotate-left ne n)
-49.0: (send planet1)
-50.0: (send star1)
+19.0: (rotate-left ne n)
+20.0: (send planet1)
 
-Plan-Length:51
-Metric (Search):45.0
-Planning Time (msec): 34
-Heuristic Time (msec): 14
-Search Time (msec): 32
-Expanded Nodes:126
-States Evaluated:296
-Number of Dead-Ends detected:33
-Number of Duplicates detected:23
+Plan-Length:21
+Metric (Search):15.0
+Planning Time (msec): 23
+Heuristic Time (msec): 11
+Search Time (msec): 21
+Expanded Nodes:38
+States Evaluated:67
+Number of Dead-Ends detected:0
+Number of Duplicates detected:14
+
+
+STDERR:

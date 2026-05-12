@@ -1,47 +1,51 @@
+STDOUT:
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 14
+Grounding Time: 17
 Aibr Preprocessing
 UFX:false
-|F|:24
+|F|:20
 |X|:3
-|A|:22
+|A|:20
 |P|:0
 |E|:0
 Folding back to 1-0 heuristic. Input heuristic is not supported
 h(I):1.0
-f(n) = 1.0 (Expanded Nodes: 1, Evaluated States: 1, Time: 0.007) Frontier Size: 0
-f(n) = 2.0 (Expanded Nodes: 2, Evaluated States: 3, Time: 0.016) Frontier Size: 1
-f(n) = 3.0 (Expanded Nodes: 4, Evaluated States: 6, Time: 0.017) Frontier Size: 2
-f(n) = 4.0 (Expanded Nodes: 11, Evaluated States: 22, Time: 0.018) Frontier Size: 11
-f(n) = 5.0 (Expanded Nodes: 23, Evaluated States: 38, Time: 0.019) Frontier Size: 15
-f(n) = 6.0 (Expanded Nodes: 43, Evaluated States: 70, Time: 0.021) Frontier Size: 27
-f(n) = 7.0 (Expanded Nodes: 71, Evaluated States: 102, Time: 0.022) Frontier Size: 31
-f(n) = 8.0 (Expanded Nodes: 117, Evaluated States: 180, Time: 0.025) Frontier Size: 63
-f(n) = 9.0 (Expanded Nodes: 181, Evaluated States: 252, Time: 0.027) Frontier Size: 71
+f(n) = 1.0 (Expanded Nodes: 1, Evaluated States: 1, Time: 0.003) Frontier Size: 0
+f(n) = 2.0 (Expanded Nodes: 2, Evaluated States: 3, Time: 0.008) Frontier Size: 1
+f(n) = 3.0 (Expanded Nodes: 4, Evaluated States: 6, Time: 0.008) Frontier Size: 2
+f(n) = 4.0 (Expanded Nodes: 9, Evaluated States: 16, Time: 0.009) Frontier Size: 7
+f(n) = 5.0 (Expanded Nodes: 17, Evaluated States: 26, Time: 0.01) Frontier Size: 9
+f(n) = 6.0 (Expanded Nodes: 29, Evaluated States: 44, Time: 0.012) Frontier Size: 15
+f(n) = 7.0 (Expanded Nodes: 45, Evaluated States: 62, Time: 0.013) Frontier Size: 17
+f(n) = 8.0 (Expanded Nodes: 66, Evaluated States: 91, Time: 0.014) Frontier Size: 25
+f(n) = 9.0 (Expanded Nodes: 92, Evaluated States: 120, Time: 0.016) Frontier Size: 28
 Problem Solved
 
 Found Plan:
 0.0: (rotate-right s sw)
 1.0: (rotate-right sw w)
-2.0: (take-picture-hd planet1 w)
+2.0: (take-picture planet1 w)
 3.0: (rotate-right w nw)
 4.0: (rotate-right nw n)
 5.0: (send planet1)
 6.0: (rotate-right n ne)
 7.0: (rotate-right ne e)
-8.0: (take-picture-hd star1 e)
+8.0: (take-picture star1 e)
 9.0: (rotate-left e ne)
 10.0: (rotate-left ne n)
 11.0: (send star1)
 
 Plan-Length:12
 Metric (Search):8.0
-Planning Time (msec): 29
-Heuristic Time (msec): 4
-Search Time (msec): 28
-Expanded Nodes:239
-States Evaluated:329
+Planning Time (msec): 19
+Heuristic Time (msec): 1
+Search Time (msec): 17
+Expanded Nodes:107
+States Evaluated:144
 Number of Dead-Ends detected:0
-Number of Duplicates detected:213
+Number of Duplicates detected:86
+
+
+STDERR:

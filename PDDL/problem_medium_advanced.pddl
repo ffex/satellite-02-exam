@@ -1,5 +1,5 @@
 (define (problem satellite-medium)
-(:domain satellite)
+(:domain satellite-advanced)
 
 (:objects
     star1 planet1 junk1 noise2 - object

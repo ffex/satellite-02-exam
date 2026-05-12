@@ -1,33 +1,34 @@
+STDOUT:
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 16
+Grounding Time: 17
 Aibr Preprocessing
 UFX:false
-|F|:28
+|F|:22
 |X|:3
-|A|:25
+|A|:22
 |P|:0
 |E|:0
 Folding back to 1-0 heuristic. Input heuristic is not supported
 h(I):1.0
-f(n) = 1.0 (Expanded Nodes: 1, Evaluated States: 1, Time: 0.002) Frontier Size: 0
-f(n) = 2.0 (Expanded Nodes: 2, Evaluated States: 3, Time: 0.007) Frontier Size: 1
-f(n) = 3.0 (Expanded Nodes: 6, Evaluated States: 12, Time: 0.008) Frontier Size: 6
-f(n) = 4.0 (Expanded Nodes: 15, Evaluated States: 28, Time: 0.009) Frontier Size: 13
-f(n) = 5.0 (Expanded Nodes: 36, Evaluated States: 67, Time: 0.011) Frontier Size: 31
-f(n) = 6.0 (Expanded Nodes: 71, Evaluated States: 117, Time: 0.014) Frontier Size: 46
-f(n) = 7.0 (Expanded Nodes: 150, Evaluated States: 267, Time: 0.018) Frontier Size: 117
-f(n) = 8.0 (Expanded Nodes: 292, Evaluated States: 483, Time: 0.021) Frontier Size: 191
-f(n) = 9.0 (Expanded Nodes: 532, Evaluated States: 847, Time: 0.024) Frontier Size: 315
-f(n) = 10.0 (Expanded Nodes: 848, Evaluated States: 1212, Time: 0.028) Frontier Size: 364
-f(n) = 11.0 (Expanded Nodes: 1219, Evaluated States: 1618, Time: 0.035) Frontier Size: 399
-f(n) = 12.0 (Expanded Nodes: 1620, Evaluated States: 2027, Time: 0.044) Frontier Size: 407
+f(n) = 1.0 (Expanded Nodes: 1, Evaluated States: 1, Time: 0.004) Frontier Size: 0
+f(n) = 2.0 (Expanded Nodes: 2, Evaluated States: 3, Time: 0.009) Frontier Size: 1
+f(n) = 3.0 (Expanded Nodes: 5, Evaluated States: 9, Time: 0.01) Frontier Size: 4
+f(n) = 4.0 (Expanded Nodes: 11, Evaluated States: 19, Time: 0.011) Frontier Size: 8
+f(n) = 5.0 (Expanded Nodes: 22, Evaluated States: 36, Time: 0.012) Frontier Size: 14
+f(n) = 6.0 (Expanded Nodes: 37, Evaluated States: 54, Time: 0.014) Frontier Size: 17
+f(n) = 7.0 (Expanded Nodes: 58, Evaluated States: 83, Time: 0.015) Frontier Size: 25
+f(n) = 8.0 (Expanded Nodes: 86, Evaluated States: 118, Time: 0.018) Frontier Size: 32
+f(n) = 9.0 (Expanded Nodes: 123, Evaluated States: 168, Time: 0.019) Frontier Size: 45
+f(n) = 10.0 (Expanded Nodes: 169, Evaluated States: 220, Time: 0.021) Frontier Size: 51
+f(n) = 11.0 (Expanded Nodes: 224, Evaluated States: 285, Time: 0.022) Frontier Size: 61
+f(n) = 12.0 (Expanded Nodes: 287, Evaluated States: 353, Time: 0.023) Frontier Size: 66
 Problem Solved
 
 Found Plan:
 0.0: (rotate-left sw s)
-1.0: (take-picture-hd planet1 s)
+1.0: (take-picture planet1 s)
 2.0: (rotate-left s se)
 3.0: (rotate-left se e)
 4.0: (rotate-left e ne)
@@ -35,21 +36,24 @@ Found Plan:
 6.0: (send planet1)
 7.0: (rotate-right n ne)
 8.0: (rotate-right ne e)
-9.0: (take-picture-hd star1 e)
+9.0: (take-picture star1 e)
 10.0: (rotate-left e ne)
 11.0: (rotate-left ne n)
 12.0: (send star1)
 13.0: (rotate-left n nw)
-14.0: (take-picture-hd galaxy1 nw)
+14.0: (take-picture galaxy1 nw)
 15.0: (rotate-right nw n)
 16.0: (send galaxy1)
 
 Plan-Length:17
 Metric (Search):11.0
-Planning Time (msec): 46
-Heuristic Time (msec): 1
-Search Time (msec): 45
-Expanded Nodes:1814
-States Evaluated:2364
+Planning Time (msec): 25
+Heuristic Time (msec): 2
+Search Time (msec): 24
+Expanded Nodes:333
+States Evaluated:416
 Number of Dead-Ends detected:0
-Number of Duplicates detected:1806
+Number of Duplicates detected:310
+
+
+STDERR:

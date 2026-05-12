@@ -1,63 +1,67 @@
+STDOUT:
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 17
+Grounding Time: 18
 Aibr Preprocessing
 UFX:false
-|F|:32
+|F|:24
 |X|:3
-|A|:28
+|A|:24
 |P|:0
 |E|:0
 Folding back to 1-0 heuristic. Input heuristic is not supported
 h(I):1.0
-f(n) = 1.0 (Expanded Nodes: 1, Evaluated States: 1, Time: 0.003) Frontier Size: 0
+f(n) = 1.0 (Expanded Nodes: 1, Evaluated States: 1, Time: 0.004) Frontier Size: 0
 f(n) = 2.0 (Expanded Nodes: 2, Evaluated States: 3, Time: 0.009) Frontier Size: 1
-f(n) = 3.0 (Expanded Nodes: 6, Evaluated States: 12, Time: 0.01) Frontier Size: 6
-f(n) = 4.0 (Expanded Nodes: 17, Evaluated States: 34, Time: 0.011) Frontier Size: 17
-f(n) = 5.0 (Expanded Nodes: 45, Evaluated States: 88, Time: 0.014) Frontier Size: 43
-f(n) = 6.0 (Expanded Nodes: 98, Evaluated States: 173, Time: 0.017) Frontier Size: 75
-f(n) = 7.0 (Expanded Nodes: 207, Evaluated States: 361, Time: 0.02) Frontier Size: 154
-f(n) = 8.0 (Expanded Nodes: 391, Evaluated States: 630, Time: 0.023) Frontier Size: 239
-f(n) = 9.0 (Expanded Nodes: 687, Evaluated States: 1064, Time: 0.027) Frontier Size: 377
-f(n) = 10.0 (Expanded Nodes: 1128, Evaluated States: 1683, Time: 0.03) Frontier Size: 555
-f(n) = 11.0 (Expanded Nodes: 1805, Evaluated States: 2645, Time: 0.034) Frontier Size: 840
-f(n) = 12.0 (Expanded Nodes: 2699, Evaluated States: 3740, Time: 0.04) Frontier Size: 1041
-f(n) = 13.0 (Expanded Nodes: 3813, Evaluated States: 5061, Time: 0.046) Frontier Size: 1248
-f(n) = 14.0 (Expanded Nodes: 5161, Evaluated States: 6649, Time: 0.053) Frontier Size: 1488
-f(n) = 15.0 (Expanded Nodes: 6714, Evaluated States: 8386, Time: 0.058) Frontier Size: 1672
+f(n) = 3.0 (Expanded Nodes: 5, Evaluated States: 9, Time: 0.01) Frontier Size: 4
+f(n) = 4.0 (Expanded Nodes: 12, Evaluated States: 22, Time: 0.011) Frontier Size: 10
+f(n) = 5.0 (Expanded Nodes: 26, Evaluated States: 45, Time: 0.014) Frontier Size: 19
+f(n) = 6.0 (Expanded Nodes: 48, Evaluated States: 76, Time: 0.015) Frontier Size: 28
+f(n) = 7.0 (Expanded Nodes: 84, Evaluated States: 131, Time: 0.018) Frontier Size: 47
+f(n) = 8.0 (Expanded Nodes: 138, Evaluated States: 206, Time: 0.02) Frontier Size: 68
+f(n) = 9.0 (Expanded Nodes: 217, Evaluated States: 317, Time: 0.022) Frontier Size: 100
+f(n) = 10.0 (Expanded Nodes: 330, Evaluated States: 466, Time: 0.024) Frontier Size: 136
+f(n) = 11.0 (Expanded Nodes: 479, Evaluated States: 654, Time: 0.026) Frontier Size: 175
+f(n) = 12.0 (Expanded Nodes: 663, Evaluated States: 867, Time: 0.028) Frontier Size: 204
+f(n) = 13.0 (Expanded Nodes: 875, Evaluated States: 1105, Time: 0.031) Frontier Size: 230
+f(n) = 14.0 (Expanded Nodes: 1109, Evaluated States: 1352, Time: 0.032) Frontier Size: 243
+f(n) = 15.0 (Expanded Nodes: 1357, Evaluated States: 1614, Time: 0.033) Frontier Size: 257
 Problem Solved
 
 Found Plan:
 0.0: (rotate-left n nw)
 1.0: (rotate-left nw w)
-2.0: (take-picture-sd nebula1 w)
-3.0: (rotate-right w nw)
-4.0: (rotate-right nw n)
-5.0: (send nebula1)
-6.0: (rotate-left n nw)
-7.0: (rotate-left nw w)
-8.0: (rotate-left w sw)
-9.0: (take-picture-sd planet1 sw)
-10.0: (rotate-left sw s)
-11.0: (rotate-left s se)
-12.0: (take-picture-hd star1 se)
-13.0: (rotate-left se e)
-14.0: (rotate-left e ne)
-15.0: (rotate-left ne n)
-16.0: (send star1)
-17.0: (rotate-right n ne)
-18.0: (take-picture-hd galaxy1 ne)
-19.0: (rotate-left ne n)
-20.0: (send galaxy1)
-21.0: (send planet1)
+2.0: (take-picture nebula1 w)
+3.0: (rotate-left w sw)
+4.0: (take-picture planet1 sw)
+5.0: (rotate-right sw w)
+6.0: (rotate-right w nw)
+7.0: (rotate-right nw n)
+8.0: (send nebula1)
+9.0: (send planet1)
+10.0: (rotate-right n ne)
+11.0: (rotate-right ne e)
+12.0: (rotate-right e se)
+13.0: (take-picture star1 se)
+14.0: (rotate-left se e)
+15.0: (rotate-left e ne)
+16.0: (rotate-left ne n)
+17.0: (send star1)
+18.0: (rotate-right n ne)
+19.0: (take-picture galaxy1 ne)
+20.0: (rotate-left ne n)
+21.0: (send galaxy1)
 
 Plan-Length:22
 Metric (Search):14.0
-Planning Time (msec): 61
-Heuristic Time (msec): 1
-Search Time (msec): 59
-Expanded Nodes:7042
-States Evaluated:8937
+Planning Time (msec): 36
+Heuristic Time (msec): 2
+Search Time (msec): 34
+Expanded Nodes:1481
+States Evaluated:1805
 Number of Dead-Ends detected:0
-Number of Duplicates detected:7522
+Number of Duplicates detected:1531
+
+
+STDERR:

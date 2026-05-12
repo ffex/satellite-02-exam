@@ -1,19 +1,18 @@
+STDOUT:
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 16
+Grounding Time: 15
 Aibr Preprocessing
 UFX:false
-|F|:24
+|F|:20
 |X|:3
-|A|:22
+|A|:20
 |P|:0
 |E|:0
 Numeric Error for Complex Condition Activated
-H1 Setup Time (msec): 10
-h(I):4.0
- g(n)= 1.0 h(n)=3.0
- g(n)= 2.0 h(n)=2.0
+H1 Setup Time (msec): 8
+h(I):2.0
  g(n)= 3.0 h(n)=1.0
  g(n)= 4.0 h(n)=0.0
 Problem Solved
@@ -21,17 +20,21 @@ Problem Solved
 Found Plan:
 0.0: (rotate-right n ne)
 1.0: (rotate-right ne e)
-2.0: (take-picture-hd star1 e)
-3.0: (rotate-left e ne)
-4.0: (rotate-left ne n)
-5.0: (send star1)
+2.0: (take-picture noise1 e)
+3.0: (take-picture star1 e)
+4.0: (rotate-left e ne)
+5.0: (rotate-left ne n)
+6.0: (send star1)
 
-Plan-Length:6
+Plan-Length:7
 Metric (Search):4.0
-Planning Time (msec): 24
-Heuristic Time (msec): 11
-Search Time (msec): 22
-Expanded Nodes:9
+Planning Time (msec): 16
+Heuristic Time (msec): 6
+Search Time (msec): 14
+Expanded Nodes:11
 States Evaluated:26
 Number of Dead-Ends detected:0
-Number of Duplicates detected:2
+Number of Duplicates detected:1
+
+
+STDERR:

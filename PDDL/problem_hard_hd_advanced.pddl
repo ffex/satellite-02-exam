@@ -1,5 +1,5 @@
 (define (problem satellite-hard-hd)
-(:domain satellite)
+(:domain satellite-advanced)
 
 (:objects
     star1 planet1 galaxy1 - object

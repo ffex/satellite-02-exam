@@ -1,26 +1,25 @@
+STDOUT:
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 17
+Grounding Time: 14
 Aibr Preprocessing
 UFX:false
-|F|:24
+|F|:20
 |X|:3
-|A|:22
+|A|:20
 |P|:0
 |E|:0
 Numeric Error for Complex Condition Activated
-H1 Setup Time (msec): 8
-h(I):16.0
- g(n)= 1.0 h(n)=14.0
- g(n)= 2.0 h(n)=12.0
- g(n)= 3.0 h(n)=10.0
- g(n)= 4.0 h(n)=8.0
- g(n)= 28.0 h(n)=4.0
- g(n)= 29.0 h(n)=3.0
- g(n)= 30.0 h(n)=2.0
- g(n)= 31.0 h(n)=1.0
- g(n)= 32.0 h(n)=0.0
+H1 Setup Time (msec): 7
+h(I):12.0
+ g(n)= 1.0 h(n)=10.0
+ g(n)= 2.0 h(n)=8.0
+ g(n)= 3.0 h(n)=6.0
+ g(n)= 4.0 h(n)=4.0
+ g(n)= 22.0 h(n)=2.0
+ g(n)= 25.0 h(n)=1.0
+ g(n)= 26.0 h(n)=0.0
 Problem Solved
 
 Found Plan:
@@ -36,37 +35,34 @@ Found Plan:
 9.0: (rotate-left ne n)
 10.0: (rotate-right n ne)
 11.0: (rotate-left ne n)
-12.0: (rotate-left n nw)
-13.0: (rotate-right nw n)
+12.0: (rotate-right n ne)
+13.0: (rotate-left ne n)
 14.0: (rotate-right n ne)
 15.0: (rotate-left ne n)
 16.0: (rotate-right n ne)
 17.0: (rotate-left ne n)
-18.0: (rotate-right n ne)
-19.0: (rotate-left ne n)
-20.0: (rotate-right n ne)
-21.0: (rotate-left ne n)
-22.0: (rotate-right n ne)
-23.0: (rotate-left ne n)
+18.0: (rotate-left n nw)
+19.0: (rotate-left nw w)
+20.0: (take-picture planet1 w)
+21.0: (rotate-right w nw)
+22.0: (rotate-right nw n)
+23.0: (send planet1)
 24.0: (rotate-right n ne)
 25.0: (rotate-right ne e)
-26.0: (take-picture-hd star1 e)
+26.0: (take-picture star1 e)
 27.0: (rotate-left e ne)
 28.0: (rotate-left ne n)
 29.0: (send star1)
-30.0: (rotate-left n nw)
-31.0: (rotate-left nw w)
-32.0: (take-picture-hd planet1 w)
-33.0: (rotate-right w nw)
-34.0: (rotate-right nw n)
-35.0: (send planet1)
 
-Plan-Length:36
-Metric (Search):32.0
-Planning Time (msec): 34
-Heuristic Time (msec): 16
-Search Time (msec): 33
-Expanded Nodes:126
-States Evaluated:271
-Number of Dead-Ends detected:10
-Number of Duplicates detected:66
+Plan-Length:30
+Metric (Search):26.0
+Planning Time (msec): 25
+Heuristic Time (msec): 11
+Search Time (msec): 23
+Expanded Nodes:105
+States Evaluated:186
+Number of Dead-Ends detected:5
+Number of Duplicates detected:44
+
+
+STDERR:

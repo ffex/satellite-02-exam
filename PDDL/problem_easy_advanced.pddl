@@ -1,5 +1,5 @@
 (define (problem satellite-easy)
-(:domain satellite)
+(:domain satellite-advanced)
 
 (:objects
     star1 noise1 - object

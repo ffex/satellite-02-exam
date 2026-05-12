@@ -1,0 +1,76 @@
+STDOUT:
+Domain parsed
+Problem parsed
+Grounding..
+Grounding Time: 17
+Aibr Preprocessing
+UFX:false
+|F|:20
+|X|:3
+|A|:20
+|P|:0
+|E|:0
+Folding back to 1-0 heuristic. Input heuristic is not supported
+h(I):1.0
+Problem Solved
+
+Found Plan:
+0.0: (rotate-left s se)
+1.0: (rotate-left se e)
+2.0: (take-picture star1 e)
+3.0: (rotate-left e ne)
+4.0: (rotate-right ne e)
+5.0: (rotate-left e ne)
+6.0: (rotate-right ne e)
+7.0: (rotate-left e ne)
+8.0: (rotate-right ne e)
+9.0: (rotate-left e ne)
+10.0: (rotate-right ne e)
+11.0: (rotate-left e ne)
+12.0: (rotate-right ne e)
+13.0: (rotate-left e ne)
+14.0: (rotate-right ne e)
+15.0: (rotate-left e ne)
+16.0: (rotate-right ne e)
+17.0: (rotate-left e ne)
+18.0: (rotate-right ne e)
+19.0: (rotate-left e ne)
+20.0: (rotate-right ne e)
+21.0: (rotate-left e ne)
+22.0: (rotate-right ne e)
+23.0: (rotate-left e ne)
+24.0: (rotate-right ne e)
+25.0: (rotate-left e ne)
+26.0: (rotate-right ne e)
+27.0: (rotate-left e ne)
+28.0: (rotate-right ne e)
+29.0: (rotate-left e ne)
+30.0: (rotate-right ne e)
+31.0: (rotate-left e ne)
+32.0: (rotate-right ne e)
+33.0: (rotate-left e ne)
+34.0: (rotate-right ne e)
+35.0: (rotate-left e ne)
+36.0: (rotate-right ne e)
+37.0: (rotate-left e ne)
+38.0: (rotate-left ne n)
+39.0: (send star1)
+40.0: (rotate-left n nw)
+41.0: (rotate-left nw w)
+42.0: (take-picture planet1 w)
+43.0: (rotate-right w nw)
+44.0: (rotate-right nw n)
+45.0: (send planet1)
+
+Plan-Length:46
+Metric (Search):42.0
+Planning Time (msec): 18
+Heuristic Time (msec): 1
+Search Time (msec): 16
+Expanded Nodes:268
+States Evaluated:364
+Number of Dead-Ends detected:0
+Number of Duplicates detected:158
+
+
+STDERR:

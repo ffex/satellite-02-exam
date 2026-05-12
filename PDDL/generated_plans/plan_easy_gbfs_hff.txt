@@ -1,6 +1,6 @@
 (rotate-right n ne)
 (rotate-right ne e)
-(take-picture-hd star1 e)
+(take-picture star1 e)
 (rotate-left e ne)
 (rotate-right ne e)
 (rotate-left e ne)

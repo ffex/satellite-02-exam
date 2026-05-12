@@ -1,5 +1,5 @@
 # ==========================================================
-# PE_IM_planner_runner_advanced.py (FIXED & CLEAN)
+# PE_IM_planner_runner_advanced.py (CLEAN + SEMANTIC FIX)
 # ==========================================================
 
 import subprocess
@@ -39,25 +39,39 @@ PROBLEMS = {
 # ==========================================================
 
 PLANNERS = {
+
+    #bfs
     "bfs": ["-s", "bfs"],
-    "gbfs_hadd": ["-s", "gbfs", "-h", "hadd"],
+
+    # UCS (uniform cost ~ A* senza euristica utile)
+    "ucs": ["-s", "astar", "-h", "zero"],  # ENHSP interpreta zero o default cost
+
+    # Greedy best first
+
     "gbfs_hff": ["-s", "gbfs", "-h", "hff"],
+
+    # A*
+
     "astar_hff": ["-s", "astar", "-h", "hff"],
-    "wastar_hff": ["-s", "WAStar", "-h", "hff"],
+    "astar_lmcut": ["-s", "astar", "-h", "lmcut"],
+
+    # A* pesato
+    "wastar_hadd": ["-s", "WAStar", "-h", "hadd"],
 }
 
 # ==========================================================
-# UTIL: RESET FILE
+# RESET FILE
 # ==========================================================
 
 def reset_file(path: Path):
     path.write_text("")
 
 # ==========================================================
-# FIXED PARSER (ENHSP SAFE)
+# PLAN PARSER
 # ==========================================================
 
-def parse_and_print_plan(plan_file: Path):
+def parse_and_print_plan(plan_file: Path, renderer=None):
+
     print("\nPLAN STEPS")
     print("-" * 60)
 
@@ -69,13 +83,13 @@ def parse_and_print_plan(plan_file: Path):
             return False
 
         steps = []
+
         for line in text.splitlines():
             line = line.strip()
 
             if not line or line.startswith(";"):
                 continue
 
-            # ENHSP format cleanup
             line = re.sub(r"^[0-9\.]+\:\s*", "", line)
             line = line.replace("(", "").replace(")", "")
 
@@ -84,6 +98,12 @@ def parse_and_print_plan(plan_file: Path):
         if not steps:
             print("[!] NO VALID ACTIONS FOUND")
             return False
+
+        # ==============================
+        # SEMANTIC ENRICHMENT
+        # ==============================
+        if renderer:
+            steps = renderer.render(steps)
 
         for i, s in enumerate(steps, 1):
             print(f"[{i:02}] {s}")
@@ -96,7 +116,98 @@ def parse_and_print_plan(plan_file: Path):
         return False
 
 # ==========================================================
-# RUN PLANNER (FIXED LOGIC)
+# EXTRACT INIT FROM PDDL
+# ==========================================================
+
+def get_init_from_problem(problem_file: Path):
+
+    lines = problem_file.read_text().splitlines()
+
+    init = []
+    inside = False
+
+    for line in lines:
+        l = line.strip()
+
+        if "(:init" in l:
+            inside = True
+            continue
+
+        if inside and l.startswith("(:goal"):
+            break
+
+        if inside:
+            init.append(l)
+
+    return init
+
+# ==========================================================
+# SEMANTIC RENDERER
+# ==========================================================
+
+class SemanticPlanRenderer:
+
+    def __init__(self, pddl_init_lines):
+        self.quality_map = self._parse_quality(pddl_init_lines)
+        self.current_direction = None
+
+    def _parse_quality(self, lines):
+        quality = {}
+
+        for line in lines:
+
+            m_hd = re.match(r"\(quality-hd\s+([^\s\)]+)\)", line)
+            if m_hd:
+                quality[m_hd.group(1)] = "HD"
+
+            m_sd = re.match(r"\(quality-sd\s+([^\s\)]+)\)", line)
+            if m_sd:
+                quality[m_sd.group(1)] = "SD"
+
+        return quality
+
+    def render(self, steps):
+
+        out = []
+
+        for step in steps:
+
+            tokens = step.split()
+            if not tokens:
+                continue
+
+            action = tokens[0]
+
+            # ROTATE
+            if "rotate" in action:
+                self.current_direction = tokens[-1]
+                out.append(step)
+                continue
+
+            # TAKE PICTURE
+            if action == "take-picture":
+                obj = tokens[1]
+                direction = tokens[2] if len(tokens) > 2 else self.current_direction
+                quality = self.quality_map.get(obj, "UNKNOWN")
+
+                out.append(f"take-picture {obj} {direction} {quality}")
+                continue
+
+            # SEND
+            if action == "send":
+                obj = tokens[1]
+                direction = self.current_direction or "UNKNOWN"
+                quality = self.quality_map.get(obj, "UNKNOWN")
+
+                out.append(f"send {obj} {direction} {quality}")
+                continue
+
+            out.append(step)
+
+        return out
+
+# ==========================================================
+# RUN PLANNER
 # ==========================================================
 
 def run_planner(problem_name, problem_file, strategy):
@@ -112,9 +223,7 @@ def run_planner(problem_name, problem_file, strategy):
     reset_file(plan_file)
 
     cmd = [
-        "java",
-        "-jar",
-        str(ENHSP_JAR),
+        "java", "-jar", str(ENHSP_JAR),
         "-o", str(DOMAIN_FILE),
         "-f", str(problem_file),
         "-sp", str(plan_file),
@@ -136,27 +245,15 @@ def run_planner(problem_name, problem_file, strategy):
 
     elapsed = time.time() - start
 
-    # ======================================================
-    # LOGGING FULL OUTPUT
-    # ======================================================
-
     log_file.write_text(
         "STDOUT:\n" + result.stdout +
         "\n\nSTDERR:\n" + result.stderr
     )
 
-    # ======================================================
-    # OUTPUT
-    # ======================================================
-
     print("\nRESULT")
     print("-" * 60)
     print(f"Exit code : {result.returncode}")
     print(f"Time      : {elapsed:.2f}s")
-
-    # ⚠ FIX IMPORTANTISSIMO
-    # ENHSP spesso ritorna 0 anche se non trova piano utile
-    # quindi NON usare returncode come criterio unico
 
     if "Solution found" not in result.stdout and plan_file.stat().st_size == 0:
         print("\n[NO PLAN FOUND]")
@@ -177,7 +274,11 @@ def execute(problem_name, problem_file, strategy):
         print("[SKIP]")
         return
 
-    parse_and_print_plan(plan_file)
+    init_lines = get_init_from_problem(problem_file)
+
+    renderer = SemanticPlanRenderer(init_lines)
+
+    parse_and_print_plan(plan_file, renderer)
 
 # ==========================================================
 # MAIN
@@ -192,6 +293,7 @@ def main():
         print("#" * 80)
 
         for strategy in PLANNERS:
+
             try:
                 execute(pname, pfile, strategy)
             except Exception as e:

@@ -1,0 +1,123 @@
+STDOUT:
+Domain parsed
+Problem parsed
+Grounding..
+Grounding Time: 17
+Aibr Preprocessing
+UFX:false
+|F|:22
+|X|:3
+|A|:22
+|P|:0
+|E|:0
+Folding back to 1-0 heuristic. Input heuristic is not supported
+h(I):1.0
+Problem Solved
+
+Found Plan:
+0.0: (rotate-left sw s)
+1.0: (rotate-left s se)
+2.0: (rotate-right se s)
+3.0: (rotate-left s se)
+4.0: (rotate-right se s)
+5.0: (rotate-left s se)
+6.0: (rotate-right se s)
+7.0: (rotate-left s se)
+8.0: (rotate-right se s)
+9.0: (rotate-left s se)
+10.0: (rotate-right se s)
+11.0: (rotate-left s se)
+12.0: (rotate-right se s)
+13.0: (rotate-left s se)
+14.0: (rotate-right se s)
+15.0: (rotate-left s se)
+16.0: (rotate-right se s)
+17.0: (rotate-left s se)
+18.0: (rotate-right se s)
+19.0: (rotate-left s se)
+20.0: (rotate-right se s)
+21.0: (rotate-left s se)
+22.0: (rotate-right se s)
+23.0: (rotate-left s se)
+24.0: (rotate-right se s)
+25.0: (rotate-left s se)
+26.0: (rotate-right se s)
+27.0: (rotate-left s se)
+28.0: (rotate-right se s)
+29.0: (rotate-left s se)
+30.0: (rotate-right se s)
+31.0: (rotate-left s se)
+32.0: (rotate-right se s)
+33.0: (rotate-left s se)
+34.0: (rotate-right se s)
+35.0: (rotate-left s se)
+36.0: (rotate-right se s)
+37.0: (rotate-left s se)
+38.0: (rotate-right se s)
+39.0: (rotate-left s se)
+40.0: (rotate-right se s)
+41.0: (rotate-left s se)
+42.0: (rotate-right se s)
+43.0: (rotate-left s se)
+44.0: (rotate-right se s)
+45.0: (rotate-left s se)
+46.0: (rotate-right se s)
+47.0: (rotate-left s se)
+48.0: (rotate-right se s)
+49.0: (rotate-left s se)
+50.0: (rotate-right se s)
+51.0: (rotate-left s se)
+52.0: (rotate-right se s)
+53.0: (rotate-left s se)
+54.0: (rotate-right se s)
+55.0: (rotate-left s se)
+56.0: (rotate-right se s)
+57.0: (rotate-left s se)
+58.0: (rotate-right se s)
+59.0: (rotate-left s se)
+60.0: (rotate-right se s)
+61.0: (rotate-left s se)
+62.0: (rotate-right se s)
+63.0: (rotate-left s se)
+64.0: (rotate-right se s)
+65.0: (rotate-left s se)
+66.0: (rotate-right se s)
+67.0: (rotate-left s se)
+68.0: (rotate-right se s)
+69.0: (rotate-left s se)
+70.0: (rotate-right se s)
+71.0: (rotate-left s se)
+72.0: (rotate-right se s)
+73.0: (rotate-left s se)
+74.0: (rotate-right se s)
+75.0: (rotate-left s se)
+76.0: (rotate-right se s)
+77.0: (take-picture planet1 s)
+78.0: (rotate-left s se)
+79.0: (rotate-left se e)
+80.0: (rotate-left e ne)
+81.0: (rotate-left ne n)
+82.0: (send planet1)
+83.0: (rotate-left n nw)
+84.0: (take-picture galaxy1 nw)
+85.0: (rotate-right nw n)
+86.0: (send galaxy1)
+87.0: (rotate-right n ne)
+88.0: (rotate-right ne e)
+89.0: (take-picture star1 e)
+90.0: (rotate-left e ne)
+91.0: (rotate-left ne n)
+92.0: (send star1)
+
+Plan-Length:93
+Metric (Search):87.0
+Planning Time (msec): 26
+Heuristic Time (msec): 2
+Search Time (msec): 24
+Expanded Nodes:998
+States Evaluated:1237
+Number of Dead-Ends detected:0
+Number of Duplicates detected:807
+
+
+STDERR:

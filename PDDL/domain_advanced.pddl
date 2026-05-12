@@ -1,4 +1,4 @@
-(define (domain satellite)
+(define (domain satellite-advanced)
 
 (:requirements
     :typing
