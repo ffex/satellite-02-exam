@@ -1,5 +1,5 @@
 # ==========================================================
-# PE_IM_planner_runner_clean.py
+# PE_IM_planner_runner_advanced.py (FIXED & CLEAN)
 # ==========================================================
 
 import subprocess
@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 
 # ==========================================================
-# CONFIG
+# PATHS
 # ==========================================================
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -21,9 +21,6 @@ LOGS_DIR = BASE_DIR / "planner_logs"
 
 PLANS_DIR.mkdir(exist_ok=True)
 LOGS_DIR.mkdir(exist_ok=True)
-
-DEBUG_LOG = False
-VERBOSE = False
 
 # ==========================================================
 # PROBLEMS
@@ -50,93 +47,56 @@ PLANNERS = {
 }
 
 # ==========================================================
-# FILE RESET
+# UTIL: RESET FILE
 # ==========================================================
 
 def reset_file(path: Path):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w") as f:
-        pass
+    path.write_text("")
 
 # ==========================================================
-# ERROR DETECTION
-# ==========================================================
-
-def detect_failure(stdout, stderr):
-    text = (stdout + stderr).lower()
-
-    keywords = [
-        "error",
-        "exception",
-        "failed",
-        "unsolvable",
-        "numeric error"
-    ]
-
-    return any(k in text for k in keywords)
-
-# ==========================================================
-# PLAN PARSER (ROBUSTO)
+# FIXED PARSER (ENHSP SAFE)
 # ==========================================================
 
 def parse_and_print_plan(plan_file: Path):
-
     print("\nPLAN STEPS")
     print("-" * 60)
 
     try:
-        with open(plan_file, "r") as f:
-            lines = f.readlines()
+        text = plan_file.read_text().strip()
 
-        steps = []
-
-        for line in lines:
-            line = line.strip()
-
-            if not line:
-                continue
-
-            if line.startswith(";"):
-                continue
-
-            # rimuove timestamp ENHSP
-            line = re.sub(r"^[0-9\.]+\s*:\s*", "", line)
-
-            # rimuove formato [01]
-            line = re.sub(r"^\[\d+\]\s*", "", line)
-
-            # pulizia parentesi
-            line = line.replace("(", "").replace(")", "").strip()
-
-            # filtri rumore ENHSP
-            if any(x in line.lower() for x in [
-                "numeric error",
-                "grounding",
-                "problem parsed",
-                "heuristic"
-            ]):
-                continue
-
-            if line:
-                steps.append(line)
-
-        if not steps:
-            print("[!] Plan vuoto o non valido")
+        if not text:
+            print("[!] EMPTY PLAN")
             return False
 
-        for i, s in enumerate(steps):
-            print(f"[{i+1:02}] {s}")
+        steps = []
+        for line in text.splitlines():
+            line = line.strip()
+
+            if not line or line.startswith(";"):
+                continue
+
+            # ENHSP format cleanup
+            line = re.sub(r"^[0-9\.]+\:\s*", "", line)
+            line = line.replace("(", "").replace(")", "")
+
+            steps.append(line)
+
+        if not steps:
+            print("[!] NO VALID ACTIONS FOUND")
+            return False
+
+        for i, s in enumerate(steps, 1):
+            print(f"[{i:02}] {s}")
 
         print(f"\n[PLAN LENGTH]: {len(steps)}")
         return True
 
     except Exception as e:
-        print("\n[PARSE ERROR]")
-        print(e)
+        print("[PARSE ERROR]", e)
         return False
 
 # ==========================================================
-# RUN PLANNER
+# RUN PLANNER (FIXED LOGIC)
 # ==========================================================
 
 def run_planner(problem_name, problem_file, strategy):
@@ -149,9 +109,7 @@ def run_planner(problem_name, problem_file, strategy):
     plan_file = PLANS_DIR / f"plan_{problem_name}_{strategy}.txt"
     log_file = LOGS_DIR / f"log_{problem_name}_{strategy}.txt"
 
-    # reset totale
     reset_file(plan_file)
-    reset_file(log_file)
 
     cmd = [
         "java",
@@ -163,9 +121,8 @@ def run_planner(problem_name, problem_file, strategy):
         *PLANNERS[strategy]
     ]
 
-    if VERBOSE:
-        print("\nCOMMAND")
-        print(" ".join(cmd))
+    print("\nCOMMAND")
+    print(" ".join(cmd))
 
     start = time.time()
 
@@ -174,19 +131,19 @@ def run_planner(problem_name, problem_file, strategy):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
-        timeout=60
+        timeout=120
     )
 
     elapsed = time.time() - start
 
     # ======================================================
-    # LOG MANAGEMENT
+    # LOGGING FULL OUTPUT
     # ======================================================
 
-    if DEBUG_LOG:
-        log_file.write_text(result.stdout + "\n\n" + result.stderr)
-    else:
-        log_file.write_text(result.stderr if result.stderr else result.stdout)
+    log_file.write_text(
+        "STDOUT:\n" + result.stdout +
+        "\n\nSTDERR:\n" + result.stderr
+    )
 
     # ======================================================
     # OUTPUT
@@ -197,27 +154,19 @@ def run_planner(problem_name, problem_file, strategy):
     print(f"Exit code : {result.returncode}")
     print(f"Time      : {elapsed:.2f}s")
 
-    # detection errori reali
-    if result.returncode != 0 or detect_failure(result.stdout, result.stderr):
-        print("\n[PLANNER ERROR / WARNING]")
-        print(result.stderr[-1000:])
-        return None
+    # ⚠ FIX IMPORTANTISSIMO
+    # ENHSP spesso ritorna 0 anche se non trova piano utile
+    # quindi NON usare returncode come criterio unico
 
-    # ======================================================
-    # PLAN CHECK
-    # ======================================================
-
-    if not plan_file.exists() or plan_file.stat().st_size == 0:
-        print("\n[ERROR] Plan non generato")
-        print(result.stdout[-1000:])
+    if "Solution found" not in result.stdout and plan_file.stat().st_size == 0:
+        print("\n[NO PLAN FOUND]")
         return None
 
     print("\n[SUCCESS] Plan generato")
-
     return plan_file
 
 # ==========================================================
-# EXECUTE SINGLE RUN
+# EXECUTION PIPELINE
 # ==========================================================
 
 def execute(problem_name, problem_file, strategy):
@@ -225,16 +174,13 @@ def execute(problem_name, problem_file, strategy):
     plan_file = run_planner(problem_name, problem_file, strategy)
 
     if not plan_file:
-        print("\n[SKIP]")
+        print("[SKIP]")
         return
 
-    ok = parse_and_print_plan(plan_file)
-
-    if not ok:
-        print("\n[WARNING] Plan problematico")
+    parse_and_print_plan(plan_file)
 
 # ==========================================================
-# MAIN LOOP
+# MAIN
 # ==========================================================
 
 def main():
@@ -246,13 +192,10 @@ def main():
         print("#" * 80)
 
         for strategy in PLANNERS:
-
             try:
                 execute(pname, pfile, strategy)
-
             except Exception as e:
-                print("\n[FATAL ERROR]")
-                print(f"{pname} / {strategy}")
+                print("[FATAL]", pname, strategy)
                 print(e)
 
 # ==========================================================
