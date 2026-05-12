@@ -1,7 +1,0 @@
-(rotate-right n ne)
-(rotate-right ne e)
-(take-picture-hd-s1 star1 e)
-(rotate-left e ne)
-(rotate-left ne n)
-(send-hd-s1 star1 n)
-; cost = 8 (general cost)
