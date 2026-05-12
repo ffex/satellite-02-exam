@@ -1,75 +1,20 @@
 # ==========================================================
-# FILE: PE_IM_planner_runner_advanced.py
-# ==========================================================
-#
-# RUNNER COMPLETO PER ENHSP
-#
-# Questo runner:
-#
-# 1. Esegue ENHSP
-# 2. Salva:
-#       - piano generato
-#       - stdout/stderr
-#       - log debug
-# 3. Parse del piano
-# 4. Simulazione del piano tramite interpreter
-# 5. Validazione finale dello stato
-#
-# ----------------------------------------------------------
-# STRUTTURA OUTPUT
-#
-# generated_plans/
-#   ├── plan_easy_bfs.txt
-#   ├── plan_easy_gbfs_hff.txt
-#   └── ...
-#
-# planner_logs/
-#   ├── log_easy_bfs.txt
-#   └── ...
-#
-# ----------------------------------------------------------
-# PIPELINE
-#
-# problem.pddl
-#      ↓
-# ENHSP
-#      ↓
-# piano.txt
-#      ↓
-# parse_plan()
-#      ↓
-# interpreter.run()
-#      ↓
-# stato finale
-#
+# PE_IM_planner_runner_clean.py
 # ==========================================================
 
 import subprocess
 import time
 from pathlib import Path
-
-from PE_IM_parse_plan_advanced import parse_plan
-from PE_IM_planner_interpreter_advanced import (
-    PDDLPlanInterpreterAdvanced
-)
+import re
 
 # ==========================================================
-# PATHS
+# CONFIG
 # ==========================================================
 
 BASE_DIR = Path(__file__).resolve().parent
 
 DOMAIN_FILE = BASE_DIR / "domain_advanced.pddl"
-
-ENHSP_JAR = (
-    BASE_DIR /
-    "enhsp-enhsp-20" /
-    "enhsp.jar"
-)
-
-# ----------------------------------------------------------
-# output folders
-# ----------------------------------------------------------
+ENHSP_JAR = BASE_DIR / "enhsp-enhsp-20" / "enhsp.jar"
 
 PLANS_DIR = BASE_DIR / "generated_plans"
 LOGS_DIR = BASE_DIR / "planner_logs"
@@ -77,437 +22,237 @@ LOGS_DIR = BASE_DIR / "planner_logs"
 PLANS_DIR.mkdir(exist_ok=True)
 LOGS_DIR.mkdir(exist_ok=True)
 
+DEBUG_LOG = False
+VERBOSE = False
+
 # ==========================================================
 # PROBLEMS
 # ==========================================================
 
 PROBLEMS = {
-
-    "easy":
-        BASE_DIR / "problem_easy_advanced.pddl",
-
-    "medium":
-        BASE_DIR / "problem_medium_advanced.pddl",
-
-    "hard":
-        BASE_DIR / "problem_hard_advanced.pddl",
-
-    "hard_hd":
-        BASE_DIR / "problem_hard_hd_advanced.pddl",
-
-    "extreme":
-        BASE_DIR / "problem_extreme_advanced.pddl",
+    "easy": BASE_DIR / "problem_easy_advanced.pddl",
+    "medium": BASE_DIR / "problem_medium_advanced.pddl",
+    "hard": BASE_DIR / "problem_hard_advanced.pddl",
+    "hard_hd": BASE_DIR / "problem_hard_hd_advanced.pddl",
+    "extreme": BASE_DIR / "problem_extreme_advanced.pddl",
 }
 
 # ==========================================================
-# SEARCH STRATEGIES
+# STRATEGIES
 # ==========================================================
 
 PLANNERS = {
-
-    # ------------------------------------------------------
-    # Breadth First Search
-    # ricerca non informata per livelli
-    # ------------------------------------------------------
-
-    "bfs":
-        ["-s", "bfs"],
-
-    # ------------------------------------------------------
-    # Greedy Best First Search
-    # ------------------------------------------------------
-
-    "gbfs_hadd":
-        ["-s", "gbfs", "-h", "hadd"],
-
-    "gbfs_hff":
-        ["-s", "gbfs", "-h", "hff"],
-
-    # ------------------------------------------------------
-    # A*
-    # ------------------------------------------------------
-
-    "astar_hadd":
-        ["-s", "astar", "-h", "hadd"],
-
-    "astar_hff":
-        ["-s", "astar", "-h", "hff"],
-
-    # ------------------------------------------------------
-    # Weighted A*
-    # più veloce ma meno ottimale
-    # ------------------------------------------------------
-
-    "wastar_hff":
-        ["-s", "WAStar", "-h", "hff"],
+    "bfs": ["-s", "bfs"],
+    "gbfs_hadd": ["-s", "gbfs", "-h", "hadd"],
+    "gbfs_hff": ["-s", "gbfs", "-h", "hff"],
+    "astar_hff": ["-s", "astar", "-h", "hff"],
+    "wastar_hff": ["-s", "WAStar", "-h", "hff"],
 }
 
 # ==========================================================
-# FAILURE ANALYSIS
+# FILE RESET
 # ==========================================================
 
-def diagnose_failure(stdout: str,
-                     stderr: str):
+def reset_file(path: Path):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w") as f:
+        pass
 
-    """
-    Analizza stdout/stderr per capire
-    perché ENHSP non ha prodotto un piano.
-    """
+# ==========================================================
+# ERROR DETECTION
+# ==========================================================
 
+def detect_failure(stdout, stderr):
     text = (stdout + stderr).lower()
 
-    if "unsolvable" in text:
-        return "UNSOLVABLE_PROBLEM"
+    keywords = [
+        "error",
+        "exception",
+        "failed",
+        "unsolvable",
+        "numeric error"
+    ]
 
-    if "timeout" in text:
-        return "TIMEOUT"
-
-    if "parser error" in text:
-        return "PDDL_PARSE_ERROR"
-
-    if "undefined" in text:
-        return "UNDEFINED_SYMBOL"
-
-    if "cannot parse" in text:
-        return "INVALID_PDDL"
-
-    if "heuristic" in text:
-        return "HEURISTIC_FAILURE"
-
-    return "UNKNOWN_FAILURE"
+    return any(k in text for k in keywords)
 
 # ==========================================================
-# RUN ENHSP
+# PLAN PARSER (ROBUSTO)
 # ==========================================================
 
-def run_planner(problem_name: str,
-                problem_file: Path,
-                strategy: str):
+def parse_and_print_plan(plan_file: Path):
 
-    """
-    Esegue ENHSP sul problema selezionato.
-    """
+    print("\nPLAN STEPS")
+    print("-" * 60)
+
+    try:
+        with open(plan_file, "r") as f:
+            lines = f.readlines()
+
+        steps = []
+
+        for line in lines:
+            line = line.strip()
+
+            if not line:
+                continue
+
+            if line.startswith(";"):
+                continue
+
+            # rimuove timestamp ENHSP
+            line = re.sub(r"^[0-9\.]+\s*:\s*", "", line)
+
+            # rimuove formato [01]
+            line = re.sub(r"^\[\d+\]\s*", "", line)
+
+            # pulizia parentesi
+            line = line.replace("(", "").replace(")", "").strip()
+
+            # filtri rumore ENHSP
+            if any(x in line.lower() for x in [
+                "numeric error",
+                "grounding",
+                "problem parsed",
+                "heuristic"
+            ]):
+                continue
+
+            if line:
+                steps.append(line)
+
+        if not steps:
+            print("[!] Plan vuoto o non valido")
+            return False
+
+        for i, s in enumerate(steps):
+            print(f"[{i+1:02}] {s}")
+
+        print(f"\n[PLAN LENGTH]: {len(steps)}")
+        return True
+
+    except Exception as e:
+        print("\n[PARSE ERROR]")
+        print(e)
+        return False
+
+# ==========================================================
+# RUN PLANNER
+# ==========================================================
+
+def run_planner(problem_name, problem_file, strategy):
 
     print("\n" + "=" * 80)
     print(f"PROBLEM  : {problem_name}")
     print(f"STRATEGY : {strategy}")
     print("=" * 80)
 
-    # ------------------------------------------------------
-    # unique output files
-    # ------------------------------------------------------
+    plan_file = PLANS_DIR / f"plan_{problem_name}_{strategy}.txt"
+    log_file = LOGS_DIR / f"log_{problem_name}_{strategy}.txt"
 
-    plan_file = (
-        PLANS_DIR /
-        f"plan_{problem_name}_{strategy}.txt"
-    )
-
-    log_file = (
-        LOGS_DIR /
-        f"log_{problem_name}_{strategy}.txt"
-    )
-
-    # ------------------------------------------------------
-    # cleanup vecchio piano
-    # ------------------------------------------------------
-
-    if plan_file.exists():
-        plan_file.unlink()
-
-    # ------------------------------------------------------
-    # command
-    # ------------------------------------------------------
+    # reset totale
+    reset_file(plan_file)
+    reset_file(log_file)
 
     cmd = [
-
         "java",
         "-jar",
         str(ENHSP_JAR),
-
-        "-o",
-        str(DOMAIN_FILE),
-
-        "-f",
-        str(problem_file),
-
-        "-sp",
-        str(plan_file),
-
+        "-o", str(DOMAIN_FILE),
+        "-f", str(problem_file),
+        "-sp", str(plan_file),
         *PLANNERS[strategy]
     ]
 
-    print("\nCOMMAND:")
-    print(" ".join(cmd))
+    if VERBOSE:
+        print("\nCOMMAND")
+        print(" ".join(cmd))
+
+    start = time.time()
+
+    result = subprocess.run(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        timeout=60
+    )
+
+    elapsed = time.time() - start
 
     # ======================================================
-    # EXECUTION
+    # LOG MANAGEMENT
     # ======================================================
 
-    try:
-
-        start = time.time()
-
-        result = subprocess.run(
-
-            cmd,
-
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-
-            text=True,
-
-            timeout=60
-        )
-
-        elapsed = time.time() - start
-
-    except subprocess.TimeoutExpired:
-
-        print("\n[TIMEOUT]")
-        print("Planner exceeded 60 seconds")
-
-        return None
-
-    # ------------------------------------------------------
-    # ENHSP a volte scrive dopo il termine
-    # ------------------------------------------------------
-
-    time.sleep(0.3)
+    if DEBUG_LOG:
+        log_file.write_text(result.stdout + "\n\n" + result.stderr)
+    else:
+        log_file.write_text(result.stderr if result.stderr else result.stdout)
 
     # ======================================================
-    # SAVE COMPLETE LOG
+    # OUTPUT
     # ======================================================
 
-    with open(log_file, "w") as f:
-
-        f.write("=" * 80 + "\n")
-        f.write("COMMAND\n")
-        f.write("=" * 80 + "\n")
-        f.write(" ".join(cmd) + "\n\n")
-
-        f.write("=" * 80 + "\n")
-        f.write("EXIT CODE\n")
-        f.write("=" * 80 + "\n")
-        f.write(str(result.returncode) + "\n\n")
-
-        f.write("=" * 80 + "\n")
-        f.write("STDOUT\n")
-        f.write("=" * 80 + "\n")
-        f.write(result.stdout + "\n\n")
-
-        f.write("=" * 80 + "\n")
-        f.write("STDERR\n")
-        f.write("=" * 80 + "\n")
-        f.write(result.stderr + "\n\n")
-
-    # ======================================================
-    # DEBUG INFO
-    # ======================================================
-
-    print("\n" + "-" * 80)
-    print("DEBUG INFO")
-    print("-" * 80)
-
+    print("\nRESULT")
+    print("-" * 60)
     print(f"Exit code : {result.returncode}")
-    print(f"Elapsed   : {elapsed:.3f}s")
+    print(f"Time      : {elapsed:.2f}s")
 
-    # ------------------------------------------------------
-    # stdout preview
-    # ------------------------------------------------------
-
-    stdout_preview = result.stdout[-1200:]
-
-    if stdout_preview.strip():
-
-        print("\nSTDOUT PREVIEW")
-        print("-" * 40)
-        print(stdout_preview)
-
-    # ------------------------------------------------------
-    # stderr preview
-    # ------------------------------------------------------
-
-    stderr_preview = result.stderr[-1200:]
-
-    if stderr_preview.strip():
-
-        print("\nSTDERR PREVIEW")
-        print("-" * 40)
-        print(stderr_preview)
-
-    # ======================================================
-    # VALIDATE PLAN FILE
-    # ======================================================
-
-    if not plan_file.exists():
-
-        print("\n[ERROR] Plan file not generated")
-
-        failure = diagnose_failure(
-            result.stdout,
-            result.stderr
-        )
-
-        print(f"DIAGNOSIS: {failure}")
-
+    # detection errori reali
+    if result.returncode != 0 or detect_failure(result.stdout, result.stderr):
+        print("\n[PLANNER ERROR / WARNING]")
+        print(result.stderr[-1000:])
         return None
 
-    content = plan_file.read_text().strip()
+    # ======================================================
+    # PLAN CHECK
+    # ======================================================
 
-    if not content:
-
-        print("\n[ERROR] Empty plan file")
-
-        failure = diagnose_failure(
-            result.stdout,
-            result.stderr
-        )
-
-        print(f"DIAGNOSIS: {failure}")
-
+    if not plan_file.exists() or plan_file.stat().st_size == 0:
+        print("\n[ERROR] Plan non generato")
+        print(result.stdout[-1000:])
         return None
 
-    print("\n[SUCCESS] Plan generated")
+    print("\n[SUCCESS] Plan generato")
 
     return plan_file
 
 # ==========================================================
-# EXECUTION PIPELINE
+# EXECUTE SINGLE RUN
 # ==========================================================
 
-def execute_pipeline(problem_name: str,
-                     problem_file: Path,
-                     strategy: str):
+def execute(problem_name, problem_file, strategy):
 
-    # ======================================================
-    # RUN PLANNER
-    # ======================================================
+    plan_file = run_planner(problem_name, problem_file, strategy)
 
-    plan_file = run_planner(
-
-        problem_name,
-        problem_file,
-        strategy
-    )
-
-    if plan_file is None:
-
-        print(
-            f"\n[SKIP] "
-            f"{problem_name} / {strategy}"
-        )
-
+    if not plan_file:
+        print("\n[SKIP]")
         return
 
-    # ======================================================
-    # PARSE PLAN
-    # ======================================================
+    ok = parse_and_print_plan(plan_file)
 
-    print("\n" + "-" * 80)
-    print("PLAN PARSING")
-    print("-" * 80)
-
-    try:
-
-        plan = parse_plan(str(plan_file))
-
-    except Exception as e:
-
-        print("\n[PARSER ERROR]")
-        print(e)
-
-        return
-
-    if not plan:
-
-        print("\n[ERROR] Empty parsed plan")
-        return
-
-    # ======================================================
-    # PRINT PLAN
-    # ======================================================
-
-    print("\n" + "-" * 80)
-    print("PLAN STEPS")
-    print("-" * 80)
-
-    for idx, (action, params) in enumerate(plan, start=1):
-
-        print(
-            f"[{idx:02d}] "
-            f"{action} "
-            f"{' '.join(params)}"
-        )
-
-    # ======================================================
-    # INTERPRETER
-    # ======================================================
-
-    print("\n" + "-" * 80)
-    print("PLAN EXECUTION")
-    print("-" * 80)
-
-    try:
-
-        interpreter = (
-            PDDLPlanInterpreterAdvanced()
-        )
-
-        interpreter.run(plan)
-
-    except Exception as e:
-
-        print("\n[INTERPRETER ERROR]")
-        print(e)
-
-        return
-
-    # ======================================================
-    # FINAL STATE
-    # ======================================================
-
-    print("\n" + "-" * 80)
-    print("FINAL STATE")
-    print("-" * 80)
-
-    print(interpreter.state)
+    if not ok:
+        print("\n[WARNING] Plan problematico")
 
 # ==========================================================
-# MAIN
+# MAIN LOOP
 # ==========================================================
 
 def main():
 
-    for problem_name, problem_file in PROBLEMS.items():
+    for pname, pfile in PROBLEMS.items():
 
-        print("\n")
+        print("\n" + "#" * 80)
+        print(f"RUNNING PROBLEM: {pname}")
         print("#" * 80)
-        print(f"RUNNING PROBLEM: {problem_name}")
-        print("#" * 80)
 
-        for strategy in PLANNERS.keys():
-
-            print("\n")
-            print("*" * 80)
-            print(f"RUNNING STRATEGY: {strategy}")
-            print("*" * 80)
+        for strategy in PLANNERS:
 
             try:
-
-                execute_pipeline(
-
-                    problem_name,
-                    problem_file,
-                    strategy
-                )
+                execute(pname, pfile, strategy)
 
             except Exception as e:
-
-                print(
-                    f"\n[FATAL ERROR] "
-                    f"{problem_name} / {strategy}"
-                )
-
+                print("\n[FATAL ERROR]")
+                print(f"{pname} / {strategy}")
                 print(e)
 
 # ==========================================================

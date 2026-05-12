@@ -1,20 +1,7 @@
-================================================================================
-COMMAND
-================================================================================
-java -jar /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/enhsp-enhsp-20/enhsp.jar -o /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/domain_advanced.pddl -f /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/problem_easy_advanced.pddl -sp /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/generated_plans/plan_easy_wastar_hff.txt -s WAStar -h hff
-
-================================================================================
-EXIT CODE
-================================================================================
-0
-
-================================================================================
-STDOUT
-================================================================================
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 13
+Grounding Time: 18
 Aibr Preprocessing
 UFX:false
 |F|:24
@@ -24,11 +11,11 @@ UFX:false
 |E|:0
 Folding back to 1-0 heuristic. Input heuristic is not supported
 h(I):1.0
-f(n) = 1.0 (Expanded Nodes: 1, Evaluated States: 1, Time: 0.002) Frontier Size: 0
-f(n) = 2.0 (Expanded Nodes: 2, Evaluated States: 3, Time: 0.007) Frontier Size: 1
-f(n) = 3.0 (Expanded Nodes: 4, Evaluated States: 6, Time: 0.007) Frontier Size: 2
-f(n) = 4.0 (Expanded Nodes: 15, Evaluated States: 34, Time: 0.008) Frontier Size: 19
-f(n) = 5.0 (Expanded Nodes: 35, Evaluated States: 62, Time: 0.01) Frontier Size: 27
+f(n) = 1.0 (Expanded Nodes: 1, Evaluated States: 1, Time: 0.004) Frontier Size: 0
+f(n) = 2.0 (Expanded Nodes: 2, Evaluated States: 3, Time: 0.009) Frontier Size: 1
+f(n) = 3.0 (Expanded Nodes: 4, Evaluated States: 6, Time: 0.009) Frontier Size: 2
+f(n) = 4.0 (Expanded Nodes: 15, Evaluated States: 34, Time: 0.012) Frontier Size: 19
+f(n) = 5.0 (Expanded Nodes: 35, Evaluated States: 62, Time: 0.014) Frontier Size: 27
 Problem Solved
 
 Found Plan:
@@ -41,17 +28,10 @@ Found Plan:
 
 Plan-Length:6
 Metric (Search):4.0
-Planning Time (msec): 13
-Heuristic Time (msec): 0
-Search Time (msec): 11
+Planning Time (msec): 17
+Heuristic Time (msec): 2
+Search Time (msec): 15
 Expanded Nodes:38
 States Evaluated:69
 Number of Dead-Ends detected:0
 Number of Duplicates detected:19
-
-
-================================================================================
-STDERR
-================================================================================
-
-

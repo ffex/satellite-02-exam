@@ -1,20 +1,7 @@
-================================================================================
-COMMAND
-================================================================================
-java -jar /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/enhsp-enhsp-20/enhsp.jar -o /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/domain_advanced.pddl -f /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/problem_hard_advanced.pddl -sp /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/generated_plans/plan_hard_astar_hff.txt -s astar -h hff
-
-================================================================================
-EXIT CODE
-================================================================================
-0
-
-================================================================================
-STDOUT
-================================================================================
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 15
+Grounding Time: 22
 Aibr Preprocessing
 UFX:false
 |F|:28
@@ -99,17 +86,10 @@ Found Plan:
 
 Plan-Length:69
 Metric (Search):63.0
-Planning Time (msec): 38
-Heuristic Time (msec): 1
-Search Time (msec): 35
+Planning Time (msec): 32
+Heuristic Time (msec): 0
+Search Time (msec): 30
 Expanded Nodes:2399
 States Evaluated:2608
 Number of Dead-Ends detected:0
 Number of Duplicates detected:2150
-
-
-================================================================================
-STDERR
-================================================================================
-
-

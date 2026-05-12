@@ -1,16 +1,3 @@
-================================================================================
-COMMAND
-================================================================================
-java -jar /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/enhsp-enhsp-20/enhsp.jar -o /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/domain_advanced.pddl -f /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/problem_hard_advanced.pddl -sp /home/fratm/Scrivania/Main-Github/satellite-02-exam/PDDL/generated_plans/plan_hard_gbfs_hadd.txt -s gbfs -h hadd
-
-================================================================================
-EXIT CODE
-================================================================================
-0
-
-================================================================================
-STDOUT
-================================================================================
 Domain parsed
 Problem parsed
 Grounding..
@@ -23,7 +10,7 @@ UFX:false
 |P|:0
 |E|:0
 Numeric Error for Complex Condition Activated
-H1 Setup Time (msec): 9
+H1 Setup Time (msec): 10
 h(I):21.0
  g(n)= 1.0 h(n)=20.0
  g(n)= 2.0 h(n)=15.0
@@ -93,17 +80,10 @@ Found Plan:
 
 Plan-Length:51
 Metric (Search):45.0
-Planning Time (msec): 32
-Heuristic Time (msec): 15
-Search Time (msec): 31
+Planning Time (msec): 34
+Heuristic Time (msec): 14
+Search Time (msec): 32
 Expanded Nodes:126
 States Evaluated:296
 Number of Dead-Ends detected:33
 Number of Duplicates detected:23
-
-
-================================================================================
-STDERR
-================================================================================
-
-
