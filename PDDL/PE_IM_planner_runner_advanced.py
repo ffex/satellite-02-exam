@@ -1,14 +1,10 @@
-# ==========================================================
-# PE_IM_planner_runner_advanced.py (CLEAN + SEMANTIC FIX)
-# ==========================================================
-
 import subprocess
 import time
-from pathlib import Path
 import re
+from pathlib import Path
 
 # ==========================================================
-# PATHS
+# BASE PATH
 # ==========================================================
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -16,11 +12,23 @@ BASE_DIR = Path(__file__).resolve().parent
 DOMAIN_FILE = BASE_DIR / "domain_advanced.pddl"
 ENHSP_JAR = BASE_DIR / "enhsp-enhsp-20" / "enhsp.jar"
 
-PLANS_DIR = BASE_DIR / "generated_plans"
-LOGS_DIR = BASE_DIR / "planner_logs"
+OUTPUT_DIR = BASE_DIR / "output"
 
-PLANS_DIR.mkdir(exist_ok=True)
-LOGS_DIR.mkdir(exist_ok=True)
+PLANS_BASE = OUTPUT_DIR / "generated_plans"
+LOGS_BASE = OUTPUT_DIR / "planner_logs"
+
+# ==========================================================
+# STRATEGIES
+# ==========================================================
+
+PLANNERS = {
+    "bfs": ["-s", "bfs"],
+    "ucs": ["-s", "astar", "-h", "zero"],
+    "gbfs_hff": ["-s", "gbfs", "-h", "hff"],
+    "astar_hff": ["-s", "astar", "-h", "hff"],
+    "astar_lmcut": ["-s", "astar", "-h", "lmcut"],
+    "wastar_hadd": ["-s", "WAStar", "-h", "hadd"],
+}
 
 # ==========================================================
 # PROBLEMS
@@ -30,181 +38,126 @@ PROBLEMS = {
     "easy": BASE_DIR / "problem_easy_advanced.pddl",
     "medium": BASE_DIR / "problem_medium_advanced.pddl",
     "hard": BASE_DIR / "problem_hard_advanced.pddl",
-    "hard_hd": BASE_DIR / "problem_hard_hd_advanced.pddl",
     "extreme": BASE_DIR / "problem_extreme_advanced.pddl",
 }
 
 # ==========================================================
-# STRATEGIES
+# DIRECTORY MANAGEMENT
 # ==========================================================
 
-PLANNERS = {
+def ensure_clean_dir(path: Path):
 
-    #bfs
-    "bfs": ["-s", "bfs"],
+    if path.exists():
 
-    # UCS (uniform cost ~ A* senza euristica utile)
-    "ucs": ["-s", "astar", "-h", "zero"],  # ENHSP interpreta zero o default cost
+        for f in path.glob("*"):
 
-    # Greedy best first
+            try:
 
-    "gbfs_hff": ["-s", "gbfs", "-h", "hff"],
+                if f.is_file():
+                    f.unlink()
 
-    # A*
+                elif f.is_dir():
 
-    "astar_hff": ["-s", "astar", "-h", "hff"],
-    "astar_lmcut": ["-s", "astar", "-h", "lmcut"],
+                    for sub in f.rglob("*"):
+                        if sub.is_file():
+                            sub.unlink()
 
-    # A* pesato
-    "wastar_hadd": ["-s", "WAStar", "-h", "hadd"],
-}
+                    for sub in reversed(list(f.rglob("*"))):
+                        if sub.is_dir():
+                            sub.rmdir()
+
+                    f.rmdir()
+
+            except Exception as e:
+                print(f"[WARN] impossibile eliminare {f}: {e}")
+
+    else:
+
+        path.mkdir(parents=True, exist_ok=True)
 
 # ==========================================================
-# RESET FILE
+# INIT EXTRACTION
 # ==========================================================
 
-def reset_file(path: Path):
-    path.write_text("")
+def get_init(problem_file: Path):
+
+    lines = problem_file.read_text().splitlines()
+
+    inside = False
+    init = []
+
+    for l in lines:
+
+        s = l.strip()
+
+        if "(:init" in s:
+            inside = True
+            continue
+
+        if inside and s.startswith("(:goal"):
+            break
+
+        if inside:
+            init.append(s)
+
+    return init
+
+# ==========================================================
+# RENDERER IMPORT
+# ==========================================================
+
+def load_renderer(init_lines):
+
+    try:
+
+        from PE_IM_plan_render import SemanticPlanRenderer
+
+        return SemanticPlanRenderer(init_lines)
+
+    except Exception as e:
+
+        print("[WARN] Renderer non trovato:", e)
+
+        return None
 
 # ==========================================================
 # PLAN PARSER
 # ==========================================================
 
-def parse_and_print_plan(plan_file: Path, renderer=None):
+def parse_plan(plan_file: Path, renderer=None):
 
-    print("\nPLAN STEPS")
-    print("-" * 60)
+    text = plan_file.read_text().strip()
 
-    try:
-        text = plan_file.read_text().strip()
+    if not text:
+        print("[ERROR] PLAN VUOTO")
+        return
 
-        if not text:
-            print("[!] EMPTY PLAN")
-            return False
+    steps = []
 
-        steps = []
+    for line in text.splitlines():
 
-        for line in text.splitlines():
-            line = line.strip()
+        line = line.strip()
 
-            if not line or line.startswith(";"):
-                continue
-
-            line = re.sub(r"^[0-9\.]+\:\s*", "", line)
-            line = line.replace("(", "").replace(")", "")
-
-            steps.append(line)
-
-        if not steps:
-            print("[!] NO VALID ACTIONS FOUND")
-            return False
-
-        # ==============================
-        # SEMANTIC ENRICHMENT
-        # ==============================
-        if renderer:
-            steps = renderer.render(steps)
-
-        for i, s in enumerate(steps, 1):
-            print(f"[{i:02}] {s}")
-
-        print(f"\n[PLAN LENGTH]: {len(steps)}")
-        return True
-
-    except Exception as e:
-        print("[PARSE ERROR]", e)
-        return False
-
-# ==========================================================
-# EXTRACT INIT FROM PDDL
-# ==========================================================
-
-def get_init_from_problem(problem_file: Path):
-
-    lines = problem_file.read_text().splitlines()
-
-    init = []
-    inside = False
-
-    for line in lines:
-        l = line.strip()
-
-        if "(:init" in l:
-            inside = True
+        if not line or line.startswith(";"):
             continue
 
-        if inside and l.startswith("(:goal"):
-            break
+        line = re.sub(r"^[0-9\.]+\:\s*", "", line)
 
-        if inside:
-            init.append(l)
+        line = line.replace("(", "")
+        line = line.replace(")", "")
 
-    return init
+        steps.append(line)
 
-# ==========================================================
-# SEMANTIC RENDERER
-# ==========================================================
+    if renderer:
+        steps = renderer.render(steps)
 
-class SemanticPlanRenderer:
+    print("\nPLAN")
+    print("-" * 50)
 
-    def __init__(self, pddl_init_lines):
-        self.quality_map = self._parse_quality(pddl_init_lines)
-        self.current_direction = None
+    for i, s in enumerate(steps, 1):
+        print(f"{i:02} {s}")
 
-    def _parse_quality(self, lines):
-        quality = {}
-
-        for line in lines:
-
-            m_hd = re.match(r"\(quality-hd\s+([^\s\)]+)\)", line)
-            if m_hd:
-                quality[m_hd.group(1)] = "HD"
-
-            m_sd = re.match(r"\(quality-sd\s+([^\s\)]+)\)", line)
-            if m_sd:
-                quality[m_sd.group(1)] = "SD"
-
-        return quality
-
-    def render(self, steps):
-
-        out = []
-
-        for step in steps:
-
-            tokens = step.split()
-            if not tokens:
-                continue
-
-            action = tokens[0]
-
-            # ROTATE
-            if "rotate" in action:
-                self.current_direction = tokens[-1]
-                out.append(step)
-                continue
-
-            # TAKE PICTURE
-            if action == "take-picture":
-                obj = tokens[1]
-                direction = tokens[2] if len(tokens) > 2 else self.current_direction
-                quality = self.quality_map.get(obj, "UNKNOWN")
-
-                out.append(f"take-picture {obj} {direction} {quality}")
-                continue
-
-            # SEND
-            if action == "send":
-                obj = tokens[1]
-                direction = self.current_direction or "UNKNOWN"
-                quality = self.quality_map.get(obj, "UNKNOWN")
-
-                out.append(f"send {obj} {direction} {quality}")
-                continue
-
-            out.append(step)
-
-        return out
+    print(f"\n[PLAN LENGTH]: {len(steps)}")
 
 # ==========================================================
 # RUN PLANNER
@@ -212,26 +165,33 @@ class SemanticPlanRenderer:
 
 def run_planner(problem_name, problem_file, strategy):
 
-    print("\n" + "=" * 80)
-    print(f"PROBLEM  : {problem_name}")
-    print(f"STRATEGY : {strategy}")
-    print("=" * 80)
+    print("\n" + "=" * 60)
+    print(f"PROBLEM : {problem_name}")
+    print(f"STRATEGY: {strategy}")
+    print("=" * 60)
 
-    plan_file = PLANS_DIR / f"plan_{problem_name}_{strategy}.txt"
-    log_file = LOGS_DIR / f"log_{problem_name}_{strategy}.txt"
+    plan_dir = PLANS_BASE / problem_name
+    log_dir = LOGS_BASE / problem_name
 
-    reset_file(plan_file)
+    plan_file = plan_dir / f"{strategy}.txt"
+    log_file = log_dir / f"{strategy}.log"
 
     cmd = [
-        "java", "-jar", str(ENHSP_JAR),
-        "-o", str(DOMAIN_FILE),
-        "-f", str(problem_file),
-        "-sp", str(plan_file),
+        "java",
+        "-jar",
+        str(ENHSP_JAR),
+
+        "-o",
+        str(DOMAIN_FILE),
+
+        "-f",
+        str(problem_file),
+
+        "-sp",
+        str(plan_file),
+
         *PLANNERS[strategy]
     ]
-
-    print("\nCOMMAND")
-    print(" ".join(cmd))
 
     start = time.time()
 
@@ -239,46 +199,61 @@ def run_planner(problem_name, problem_file, strategy):
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True,
-        timeout=120
+        text=True
     )
 
     elapsed = time.time() - start
 
+    # ======================================================
+    # SAVE LOG
+    # ======================================================
+
     log_file.write_text(
-        "STDOUT:\n" + result.stdout +
-        "\n\nSTDERR:\n" + result.stderr
+
+        "COMMAND:\n"
+        + " ".join(cmd)
+
+        + "\n\n"
+
+        + "STDOUT:\n"
+        + result.stdout
+
+        + "\n\nSTDERR:\n"
+        + result.stderr
     )
 
-    print("\nRESULT")
-    print("-" * 60)
-    print(f"Exit code : {result.returncode}")
-    print(f"Time      : {elapsed:.2f}s")
+    print(f"\nExecution time: {elapsed:.2f}s")
 
-    if "Solution found" not in result.stdout and plan_file.stat().st_size == 0:
-        print("\n[NO PLAN FOUND]")
+    if not plan_file.exists():
+        print("[ERROR] PLAN FILE NON CREATO")
         return None
 
-    print("\n[SUCCESS] Plan generato")
+    if plan_file.stat().st_size == 0:
+        print("[WARN] PLAN FILE VUOTO")
+        return None
+
     return plan_file
 
 # ==========================================================
-# EXECUTION PIPELINE
+# EXECUTE
 # ==========================================================
 
 def execute(problem_name, problem_file, strategy):
 
-    plan_file = run_planner(problem_name, problem_file, strategy)
+    plan_file = run_planner(
+        problem_name,
+        problem_file,
+        strategy
+    )
 
     if not plan_file:
-        print("[SKIP]")
         return
 
-    init_lines = get_init_from_problem(problem_file)
+    init_lines = get_init(problem_file)
 
-    renderer = SemanticPlanRenderer(init_lines)
+    renderer = load_renderer(init_lines)
 
-    parse_and_print_plan(plan_file, renderer)
+    parse_plan(plan_file, renderer)
 
 # ==========================================================
 # MAIN
@@ -286,19 +261,42 @@ def execute(problem_name, problem_file, strategy):
 
 def main():
 
+    OUTPUT_DIR.mkdir(exist_ok=True)
+
+    ensure_clean_dir(PLANS_BASE)
+    ensure_clean_dir(LOGS_BASE)
+
     for pname, pfile in PROBLEMS.items():
 
-        print("\n" + "#" * 80)
+        print("\n" + "#" * 60)
         print(f"RUNNING PROBLEM: {pname}")
-        print("#" * 80)
+        print("#" * 60)
 
-        for strategy in PLANNERS:
+        problem_plan_dir = PLANS_BASE / pname
+        problem_log_dir = LOGS_BASE / pname
+
+        ensure_clean_dir(problem_plan_dir)
+        ensure_clean_dir(problem_log_dir)
+
+        problem_plan_dir.mkdir(parents=True, exist_ok=True)
+        problem_log_dir.mkdir(parents=True, exist_ok=True)
+
+        for strat in PLANNERS:
 
             try:
-                execute(pname, pfile, strategy)
+
+                execute(
+                    pname,
+                    pfile,
+                    strat
+                )
+
             except Exception as e:
-                print("[FATAL]", pname, strategy)
-                print(e)
+
+                print("\n[FATAL ERROR]")
+                print("problem :", pname)
+                print("strategy:", strat)
+                print("error   :", e)
 
 # ==========================================================
 # ENTRY POINT

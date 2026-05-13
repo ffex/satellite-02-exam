@@ -31,24 +31,27 @@
 
 (:predicates
 
-    ; orientamento satellite
+    ; orientamento del satellite
     (pointing ?d - direction)
 
-    ; evita oscillazioni
+    ; evita oscillazioni inutili
     (last-dir ?d - direction)
 
-    ; visibilità oggetti
+    ; visibilità oggetti in una direzione
     (visible ?o - object ?d - direction)
 
-    ; stato invio
+    ; stato oggetti
     (taken ?o - object)
     (sent ?o - object)
 
-    ; qualità oggetto (NON della foto)
+    ; qualità immagine (per rendering/semantica)
     (quality-hd ?o - object)
     (quality-sd ?o - object)
 
-    ; grafo direzioni
+    ; SOLO OGGETTI RILEVANTI PER IL GOAL
+    (goal-object ?o - object)
+
+    ; grafo delle direzioni
     (next-right ?from ?to - direction)
     (next-left ?from ?to - direction)
 )
@@ -118,29 +121,28 @@
 )
 
 ; ==========================================================
-; TAKE PICTURE (UNICA)
+; TAKE PICTURE (SOLO OGGETTI DEL GOAL)
 ; ==========================================================
 
 (:action take-picture
-
     :parameters (?o - object ?d - direction)
 
     :precondition (and
         (pointing ?d)
         (visible ?o ?d)
 
+        ;FILTRO CRITICO: elimina oggetti inutili (noise1 ecc.)
+        (goal-object ?o)
+
         (not (taken ?o))
         (not (sent ?o))
 
         (>= (energy) 2)
-
         (< (photo-count) 2)
-
         (<= (+ (memory-used) 10) (memory-capacity))
     )
 
     :effect (and
-
         (taken ?o)
         (increase (photo-count) 1)
         (decrease (energy) 2)

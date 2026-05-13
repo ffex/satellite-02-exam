@@ -18,6 +18,11 @@
     (quality-sd planet1)
     (quality-sd galaxy1)
 
+    ; 🔴 SOLO OGGETTI DEL GOAL
+    (goal-object star1)
+    (goal-object planet1)
+    (goal-object galaxy1)
+
     (= (energy) 75)
     (= (memory-used) 0)
     (= (memory-capacity) 16)

@@ -9,22 +9,32 @@
 
     (pointing n)
 
+    ; visibilità
     (visible star1 se)
     (visible planet1 sw)
     (visible galaxy1 ne)
     (visible nebula1 w)
 
+    ; qualità
     (quality-hd star1)
     (quality-sd planet1)
     (quality-hd galaxy1)
     (quality-sd nebula1)
 
+    ; 🔴 SOLO OGGETTI DEL GOAL
+    (goal-object star1)
+    (goal-object planet1)
+    (goal-object galaxy1)
+    (goal-object nebula1)
+
+    ; risorse
     (= (energy) 120)
     (= (memory-used) 0)
     (= (memory-capacity) 13)
     (= (photo-count) 0)
     (= (rotation-cost) 0)
 
+    ; direzioni
     (next-right n ne)
     (next-right ne e)
     (next-right e se)
