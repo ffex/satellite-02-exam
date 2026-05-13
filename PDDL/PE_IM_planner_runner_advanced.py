@@ -23,6 +23,7 @@ LOGS_BASE = OUTPUT_DIR / "planner_logs"
 
 PLANNERS = {
     "bfs": ["-s", "bfs"],
+    "iddfs": ["-s", "idfs"],
     "ucs": ["-s", "astar", "-h", "zero"],
     "gbfs_hff": ["-s", "gbfs", "-h", "hff"],
     "astar_hff": ["-s", "astar", "-h", "hff"],
