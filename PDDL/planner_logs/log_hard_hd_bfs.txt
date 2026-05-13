@@ -2,7 +2,7 @@ STDOUT:
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 17
+Grounding Time: 10
 Aibr Preprocessing
 UFX:false
 |F|:22
@@ -11,7 +11,7 @@ UFX:false
 |P|:0
 |E|:0
 Numeric Error for Complex Condition Activated
-H1 Setup Time (msec): 7
+H1 Setup Time (msec): 5
 h(I):15.0
  g(n)= 1.0 h(n)=13.0
  g(n)= 2.0 h(n)=9.0
@@ -89,17 +89,17 @@ Found Plan:
 61.0: (rotate-right e se)
 62.0: (rotate-right se s)
 63.0: (take-picture planet1 s)
-64.0: (rotate-right s sw)
-65.0: (rotate-right sw w)
-66.0: (rotate-right w nw)
-67.0: (rotate-right nw n)
+64.0: (rotate-left s se)
+65.0: (rotate-left se e)
+66.0: (rotate-left e ne)
+67.0: (rotate-left ne n)
 68.0: (send planet1)
 
 Plan-Length:69
 Metric (Search):63.0
-Planning Time (msec): 32
-Heuristic Time (msec): 16
-Search Time (msec): 30
+Planning Time (msec): 23
+Heuristic Time (msec): 8
+Search Time (msec): 22
 Expanded Nodes:252
 States Evaluated:477
 Number of Dead-Ends detected:14

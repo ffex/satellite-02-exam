@@ -2,7 +2,7 @@ STDOUT:
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 15
+Grounding Time: 8
 Aibr Preprocessing
 UFX:false
 |F|:24
@@ -11,13 +11,13 @@ UFX:false
 |P|:0
 |E|:0
 Numeric Error for Complex Condition Activated
-H1 Setup Time (msec): 8
+H1 Setup Time (msec): 4
 h(I):9.0
-f(n) = 9.0 (Expanded Nodes: 1, Evaluated States: 1, Time: 0.005) Frontier Size: 0
-f(n) = 14.0 (Expanded Nodes: 2, Evaluated States: 3, Time: 0.011) Frontier Size: 1
-f(n) = 16.0 (Expanded Nodes: 5, Evaluated States: 9, Time: 0.013) Frontier Size: 4
-f(n) = 17.0 (Expanded Nodes: 8, Evaluated States: 15, Time: 0.015) Frontier Size: 7
-f(n) = 18.0 (Expanded Nodes: 89, Evaluated States: 169, Time: 0.028) Frontier Size: 80
+f(n) = 9.0 (Expanded Nodes: 1, Evaluated States: 1, Time: 0.003) Frontier Size: 0
+f(n) = 14.0 (Expanded Nodes: 2, Evaluated States: 3, Time: 0.007) Frontier Size: 1
+f(n) = 16.0 (Expanded Nodes: 5, Evaluated States: 9, Time: 0.008) Frontier Size: 4
+f(n) = 17.0 (Expanded Nodes: 8, Evaluated States: 15, Time: 0.009) Frontier Size: 7
+f(n) = 18.0 (Expanded Nodes: 89, Evaluated States: 169, Time: 0.016) Frontier Size: 80
 Problem Solved
 
 Found Plan:
@@ -50,9 +50,9 @@ Found Plan:
 
 Plan-Length:26
 Metric (Search):18.0
-Planning Time (msec): 31
-Heuristic Time (msec): 15
-Search Time (msec): 29
+Planning Time (msec): 18
+Heuristic Time (msec): 7
+Search Time (msec): 17
 Expanded Nodes:118
 States Evaluated:216
 Number of Dead-Ends detected:0

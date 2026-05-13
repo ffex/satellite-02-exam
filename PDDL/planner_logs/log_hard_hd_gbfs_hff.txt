@@ -2,7 +2,7 @@ STDOUT:
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 12
+Grounding Time: 8
 Aibr Preprocessing
 UFX:false
 |F|:22
@@ -111,9 +111,9 @@ Found Plan:
 
 Plan-Length:93
 Metric (Search):87.0
-Planning Time (msec): 26
-Heuristic Time (msec): 1
-Search Time (msec): 24
+Planning Time (msec): 17
+Heuristic Time (msec): 2
+Search Time (msec): 15
 Expanded Nodes:998
 States Evaluated:1237
 Number of Dead-Ends detected:0

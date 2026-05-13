@@ -2,7 +2,7 @@ STDOUT:
 Domain parsed
 Problem parsed
 Grounding..
-Grounding Time: 15
+Grounding Time: 8
 Aibr Preprocessing
 UFX:false
 |F|:24
@@ -11,7 +11,7 @@ UFX:false
 |P|:0
 |E|:0
 Numeric Error for Complex Condition Activated
-H1 Setup Time (msec): 7
+H1 Setup Time (msec): 14
 h(I):9.0
  g(n)= 58.0 h(n)=7.0
  g(n)= 110.0 h(n)=6.0
@@ -107,9 +107,9 @@ Found Plan:
 
 Plan-Length:82
 Metric (Search):74.0
-Planning Time (msec): 41
-Heuristic Time (msec): 21
-Search Time (msec): 39
+Planning Time (msec): 33
+Heuristic Time (msec): 15
+Search Time (msec): 33
 Expanded Nodes:355
 States Evaluated:728
 Number of Dead-Ends detected:20
