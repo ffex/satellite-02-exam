@@ -2,7 +2,7 @@
 (:domain satellite-advanced)
 
 (:objects
-    star1 planet1 galaxy1 nebula1 - object
+    star1 planet1 galaxy1 nebula1 junk1 junk2 junk3 junk4 - object
 )
 
 (:init
@@ -11,9 +11,17 @@
 
     ; visibilità
     (visible star1 se)
+    (visible junk1 se)
+
     (visible planet1 sw)
+    (visible stjunk2ar1 sw)
+
     (visible galaxy1 ne)
+    (visible junk3 ne)
+
     (visible nebula1 w)
+    (visible junk4 w)
+
 
     ; qualità
     (quality-hd star1)
@@ -21,7 +29,7 @@
     (quality-hd galaxy1)
     (quality-sd nebula1)
 
-    ; 🔴 SOLO OGGETTI DEL GOAL
+    ; SOLO OGGETTI DEL GOAL
     (goal-object star1)
     (goal-object planet1)
     (goal-object galaxy1)

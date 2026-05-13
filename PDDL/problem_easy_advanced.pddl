@@ -23,7 +23,6 @@
     ; QUALITÀ IMMAGINI
     ; ======================================================
     (quality-hd star1)
-    (quality-sd noise1)
 
     ; ======================================================
     ; GOAL SEMANTICO: SOLO STAR1 È RILEVANTE

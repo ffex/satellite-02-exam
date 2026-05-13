@@ -2,7 +2,7 @@
 (:domain satellite-advanced)
 
 (:objects
-    star1 planet1 junk1 noise2 - object
+    star1 planet1 noice1 noise2 - object
 )
 
 (:init
@@ -11,12 +11,15 @@
     (last-dir s)
 
     (visible star1 e)
+    (visible junk1 e)
+
     (visible planet1 w)
+    (visible junk2 w)
 
     (quality-hd star1)
     (quality-sd planet1)
 
-    ; 🔴 SOLO OGGETTI DEL GOAL
+    ; SOLO OGGETTI DEL GOAL
     (goal-object star1)
     (goal-object planet1)
 
