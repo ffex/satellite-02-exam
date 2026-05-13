@@ -8,6 +8,7 @@
 (:init
 
     (pointing sw)
+    (last-dir sw)
 
     (visible star1 e)
     (visible planet1 s)

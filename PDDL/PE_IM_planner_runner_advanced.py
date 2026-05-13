@@ -6,6 +6,7 @@ import subprocess
 import time
 from pathlib import Path
 import re
+from plan_render import SemanticPlanRenderer
 
 # ==========================================================
 # PATHS
@@ -140,71 +141,6 @@ def get_init_from_problem(problem_file: Path):
             init.append(l)
 
     return init
-
-# ==========================================================
-# SEMANTIC RENDERER
-# ==========================================================
-
-class SemanticPlanRenderer:
-
-    def __init__(self, pddl_init_lines):
-        self.quality_map = self._parse_quality(pddl_init_lines)
-        self.current_direction = None
-
-    def _parse_quality(self, lines):
-        quality = {}
-
-        for line in lines:
-
-            m_hd = re.match(r"\(quality-hd\s+([^\s\)]+)\)", line)
-            if m_hd:
-                quality[m_hd.group(1)] = "HD"
-
-            m_sd = re.match(r"\(quality-sd\s+([^\s\)]+)\)", line)
-            if m_sd:
-                quality[m_sd.group(1)] = "SD"
-
-        return quality
-
-    def render(self, steps):
-
-        out = []
-
-        for step in steps:
-
-            tokens = step.split()
-            if not tokens:
-                continue
-
-            action = tokens[0]
-
-            # ROTATE
-            if "rotate" in action:
-                self.current_direction = tokens[-1]
-                out.append(step)
-                continue
-
-            # TAKE PICTURE
-            if action == "take-picture":
-                obj = tokens[1]
-                direction = tokens[2] if len(tokens) > 2 else self.current_direction
-                quality = self.quality_map.get(obj, "UNKNOWN")
-
-                out.append(f"take-picture {obj} {direction} {quality}")
-                continue
-
-            # SEND
-            if action == "send":
-                obj = tokens[1]
-                direction = self.current_direction or "UNKNOWN"
-                quality = self.quality_map.get(obj, "UNKNOWN")
-
-                out.append(f"send {obj} {direction} {quality}")
-                continue
-
-            out.append(step)
-
-        return out
 
 # ==========================================================
 # RUN PLANNER
