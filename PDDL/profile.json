@@ -1,0 +1,66 @@
+{
+  "tokens": {
+    "satellite": {
+      "type": "image",
+      "src": "assets/satellite.png",
+      "width": 60,
+      "height": 60,
+      "x": 300,
+      "y": 300
+    },
+    "earth": {
+      "type": "image",
+      "src": "assets/earth.png",
+      "width": 80,
+      "height": 80,
+      "x": 300,
+      "y": 50
+    },
+    "star1": {
+      "type": "image",
+      "src": "assets/star.png",
+      "width": 40,
+      "height": 40,
+      "x": 500,
+      "y": 300
+    },
+    "photo_data": {
+      "type": "circle",
+      "color": "green",
+      "radius": 10,
+      "opacity": 0
+    }
+  },
+  "rules": [
+    {
+      "predicate": "(pointing N)",
+      "visual": "satellite",
+      "property": "rotation",
+      "value": 0
+    },
+    {
+      "predicate": "(pointing NE)",
+      "visual": "satellite",
+      "property": "rotation",
+      "value": 45
+    },
+    {
+      "predicate": "(pointing E)",
+      "visual": "satellite",
+      "property": "rotation",
+      "value": 90
+    },
+    {
+      "predicate": "(stored star1)",
+      "visual": "photo_data",
+      "property": "opacity",
+      "value": 1
+    },
+    {
+      "predicate": "(sent star1)",
+      "visual": "photo_data",
+      "property": "y",
+      "value": 50
+    }
+  ]
+}
