@@ -32,11 +32,18 @@ class SemanticPlanRenderer:
 
         text = " ".join(lines)
 
+        # ---- formato VECCHIO: (quality-hd star1) / (quality-sd planet1) ----
         for obj in re.findall(r"\(quality-hd\s+([^\s\)]+)\)", text):
             quality[obj] = "HD"
 
         for obj in re.findall(r"\(quality-sd\s+([^\s\)]+)\)", text):
             quality[obj] = "SD"
+
+        # ---- formato NUOVO: (quality star1 hd) / (quality planet1 sd) ----
+        for obj, q in re.findall(
+            r"\(quality\s+([^\s\)]+)\s+(hd|sd)\)", text, re.IGNORECASE
+        ):
+            quality[obj] = q.upper()
 
         return quality
 
@@ -91,20 +98,21 @@ class SemanticPlanRenderer:
 
             if action == "take-picture":
 
-                obj = tokens[1]
+                # nuova firma: (take-picture <quality> <obj> <dir>)
+                quality = (tokens[1].upper() if len(tokens) > 1 else "UNSPECIFIED")
+                obj     = tokens[2] if len(tokens) > 2 else "UNKNOWN"
 
-                direction = (
-                    tokens[2]
-                    if len(tokens) > 2
+                raw_dir = (
+                    tokens[3]
+                    if len(tokens) > 3
                     else self.current_direction
                 )
 
-                direction = self.human_direction(direction)
+                direction = self.human_direction(raw_dir)
 
-                quality = self.quality_map.get(obj)
-
-                if quality is None:
-                    quality = "UNSPECIFIED"
+                # fallback: se la quality_map ha info diverse, lascia priorita' al piano
+                if not quality:
+                    quality = self.quality_map.get(obj, "UNSPECIFIED")
 
                 rendered.append(
                     f"take-picture {obj} {direction} {quality}"
@@ -118,16 +126,20 @@ class SemanticPlanRenderer:
 
             if action == "send":
 
-                obj = tokens[1]
+                # nuova firma: (send <quality> <obj> <dir>)
+                quality = (tokens[1].upper() if len(tokens) > 1 else "UNSPECIFIED")
+                obj     = tokens[2] if len(tokens) > 2 else "UNKNOWN"
 
-                direction = self.human_direction(
-                    self.current_direction
+                raw_dir = (
+                    tokens[3]
+                    if len(tokens) > 3
+                    else self.current_direction
                 )
 
-                quality = self.quality_map.get(obj)
+                direction = self.human_direction(raw_dir)
 
-                if quality is None:
-                    quality = "UNSPECIFIED"
+                if not quality:
+                    quality = self.quality_map.get(obj, "UNSPECIFIED")
 
                 rendered.append(
                     f"send {obj} {direction} {quality}"

@@ -12,6 +12,18 @@ BASE_DIR = Path(__file__).resolve().parent
 DOMAIN_FILE = BASE_DIR / "domain_advanced.pddl"
 ENHSP_JAR = BASE_DIR / "enhsp-enhsp-20" / "enhsp.jar"
 
+# ==========================================================
+# JAVA RUNTIME
+# ----------------------------------------------------------
+# enhsp.jar e' compilato per class file version 69.0 (Java 25).
+# Se installi una JDK piu' recente, aggiorna questo path.
+# Per usare il "java" del PATH di sistema, metti JAVA_BIN = "java".
+# ==========================================================
+
+JAVA_BIN = r"C:\Program Files\Java\jdk-25.0.2\bin\java.exe"
+# JAVA_BIN = r"C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot\bin\java.exe"  # fallback JDK 21 (non basta per enhsp.jar class 69)
+# JAVA_BIN = "java"  # usa il java del PATH di sistema
+
 OUTPUT_DIR = BASE_DIR / "output"
 
 PLANS_BASE = OUTPUT_DIR / "generated_plans"
@@ -178,7 +190,7 @@ def run_planner(problem_name, problem_file, strategy):
     log_file = log_dir / f"{strategy}.log"
 
     cmd = [
-        "java",
+        JAVA_BIN,
         "-jar",
         str(ENHSP_JAR),
 

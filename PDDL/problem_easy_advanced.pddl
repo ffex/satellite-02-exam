@@ -22,7 +22,7 @@
     ; ======================================================
     ; QUALITÀ IMMAGINI
     ; ======================================================
-    (quality-hd star1)
+    (quality star1 hd)
 
     ; ======================================================
     ; GOAL SEMANTICO: SOLO STAR1 È RILEVANTE
@@ -37,6 +37,10 @@
     (= (memory-capacity) 20)
     (= (photo-count) 0)
     (= (rotation-cost) 0)
+
+    ; costo memoria per qualita'
+    (= (memory-cost hd) 10)
+    (= (memory-cost sd) 3)
 
     ; ======================================================
     ; GRAFO DIREZIONI

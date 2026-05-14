@@ -15,14 +15,16 @@
 (:types
     object
     direction
+    quality
 )
 
 ; ==========================================================
-; DIRECTIONS
+; CONSTANTS
 ; ==========================================================
 
 (:constants
     n ne e se s sw w nw - direction
+    hd sd                - quality
 )
 
 ; ==========================================================
@@ -37,23 +39,22 @@
     ; evita oscillazioni inutili
     (last-dir ?d - direction)
 
-    ; visibilità oggetti in una direzione
+    ; visibilita' oggetti in una direzione
     (visible ?o - object ?d - direction)
 
     ; stato oggetti
     (taken ?o - object)
-    (sent ?o - object)
+    (sent  ?o - object)
 
-    ; qualità immagine (per rendering/semantica)
-    (quality-hd ?o - object)
-    (quality-sd ?o - object)
+    ; qualita' immagine (PREDICATO UNICO con parametro quality)
+    (quality ?o - object ?q - quality)
 
     ; SOLO OGGETTI RILEVANTI PER IL GOAL
     (goal-object ?o - object)
 
     ; grafo delle direzioni
     (next-right ?from ?to - direction)
-    (next-left ?from ?to - direction)
+    (next-left  ?from ?to - direction)
 )
 
 ; ==========================================================
@@ -66,6 +67,9 @@
     (memory-capacity)
     (photo-count)
     (rotation-cost)
+
+    ; costo in memoria dipendente dalla qualita' (init nel problema)
+    (memory-cost ?q - quality)
 )
 
 ; ==========================================================
@@ -121,53 +125,57 @@
 )
 
 ; ==========================================================
-; TAKE PICTURE (SOLO OGGETTI DEL GOAL)
+; TAKE PICTURE  (azione UNICA, qualita' come parametro)
+;   Plan output: (take-picture <hd|sd> <obj> <dir>)
 ; ==========================================================
 
 (:action take-picture
-    :parameters (?o - object ?d - direction)
+    :parameters (?q - quality ?o - object ?d - direction)
 
     :precondition (and
         (pointing ?d)
         (visible ?o ?d)
 
-        ;FILTRO CRITICO: elimina oggetti inutili (noise1 ecc.)
+        ; filtro critico: elimina oggetti inutili (noise/junk)
         (goal-object ?o)
 
+        ; la qualita' richiesta deve combaciare con quella dell'oggetto
+        (quality ?o ?q)
+
         (not (taken ?o))
-        (not (sent ?o))
+        (not (sent  ?o))
 
         (>= (energy) 2)
-        (< (photo-count) 2)
-        (<= (+ (memory-used) 10) (memory-capacity))
+        (<  (photo-count) 2)
+        (<= (+ (memory-used) (memory-cost ?q)) (memory-capacity))
     )
 
     :effect (and
         (taken ?o)
         (increase (photo-count) 1)
         (decrease (energy) 2)
-
-        (when (quality-hd ?o)
-            (increase (memory-used) 10)
-        )
-
-        (when (quality-sd ?o)
-            (increase (memory-used) 3)
-        )
+        (increase (memory-used) (memory-cost ?q))
     )
 )
 
 ; ==========================================================
-; SEND
+; SEND  (azione UNICA, qualita' e direzione come parametri)
+;   Plan output: (send <hd|sd> <obj> n)
 ; ==========================================================
 
 (:action send
-    :parameters (?o - object)
+    :parameters (?q - quality ?o - object ?d - direction)
 
     :precondition (and
-        (pointing n)
+        ; si trasmette solo guardando a NORD
+        (pointing ?d)
+        (= ?d n)
+
         (taken ?o)
         (not (sent ?o))
+
+        (quality ?o ?q)
+
         (>= (energy) 2)
     )
 
@@ -177,14 +185,7 @@
 
         (decrease (photo-count) 1)
         (decrease (energy) 2)
-
-        (when (quality-hd ?o)
-            (decrease (memory-used) 10)
-        )
-
-        (when (quality-sd ?o)
-            (decrease (memory-used) 3)
-        )
+        (decrease (memory-used) (memory-cost ?q))
     )
 )
 

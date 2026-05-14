@@ -14,7 +14,7 @@
     (visible junk1 se)
 
     (visible planet1 sw)
-    (visible stjunk2ar1 sw)
+    (visible junk2 sw)
 
     (visible galaxy1 ne)
     (visible junk3 ne)
@@ -24,10 +24,10 @@
 
 
     ; qualità
-    (quality-hd star1)
-    (quality-sd planet1)
-    (quality-hd galaxy1)
-    (quality-sd nebula1)
+    (quality star1 hd)
+    (quality planet1 sd)
+    (quality galaxy1 hd)
+    (quality nebula1 sd)
 
     ; SOLO OGGETTI DEL GOAL
     (goal-object star1)
@@ -41,6 +41,10 @@
     (= (memory-capacity) 13)
     (= (photo-count) 0)
     (= (rotation-cost) 0)
+
+    ; costo memoria per qualita'
+    (= (memory-cost hd) 10)
+    (= (memory-cost sd) 3)
 
     ; direzioni
     (next-right n ne)
