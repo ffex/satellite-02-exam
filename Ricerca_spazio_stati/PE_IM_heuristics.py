@@ -22,6 +22,7 @@ from PE_IM_utils import (
     COST_SEND,
     COST_ROTATE,
     SD_MEM_COST,
+    MEM_SLOT_MAX,
     min_rotation_distance,
 )
 
@@ -116,7 +117,7 @@ def h3(node, problem):
     - SEND
     - memoria
 
-    ✔ Ammissibile (sottostima molto, ma non sovrastima mai)
+    Ammissibile (sottostima molto, ma non sovrastima mai)
     """
     orientation, _, _, _, sent = node.state
 
@@ -217,6 +218,114 @@ def h4(node, problem):
 
 
 # ==========================================================
+# H_ENERGY - EURISTICA SEMPLICE BASATA SUL CONSUMO ENERGETICO
+# ==========================================================
+def h_energy(node, problem):
+    """
+    EURISTICA "ENERGIA"
+    Ragiona solo sul costo delle AZIONI (energia consumata),
+    ignorando completamente i vincoli di memoria.
+
+    L'idea è semplicissima: ogni obiettivo del goal non ancora
+    inviato richiede almeno una sequenza minima di azioni.
+
+    Per ogni obiettivo "missing":
+        - se non e' ancora in memoria  -> 1 TAKEPIC + 1 SEND
+        - se e' gia' in memoria        -> 1 SEND
+    Inoltre, dato che SEND e' permesso solo guardando a Nord,
+    aggiungiamo UNA SOLA volta il costo di rotazione dalla
+    direzione attuale fino a Nord.
+
+    NON considera:
+        - il vincolo dei 2 slot di memoria
+        - le rotazioni necessarie per visitare le direzioni
+          dei vari oggetti (cattura solo l'ultima verso N)
+
+    Ammissibile  : ogni azione conteggiata e' indispensabile
+    Consistente  : costi non negativi, somma per singolo oggetto
+    Debolezza    : trascura completamente la memoria; e' una
+                   versione "energetica pura" di h1+rotazione-finale
+    """
+    orientation, _, _, memory, sent = node.state
+
+    sent_names   = {x[0] for x in sent}
+    memory_names = {x[0] for x in memory}
+    goal_names   = {g[0] for g in problem._goal}
+
+    missing = goal_names - sent_names
+    if not missing:
+        return 0
+
+    # quante TAKEPIC + quante SEND servono come minimo
+    needs_photo = sum(1 for o in missing if o not in memory_names)
+    needs_send  = len(missing)   # tutti i missing vanno sempre inviati
+
+    cost = needs_photo * COST_TAKEPIC + needs_send * COST_SEND
+
+    # almeno UNA rotazione fino a N (SEND avviene solo da N)
+    if orientation != "N":
+        cost += min_rotation_distance(orientation, "N") * COST_ROTATE
+
+    return cost
+
+
+# ==========================================================
+# H_MEMORY - EURISTICA SEMPLICE BASATA SUL VINCOLO MEMORIA
+# ==========================================================
+def h_memory(node, problem):
+    """
+    EURISTICA "MEMORIA"
+    Ragiona solo sul vincolo della memoria a bordo, ignorando
+    rotazioni e tipo di azione.
+
+    L'idea: dato che ci sono al massimo MEM_SLOT_MAX foto
+    contemporaneamente in memoria, se ho piu' oggetti da
+    fotografare degli slot disponibili sono OBBLIGATO a fare
+    almeno un ciclo SEND in piu' per liberare slot.
+
+    Stima:
+        - 1 SEND per ogni oggetto del goal non ancora inviato
+          (per liberare la memoria che occupa o occupera')
+        - questa e' una sottostima sicura: nessuna foto puo'
+          essere mandata senza un SEND, indipendentemente
+          da posizione e qualita'.
+
+    NON considera:
+        - le TAKEPIC iniziali
+        - le rotazioni
+        - se la foto e' HD o SD
+
+    Ammissibile  : ogni foto in memoria avra' bisogno di 1 SEND
+    Consistente  : il valore puo' solo decrescere lungo il piano
+    Debolezza    : si limita a contare SEND, non vede TAKEPIC
+                   ne' rotazioni; e' deliberatamente minimale.
+    """
+    _, _, _, memory, sent = node.state
+
+    sent_names   = {x[0] for x in sent}
+    memory_names = {x[0] for x in memory}
+    goal_names   = {g[0] for g in problem._goal}
+
+    missing = goal_names - sent_names
+    if not missing:
+        return 0
+
+    # SEND minimi indispensabili
+    cost = len(missing) * COST_SEND
+
+    # Penalizzazione "cicli extra" causati dai 2 slot fisici:
+    # se le foto ancora da scattare superano gli slot liberi,
+    # serve un SEND in piu' per ogni overflow.
+    free_slots = max(1, MEM_SLOT_MAX - len(memory))
+    to_photograph = sum(1 for o in missing if o not in memory_names)
+    overflow = max(0, to_photograph - free_slots)
+
+    cost += overflow * COST_SEND  # un SEND in piu' per ogni foto in eccesso
+
+    return cost
+
+
+# ==========================================================
 # H_MAX - COMBINAZIONE
 # ==========================================================
 def h_max(node, problem):
@@ -228,14 +337,18 @@ def h_max(node, problem):
     Domina tutte le singole euristiche → meno nodi espansi in A*
 
     Con la nuova h4, ogni euristica può ora "vincere" in scenari diversi:
-    - h1: pochi oggetti, nessuna rotazione necessaria
-    - h2: oggetti lontani dall'orientamento corrente
-    - h3: molte rotazioni, pochi invii
-    - h4: molti oggetti, vincolo memoria stringente
+    - h1:        pochi oggetti, nessuna rotazione necessaria
+    - h2:        oggetti lontani dall'orientamento corrente
+    - h3:        molte rotazioni, pochi invii
+    - h4:        molti oggetti, vincolo memoria stringente
+    - h_energy:  stato lontano da N con pochi obiettivi
+    - h_memory:  molti scatti pendenti che eccedono gli slot
     """
     return max(
         h1(node, problem),
         h2(node, problem),
         h3(node, problem),
         h4(node, problem),
+        h_energy(node, problem),
+        h_memory(node, problem),
     )

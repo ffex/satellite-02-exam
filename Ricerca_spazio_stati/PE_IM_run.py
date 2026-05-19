@@ -12,7 +12,8 @@ STRUTTURA GENERALE:
             ├── BFS   — ricerca in ampiezza (graph search)
             ├── UCS   — costo uniforme
             ├── DLS   — profondità limitata (limite = IDS_MAX_DEPTH)
-            └── A*    — con ognuna delle euristiche: h1, h2, h3, h4, h_max
+            └── A*    — con ognuna delle euristiche:
+                        h1, h2, h3, h4, h_energy, h_memory, h_max
 
 FUNZIONI PRINCIPALI:
     run_experiment(problem_name, problem_fn, algo, heuristic)
@@ -40,6 +41,56 @@ GESTIONE DEI RISULTATI:
 
 """
 
+import sys
+import os
+import subprocess
+import shutil
+from pathlib import Path
+
+
+def _find_python_312():
+    # 1) py.exe -3.12 (Windows launcher)
+    py = shutil.which("py.exe") or shutil.which("py")
+    if py:
+        try:
+            r = subprocess.run(
+                [py, "-3.12", "-c", "import sys; print(sys.executable)"],
+                capture_output=True, text=True, timeout=5,
+            )
+            if r.returncode == 0:
+                exe = r.stdout.strip()
+                if exe and Path(exe).exists():
+                    return exe
+        except Exception:
+            pass
+
+    # 2) percorsi standard Windows / Unix
+    candidates = [
+        Path.home() / "AppData" / "Local" / "Programs" / "Python" / "Python312" / "python.exe",
+        Path.home() / "AppData" / "Roaming" / "Python" / "Python312" / "python.exe",
+        Path("C:/Python312/python.exe"),
+        Path("C:/Program Files/Python312/python.exe"),
+        Path("/usr/bin/python3.12"),
+        Path("/usr/local/bin/python3.12"),
+    ]
+    for c in candidates:
+        if c.exists():
+            return str(c)
+
+    return None
+
+
+if sys.version_info[:2] != (3, 12):
+    _py312 = _find_python_312()
+    if _py312:
+        print(f"[INFO] interprete corrente: Python {sys.version_info.major}.{sys.version_info.minor}")
+        print(f"[INFO] re-exec con Python 3.12: {_py312}")
+        result = subprocess.run([_py312, __file__, *sys.argv[1:]])
+        sys.exit(result.returncode)
+    else:
+        print(f"[WARN] Python 3.12 non trovato, proseguo con {sys.version.split()[0]}")
+
+
 from search import (
     breadth_first_graph_search,
     iterative_deepening_search,
@@ -56,31 +107,32 @@ from PE_IM_problems import (
     problem_hard_HD,
     problem_extreme,
 )
-from PE_IM_heuristics import h1, h2, h3, h4, h_max
+from PE_IM_heuristics import h1, h2, h3, h4, h_energy, h_memory, h_max
 
-import time
 import csv
 import signal
+import time
 
 
 # ==========================================================
 # PARAMETRI GLOBALI
 # ==========================================================
-IDS_MAX_DEPTH = 300
-TIME_LIMIT    = 20
-NODE_LIMIT    = 30000
+IDS_MAX_DEPTH  = 300
+TIME_LIMIT     = 20
+NODE_LIMIT     = 30000
+IDS_NODE_LIMIT = 50000     # IDS e' esponenziale: limite piu' largo
 
-# Node limit più alto per IDS su problemi complessi:
-# IDS è esponenziale per natura, un limite troppo basso
-# lo fa fallire su hard_HD ed extreme anche se la soluzione esiste.
-IDS_NODE_LIMIT = 50000
 
-# TIMEOUT (usato come fallback per IDS)
 class TimeoutException(Exception):
     pass
 
 
-def timeout_handler(signum, frame):
+# signal.SIGALRM esiste solo su UNIX. Su Windows i timeout
+# vengono gestiti dal solo controllo nodes_expanded interno.
+HAS_SIGALRM = hasattr(signal, "SIGALRM")
+
+
+def _timeout_handler(signum, frame):
     raise TimeoutException()
 
 
@@ -151,76 +203,44 @@ def run_experiment(problem_name, problem_fn, algo="astar", heuristic=None):
 
     try:
 
-        # ==================================================
-        # IDS
-        # ==================================================
+        # IDS — su UNIX usiamo signal per garantire il timeout
+        # (iterative_deepening_search non passa per stopped() in
+        # modo affidabile su tutti i backend AIMA). Su Windows
+        # ci si affida al solo controllo nodi/tempo interno.
         if algo == "ids":
             print("[IDS] ricerca iterativa")
-
-            # Usiamo signal per un timeout esterno come garanzia aggiuntiva,
-            # perché iterative_deepening_search non passa per stopped()
-            # in modo affidabile su tutti i backend AIMA.
-            signal.signal(signal.SIGALRM, timeout_handler)
-            signal.alarm(TIME_LIMIT)
+            if HAS_SIGALRM:
+                signal.signal(signal.SIGALRM, _timeout_handler)
+                signal.alarm(TIME_LIMIT)
             try:
                 result = run_limited_search(
                     iterative_deepening_search,
-                    problem,
-                    TIME_LIMIT,
-                    IDS_NODE_LIMIT
+                    problem, TIME_LIMIT, IDS_NODE_LIMIT,
                 )
             except TimeoutException:
                 print("[TIMEOUT] IDS interrotto")
                 result = None
             finally:
-                signal.alarm(0)
+                if HAS_SIGALRM:
+                    signal.alarm(0)
 
-        # ==================================================
-        # BFS
-        # ==================================================
         elif algo == "bfts":
             print("[BFS] ricerca in ampiezza")
-            result = run_limited_search(
-                breadth_first_graph_search,
-                problem,
-                TIME_LIMIT
-            )
+            result = run_limited_search(breadth_first_graph_search, problem, TIME_LIMIT)
 
-        # ==================================================
-        # UCS
-        # ==================================================
         elif algo == "ucs":
             print("[UCS] costo uniforme")
-            result = run_limited_search(
-                uniform_cost_search,
-                problem,
-                TIME_LIMIT
-            )
+            result = run_limited_search(uniform_cost_search, problem, TIME_LIMIT)
 
-        # ==================================================
-        # DLS
-        # ==================================================
         elif algo == "dls":
-            print("[DLS] profondità limitata")
-            result = run_limited_search(
-                depth_limited_search,
-                problem,
-                TIME_LIMIT,
-                None,
-                IDS_MAX_DEPTH
-            )
+            print("[DLS] profondita' limitata")
+            result = run_limited_search(depth_limited_search, problem, TIME_LIMIT, None, IDS_MAX_DEPTH)
 
-        # ==================================================
-        # A*
-        # ==================================================
         elif algo == "astar":
             print("[A*] ricerca informata")
             result = run_limited_search(
-                astar_search,
-                problem,
-                TIME_LIMIT,
-                None,
-                lambda n: safe_heuristic(n, problem, heuristic)
+                astar_search, problem, TIME_LIMIT, None,
+                lambda n: safe_heuristic(n, problem, heuristic),
             )
 
         else:
@@ -307,10 +327,14 @@ def print_results(results):
 
 # CSV export
 def save_csv(results):
-    with open("results.csv", "w", newline="") as f:
+    output_path = Path(__file__).resolve().parent / "results.csv"
+
+    with open(output_path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=results[0].keys())
         writer.writeheader()
         writer.writerows(results)
+
+    print(f"[INFO] CSV salvato in: {output_path}")
 
 
 # ==========================================================
@@ -326,7 +350,7 @@ def main():
         ("extreme",  problem_extreme),
     ]
 
-    heuristics = [h1, h2, h3, h4, h_max]
+    heuristics = [h1, h2, h3, h4, h_energy, h_memory, h_max]
 
     results = []
 

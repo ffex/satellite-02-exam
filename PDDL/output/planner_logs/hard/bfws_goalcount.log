@@ -1,0 +1,75 @@
+
+
+COMMAND:
+C:\Windows\py.exe C:\Users\lasal\AppData\Roaming\Python\Python312\Scripts\lapkt_cmd.PY BFWS --domain C:\Users\lasal\Desktop\github-ffex\satellite-02-exam\PDDL\domain.pddl --problem C:\Users\lasal\Desktop\github-ffex\satellite-02-exam\PDDL\Problems\problem_hard.pddl --plan_file C:\Users\lasal\Desktop\github-ffex\satellite-02-exam\PDDL\output\generated_plans\hard\bfws_goalcount.txt --log_file C:\Users\lasal\Desktop\github-ffex\satellite-02-exam\PDDL\output\planner_logs\hard\bfws_goalcount.log --search_type BFWS-goalcount-only
+
+===== STDOUT =====
+['AT_BFS_f_Planner', 'AT_LAPKT_Planner', 'Approximate_BFWS', 'Approximate_DFS_Plus', 'Approximate_IW', 'Approximate_RP_IW', 'Approximate_SIW', 'BFS_f_Planner', 'BFWS', 'BRFS_Planner', 'DFIW_Planner', 'DFSIW_Planner', 'DFS_Plus_Planner', 'IW_Planner', 'RPIW_Planner', 'SIW_PLUS_BFS_F_Planner', 'SIW_Planner', 'SIW_Plus_Planner', '__builtins__', '__cached__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__path__', '__spec__'] BFWS
+Loading Planner Config...
+"log_filename" value set to:  C:\Users\lasal\Desktop\github-ffex\satellite-02-exam\PDDL\output\planner_logs\hard\bfws_goalcount.log
+"plan_filename" value set to:  C:\Users\lasal\Desktop\github-ffex\satellite-02-exam\PDDL\output\generated_plans\hard\bfws_goalcount.txt
+"search" value set to:  BFWS-goalcount-only
+"anytime" value set to:  False
+"max_novelty" value set to:  2
+"m_value" value set to:  32
+"verbose" value set to:  False
+|----------------------------------------------------------|
+***Started - LAPKT_PARSE_GROUND_TASK ...***
+|----------------------------------------------------------|
+***Started - reading and parsing pddl file ...***
+***Finished reading and parsing pddl file after 0.080 seconds wall-clock time, 0.078 seconds CPU time***
+
+***Started - preprocessing tarski problem ...***
+***Finished preprocessing tarski problem after 0.000 seconds wall-clock time, 0.000 seconds CPU time***
+
+***Started - grounding ...***
+Total number of reachable action params =  28
+***Finished grounding after 0.079 seconds wall-clock time, 0.000 seconds CPU time***
+
+***Started - instantiating ...***
+***Finished instantiating after 0.000 seconds wall-clock time, 0.000 seconds CPU time***
+
+#Actions: 28
+#Fluents: 26
+----------------------------------------------------------
+***Finished LAPKT_PARSE_GROUND_TASK after 0.269 seconds wall-clock time, 0.188 seconds CPU time***
+----------------------------------------------------------
+|----------------------------------------------------------|
+***Started - LAPKT_SOLVE_TASK ...***
+|----------------------------------------------------------|
+
+ Match tree built with 28 nodes.
+
+PDDL problem description loaded: 
+	Domain: satellite-v3
+	Problem: satellite-hard-v3
+	#Actions: 28
+	#Fluents: 26
+Goals found: 3
+Goals_Edges found: 3
+Starting search with BFWS(w_(#G), #G)...
+Total time: 0
+Nodes generated during search: 105
+Nodes expanded during search: 47
+Plan found with cost: 21
+Count novelty 1 generated nodes: 32
+Count novelty 2 generated nodes: 31
+Count novelty 3 generated nodes: 42
+Count novelty 4 generated nodes: 0
+Count novelty 1 expanded nodes: 31
+Count novelty 2 expanded nodes: 16
+Count novelty 3 expanded nodes: 0
+Count novelty 4 expanded nodes: 0
+Solution nodes of novelty 1: 14
+Solution nodes of novelty 2: 7
+Solution nodes of novelty 3: 0
+Solution nodes of novelty 4: 0
+Fast-BFS search completed in 0 secs
+----------------------------------------------------------
+***Finished LAPKT_SOLVE_TASK after 0.003 seconds wall-clock time, 0.000 seconds CPU time***
+----------------------------------------------------------
+PLANNER_EXIT_CODE: SUCCESS
+
+===== STDERR =====
+
+===== exit_code=0 time=0.41s =====
